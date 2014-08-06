@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		 {% load staticfiles %}
+		 <link rel="stylesheet" href="{% static "leaflet.css" %}" />
+		 <link rel="stylesheet" href="{% static "map.css" %}" />
+	</head>
+    
+	<body>		
+	    <div id="map"></div>
+		
+		<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+		<script src="{% static "leaflet.js"%}" type="text/javascript"></script>
+		
+		<script>
+			
+			centroLat = {{ centroLat }};
+			centroLng = {{ centroLng }};
+			
+			punti_di_interesse = new Array();
+
+			{% for media in media_vicini %}
+					latitudine = {{ media.location.point.latitude }};
+					longitudine = {{ media.location.point.longitude }};
+					thumbnail = "{{ media.images.thumbnail.url }}";
+					link = "{{ media.link }}";
+					username = "{{ media.user.username }}";
+					point = {"latitudine" : latitudine, "longitudine" : longitudine, "thumbnail" : thumbnail, "link" : link, "username" : username};
+					punti_di_interesse.push(point);
+					
+			{% endfor %}
+					
+		</script>
+		<script src="{% static "map.js"%}" type="text/javascript"></script>
+	</body>
+</html>

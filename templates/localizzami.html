@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<head></head>
+    
+	<body>
+		<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+		
+		<script>
+			$(document).ready(function() {	
+				navigator.geolocation.getCurrentPosition(getPosition, errorHandler);				
+			});
+			
+			function errorHandler(error){ 
+			  alert( "Errore " + error.code + ": " + error.message);
+			}
+			
+			function getPosition(position) {
+				centroLat = position.coords.latitude;
+				centroLng = position.coords.longitude;
+				window.location.replace("/mappa?lat="+centroLat+"&lng="+centroLng);
+			}					
+		</script>
+	</body>
+</html>
