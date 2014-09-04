@@ -19,5 +19,8 @@ function mappa() {
 	punti_di_interesse.forEach(function(point) {
 		marker = L.marker([point.latitudine, point.longitudine]).addTo(map);
 		marker.bindPopup("<img height='100' src='"+ point.thumbnail +"'></img> <a href="+ point.link +" target = '_blank'>Link</a> <a href='http://instagram.com/"+ point.username +"' target = '_blank'>Profilo</a>")
+		
+		$("#elenco").append("<li><img  src='"+ point.thumbnail +"'></img> <a href="+ point.link +" target = '_blank'>Link della foto</a> <a href='http://instagram.com/"+ point.username +"' target = '_blank'>Profilo</a> </li>");
+		
 	});
 }

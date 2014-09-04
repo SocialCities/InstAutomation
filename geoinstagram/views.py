@@ -30,7 +30,7 @@ def mappa(request):
         client_secret = "e42bb095bdc6494aa351872ea17581ac"
     )
 	
-	media_vicini = api.media_search(lat = latitudine, lng = longitudine, count = 100, distance = 1000)	
+	media_vicini = api.media_search(lat = latitudine, lng = longitudine, count = 100, distance = 5000)	
 	
 	#for media in media_vicini:
 		#print media.user.username
