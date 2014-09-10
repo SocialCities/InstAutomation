@@ -37,7 +37,7 @@ def ferma_follow(request):
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
 	ts = FollowTaskStatus.objects.get(utente = instance, completato = False)
 	id_task = ts.task_id
-	revoke(id_task, terminate=True)	
+	revoke(id_task, terminate=True, signal="KILL")	
 	
 	return HttpResponseRedirect('/access')  
 	
@@ -57,20 +57,6 @@ def avvia_pulizia_follower(request):
 	
 	return HttpResponseRedirect('/access') 			
 
-
-@login_required(login_url='/')
-def aggiungi_competitor(request):
-	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
-	rivale_form = RivaliForm(request.POST)
-		
-	if rivale_form.is_valid():
-		username = rivale_form.cleaned_data['username']
-		id_utente = rivale_form.cleaned_data['id_utente']
-		nuovo_rivale = UtentiRivali(username = username, id_utente = id_utente, utente = instance)
-		nuovo_rivale.save()
-						
-	return HttpResponseRedirect('/access')         
- 
         
 @login_required(login_url='/')    
 def follower_whitelist(request):

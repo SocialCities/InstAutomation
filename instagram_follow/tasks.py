@@ -10,7 +10,7 @@ import logging
 logger = logging.getLogger('django')
 
 
-MIOIP = '95.238.61.84'
+MIOIP = '79.47.52.179'
 
     
 @shared_task   
@@ -22,8 +22,8 @@ def how_i_met_your_follower(access_token, instance):
         client_secret = "e42bb095bdc6494aa351872ea17581ac"
     )
     
-	id_rivale = '281717074'
-	#leonardfactory	281717074	
+	id_rivale = '6012448'
+	#workingcapital	6012448	
     
 	check_limite(api)
     

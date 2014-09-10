@@ -4,9 +4,6 @@ from django.contrib import admin
 from instagram_like.models import ListaTag, BlacklistFoto, LikeTaskStatus
 from instagram_follow.models import BlacklistUtenti, UtentiRivali, WhitelistUtenti, FollowTaskStatus
 from social_auth.models import UserSocialAuth
-
-
-
 	
 class TagAdmin(admin.ModelAdmin):
 	fields=['keyword', 'utente']
@@ -49,9 +46,15 @@ urlpatterns = patterns('',
     url(r'', include('social_auth.urls')),
     url(r'^admin/', include(admin.site.urls)),
     
-    url(r'^$', 'accesso.views.index'), 
-    url(r'^access$', 'accesso.views.gestione_accesso'),
+    url(r'^$', 'accesso.views.index'),     
     url(r'^logout$', 'accesso.views.uscita'),
+    url(r'^access$', 'accesso.views.access'),
+    url(r'^home$', 'accesso.views.home_page'),
+    url(r'^task_esistente$', 'accesso.views.task_esistente'),  
+    url(r'^follow$', 'accesso.views.follow_home'),     
+    url(r'^cerca_competitor$', 'accesso.views.cerca_competitor'),       
+    url(r'^aggiungi_competitor$', 'accesso.views.aggiungi_competitor'), 
+    
      
     url(r'^tag$', 'instagram_like.views.aggiungi_tag'), 
     url(r'^avvia_like$', 'instagram_like.views.avvia_like'),    
@@ -60,8 +63,6 @@ urlpatterns = patterns('',
     url(r'^how_i_met_your_follower$', 'instagram_follow.views.prendi_follower'),  
     url(r'^ferma_follow$', 'instagram_follow.views.ferma_follow'),  
     url(r'^pulizia_follower$', 'instagram_follow.views.avvia_pulizia_follower'), 
-    url(r'^cerca_competitor$', 'accesso.views.cerca_competitor'),   
-    url(r'^aggiungi_competitor$', 'instagram_follow.views.aggiungi_competitor'), 
     url(r'^whitelist_follower$', 'instagram_follow.views.follower_whitelist'),
     
     url(r'^porco$', 'instagram_follow.views.porco_giuda'),
@@ -70,16 +71,10 @@ urlpatterns = patterns('',
     url(r'^mappa$', 'geoinstagram.views.mappa'),
     
     url(r'^test_statistiche$', 'statistiche.views.test_statistica'),    
-    
-    #url(r'^commento$', 'struttura.views.aggiungi_commento'),
-    #url(r'^rivale$', 'struttura.views.aggiungi_rivale'),    
-    #url(r'^check_all_task$', 'struttura.views.check_all_task'),
-    #url(r'^check_task$', 'struttura.views.check_task'),
-    #url(r'^debug_tag$', 'debug.views.aggiungi_like_debug'),
-    #url(r'^test$', 'struttura.views.testNuovo'),
-    #url(r'^limite$', 'struttura.views.cerca_limite'),
-    #url(r'^attacca_stacca$', 'struttura.views.attacca_stacca'),
-    #url(r'^stacca$', 'struttura.views.stacca'),
+       
+           
+     
+   
 )
 
 # Instagram only allows one callback url so you'll have to change your urls.py to accomodate

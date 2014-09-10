@@ -1,0 +1,23 @@
+{% extends "instalogin.html" %}
+
+{% block content %}
+<h3>Follow/Unfollow automatico</h3>
+
+<ul class="nav nav-list">
+	<li class="nav-header">Lista dei rivali inseriti:</li>
+	{% for rivale in rivali %}
+	<li><a href="http://instagram.com/{{ rivale.username }}" target="__blank">{{ rivale.username }}</a></li>
+	{% endfor %}	
+</ul>	
+
+<form action="/cerca_competitor" method="GET">{% csrf_token %}
+{{ form.as_table }}
+   <button type="submit" class="btn btn-default">Cerca</button>
+</form>  
+
+{% block rivali_tmp %}{% endblock %}
+			
+
+{% endblock %}	
+
+

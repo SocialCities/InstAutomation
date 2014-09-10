@@ -1,0 +1,21 @@
+{% extends "follow_home.html" %}
+
+{% block rivali_tmp %}
+
+<p>
+<ul class="nav nav-list">
+	<li class="nav-header">Risultati trovati:</li>
+	{% for nome in tutti_nomi %}
+	<li>
+		<form action="/aggiungi_competitor" method="post">{% csrf_token %}
+			<input type ="hidden" value="{{nome.username }}" name="username"/> 
+			<input type ="hidden" value="{{nome.id }}" name="id_utente"/> 
+			<a href="http://instagram.com/{{ nome.username }}" target="_blank">{{ nome.username }}</a> 
+			<button type="submit" class="btn btn-default">Aggiungi competitor</button>
+		</form>
+	</li>
+	{% endfor %}		
+</ul>	
+		
+</p>
+{% endblock %}

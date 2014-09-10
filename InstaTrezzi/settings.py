@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'djcelery',
     'debug',
     'statistiche',
+    'bootstrap3',
 )
 
 MIDDLEWARE_CLASSES = (

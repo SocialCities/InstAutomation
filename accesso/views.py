@@ -13,91 +13,69 @@ from instagram_follow.forms import CercaCompetitorForm, RivaliForm
 from celery.result import AsyncResult
 
 from instagram.client import InstagramAPI
-	
+
+#Decorator
+def task_non_completati(function):
+  def wrap(request, *args, **kwargs):
+		
+        follow_task_attivi = FollowTaskStatus.objects.filter(completato = False).exists()
+        like_task_attivi = LikeTaskStatus.objects.filter(completato = False).exists()
+        print follow_task_attivi
+        print like_task_attivi
+
+        if (follow_task_attivi is True) or (like_task_attivi is True):
+			return HttpResponseRedirect('/task_esistente')
+        else:
+            return function(request, *args, **kwargs)
+
+  wrap.__doc__=function.__doc__
+  wrap.__name__=function.__name__
+  return wrap
+		
 def index(request):	
 	return render_to_response('instalogin.html', context_instance=RequestContext(request))
 	
 def uscita(request):
     logout(request)
     return HttpResponseRedirect('/access') 	
-    
-def get_informazioni_basilari(request):
+
+def access(request):
+    return HttpResponseRedirect('/home') 	    
+
+@login_required(login_url='/')
+@task_non_completati
+def home_page(request):	
+	return render_to_response('index.html')	
+
+@login_required(login_url='/')
+def task_esistente(request):		
+	return render_to_response('task_esistente.html')
+
+@login_required(login_url='/')
+def follow_home(request):
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
-	access_token = instance.tokens['access_token']		
-	tags = ListaTag.objects.filter(utente = instance)	
-		
-	rivali = UtentiRivali.objects.filter(utente = instance) 
-		
-	check_esistenza_task = LikeTaskStatus.objects.filter(utente = instance, completato = False).exists()	
-		
-	if check_esistenza_task:
-		task_non_finiti = LikeTaskStatus.objects.filter(utente = instance, completato = False)
-		for task in task_non_finiti:
-			id_task = task.task_id
-			res = AsyncResult(id_task)
-			check_res = res.ready() 	
-			if check_res:
-				task.completato = True
-				task.save()
-				check_esistenza_task = False
-
-	check_esistenza_follow_task = FollowTaskStatus.objects.filter(utente = instance, completato = False).exists()
-
-	if check_esistenza_follow_task:
-		task_follow_non_finiti = FollowTaskStatus.objects.filter(utente = instance, completato = False)
-		for task in task_follow_non_finiti:
-			id_task = task.task_id
-			res = AsyncResult(id_task)
-			check_res = res.ready() 	
-			if check_res:
-				task.completato = True
-				task.save()
-				check_esistenza_follow_task = False
-
-	booleano_controllo_pulizia = False	
-	esistenza_user_da_unfolloware = BlacklistUtenti.objects.filter(utente = instance, unfollowato = False).exists()	
-	if (check_esistenza_follow_task is False) and (esistenza_user_da_unfolloware):
-		booleano_controllo_pulizia = True
-		
-	tag_form = TagForm()
-	tag_form.fields['keyword'].label = 'Inserisci un nuovo hashtag'
-		
+	access_token = instance.tokens['access_token']	
+	template = loader.get_template('follow_home.html')
+	
+	rivali = UtentiRivali.objects.filter(utente = instance) 	
 	cerca_competitor_form = CercaCompetitorForm()
 	cerca_competitor_form.fields['username'].label = 'Cerca un competitor'
 	
-	whitelist_utenti = WhitelistUtenti.objects.filter(utente = instance)
-		
-	return tags, check_esistenza_task, check_esistenza_follow_task, booleano_controllo_pulizia, tag_form, rivali, cerca_competitor_form, access_token, whitelist_utenti   
-						
-@login_required(login_url='/')
-def gestione_accesso(request):
-	
-	tags, check_esistenza_task, check_esistenza_follow_task, booleano_controllo_pulizia, tag_form, rivali, cerca_competitor_form, access_token, whitelist_utenti = get_informazioni_basilari(request)
-					
-	template = loader.get_template('home.html')
 	context = RequestContext(request, {
-		'tags': tags,
-		'check_esistenza_task' : check_esistenza_task,
-		'tag_form' : tag_form,
 		'rivali' : rivali,
-		'cerca_competitor_form' : cerca_competitor_form,
-		'whitelist_utenti' : whitelist_utenti,
-		'check_esistenza_follow_task' : check_esistenza_follow_task,
-		'booleano_controllo_pulizia' : booleano_controllo_pulizia,
+		'form' : cerca_competitor_form,
 	})
 		
-	return HttpResponse(template.render(context))			
-
+	return HttpResponse(template.render(context))	
+	
 @login_required(login_url='/')
 def cerca_competitor(request):
-
-	tags, check_esistenza_task, check_esistenza_follow_task, booleano_controllo_pulizia, tag_form, rivali, cerca_competitor_form, access_token, whitelist_utenti = get_informazioni_basilari(request)
+	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
+	access_token = instance.tokens['access_token']	
 	
 	cerca_competitor_form = CercaCompetitorForm(request.GET)
 	if cerca_competitor_form.is_valid():
 		nome_da_cercare = cerca_competitor_form.cleaned_data['username']
-	#else:
-	#	return HttpResponse('no')
 	
 	api = InstagramAPI(
         access_token=access_token,
@@ -105,25 +83,31 @@ def cerca_competitor(request):
         client_secret="e42bb095bdc6494aa351872ea17581ac"
     )
     
-	rivali_form = RivaliForm()
+	rivali = UtentiRivali.objects.filter(utente = instance) 	
+	cerca_competitor_form = CercaCompetitorForm()
+	cerca_competitor_form.fields['username'].label = 'Cerca un competitor'
 	
 	tutti_nomi = api.user_search(q = nome_da_cercare)	
 					
-	template = loader.get_template('home2.html')
+	template = loader.get_template('follow_home_ricerca.html')
 	context = RequestContext(request, {
-		'tags': tags,
-		'check_esistenza_task' : check_esistenza_task,
-		'tag_form' : tag_form,
+		'tutti_nomi': tutti_nomi,		
 		'rivali' : rivali,
-		'cerca_competitor_form' : cerca_competitor_form,
-		'tutti_nomi': tutti_nomi,
-		'rivali_form' : rivali_form,
-		'whitelist_utenti' : whitelist_utenti,
-		'check_esistenza_follow_task': check_esistenza_follow_task,
-		'booleano_controllo_pulizia' : booleano_controllo_pulizia,
+		'form' : cerca_competitor_form,
 	})
 		
-	return HttpResponse(template.render(context))		
-		
+	return HttpResponse(template.render(context))
 	
 
+@login_required(login_url='/')
+def aggiungi_competitor(request):
+	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
+	rivale_form = RivaliForm(request.POST)
+		
+	if rivale_form.is_valid():
+		username = rivale_form.cleaned_data['username']
+		id_utente = rivale_form.cleaned_data['id_utente']
+		nuovo_rivale = UtentiRivali(username = username, id_utente = id_utente, utente = instance)
+		nuovo_rivale.save()
+						
+	return HttpResponseRedirect('/follow')      	

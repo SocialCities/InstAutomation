@@ -1,10 +1,26 @@
 <!DOCTYPE html>
 <html>
 	
-<head></head>
+<head>
+	<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+	{% load bootstrap3 %}
+	{% bootstrap_css %}
+	{% bootstrap_javascript %}
+	{% bootstrap_messages %}
+	
+	{% load staticfiles %}
+	<link rel="stylesheet" href="{% static "style_login.css" %}" />
+</head>
 
 <body>
-<a href="{% url 'socialauth_begin' 'instagram' %}">Accedi con Instagram</a>
+	<div class="container">
+		<div class = "pagina_centrata">
+			<h1>Instautomation</h1>
+			{% block content %}
+			<a href="{% url 'socialauth_begin' 'instagram' %}">Accedi con Instagram</a>
+			{% endblock %}
+		</div>	
+	</div>
 </body>
 
 </html>
