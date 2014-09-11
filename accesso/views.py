@@ -10,7 +10,7 @@ from instagram_like.models import ListaTag, BlacklistFoto, LikeTaskStatus
 from instagram_like.forms import TagForm
 from instagram_follow.models import UtentiRivali, FollowTaskStatus
 from instagram_follow.forms import CercaCompetitorForm
-from debug.decorators import task_non_completati
+from .decorators import task_non_completati
 
 from celery.result import AsyncResult
 from celery.task.control import revoke

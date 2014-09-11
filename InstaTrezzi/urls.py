@@ -54,8 +54,7 @@ urlpatterns = patterns('',
     url(r'^home$', 'accesso.views.home_page'),
     url(r'^task_esistente$', task_esistente.as_view()),
     url(r'^follow$', 'accesso.views.follow_home'),     
-    
-    
+      
     url(r'^cerca_competitor$', 'instagram_follow.views.cerca_competitor'),       
     url(r'^aggiungi_competitor$', 'instagram_follow.views.aggiungi_competitor'), 
     

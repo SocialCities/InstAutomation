@@ -8,6 +8,8 @@ from instagram.client import InstagramAPI
 from .models import UtentiRivali
 from .forms import CercaCompetitorForm, RivaliForm
 
+MIOIP = "82.106.24.34"
+
 @login_required(login_url='/')
 def cerca_competitor(request):
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
@@ -18,9 +20,9 @@ def cerca_competitor(request):
 		nome_da_cercare = cerca_competitor_form.cleaned_data['username']
 	
 	api = InstagramAPI(
-        access_token=access_token,
-        client_ips="82.106.24.34",
-        client_secret="e42bb095bdc6494aa351872ea17581ac"
+        access_token = access_token,
+        client_ips = MIOIP,
+        client_secret = "e42bb095bdc6494aa351872ea17581ac"
     )
     
 	rivali = UtentiRivali.objects.filter(utente = instance) 	
@@ -37,8 +39,6 @@ def cerca_competitor(request):
 	})
 		
 	return HttpResponse(template.render(context))
-	
-
 
 @login_required(login_url='/')
 def aggiungi_competitor(request):
