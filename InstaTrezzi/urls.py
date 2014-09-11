@@ -4,6 +4,8 @@ from django.contrib import admin
 from instagram_like.models import ListaTag, BlacklistFoto, LikeTaskStatus
 from instagram_follow.models import BlacklistUtenti, UtentiRivali, WhitelistUtenti, FollowTaskStatus
 from social_auth.models import UserSocialAuth
+
+from accesso.views import task_esistente
 	
 class TagAdmin(admin.ModelAdmin):
 	fields=['keyword', 'utente']
@@ -50,7 +52,8 @@ urlpatterns = patterns('',
     url(r'^logout$', 'accesso.views.uscita'),
     url(r'^access$', 'accesso.views.access'),
     url(r'^home$', 'accesso.views.home_page'),
-    url(r'^task_esistente$', 'accesso.views.task_esistente'),  
+    #url(r'^task_esistente$', 'accesso.views.task_esistente'),  
+    url(r'^task_esistente$', task_esistente.as_view()),
     url(r'^follow$', 'accesso.views.follow_home'),     
     url(r'^cerca_competitor$', 'accesso.views.cerca_competitor'),       
     url(r'^aggiungi_competitor$', 'accesso.views.aggiungi_competitor'), 

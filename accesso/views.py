@@ -3,6 +3,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
+from django.views.generic import View
+from django.utils.decorators import method_decorator
 
 from social_auth.models import UserSocialAuth
 from instagram_like.models import ListaTag, BlacklistFoto, LikeTaskStatus
@@ -11,19 +13,20 @@ from instagram_follow.models import UtentiRivali, WhitelistUtenti, FollowTaskSta
 from instagram_follow.forms import CercaCompetitorForm, RivaliForm
 
 from celery.result import AsyncResult
+from celery.task.control import revoke
 
 from instagram.client import InstagramAPI
 
 #Decorator
 def task_non_completati(function):
   def wrap(request, *args, **kwargs):
-		
-        follow_task_attivi = FollowTaskStatus.objects.filter(completato = False).exists()
-        like_task_attivi = LikeTaskStatus.objects.filter(completato = False).exists()
-        print follow_task_attivi
-        print like_task_attivi
+        instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
+	  	
+        follow_task_attivi = FollowTaskStatus.objects.filter(completato = False, utente = instance).exists()
+        like_task_attivi = LikeTaskStatus.objects.filter(completato = False, utente = instance).exists()
 
         if (follow_task_attivi is True) or (like_task_attivi is True):
+			
 			return HttpResponseRedirect('/task_esistente')
         else:
             return function(request, *args, **kwargs)
@@ -47,9 +50,37 @@ def access(request):
 def home_page(request):	
 	return render_to_response('index.html')	
 
-@login_required(login_url='/')
-def task_esistente(request):		
-	return render_to_response('task_esistente.html')
+class task_esistente(View):
+    template_name = 'task_esistente.html'
+
+    @method_decorator(login_required(login_url='/'))
+    def dispatch(self, *args, **kwargs):
+        return super(task_esistente, self).dispatch(*args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+	
+    def post(self, request, *args, **kwargs):
+		instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
+	  	
+		follow_task_attivi = FollowTaskStatus.objects.filter(completato = False, utente = instance).exists()
+		like_task_attivi = LikeTaskStatus.objects.filter(completato = False, utente = instance).exists()
+		
+		if follow_task_attivi:
+			task_attivo = FollowTaskStatus.objects.get(completato = False, utente = instance)
+			task_id = task_attivo.task_id
+			task_attivo.completato = True
+			task_attivo.save()
+			revoke(task_id, terminate=True, signal="KILL")	
+			
+		if like_task_attivi:
+			like_attivo = LikeTaskStatus.objects.get(completato = False, utente = instance)
+			task_id = like_attivo.task_id
+			like_attivo.completato = True
+			like_attivo.save()
+			revoke(task_id, terminate=True, signal="KILL")	
+        
+		return HttpResponseRedirect('/home')
 
 @login_required(login_url='/')
 def follow_home(request):
