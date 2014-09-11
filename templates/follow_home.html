@@ -6,7 +6,14 @@
 <ul class="nav nav-list">
 	<li class="nav-header">Lista dei rivali inseriti:</li>
 	{% for rivale in rivali %}
-	<li><a href="http://instagram.com/{{ rivale.username }}" target="__blank">{{ rivale.username }}</a></li>
+	<li>
+		<form action="/how_i_met_your_follower////" method="post">{% csrf_token %}
+		<input type ="hidden" value="{{rivale.username }}" name="username"/> 
+		<input type ="hidden" value="{{rivale.id }}" name="id_utente"/> 		
+		<a href="http://instagram.com/{{ rivale.username }}" target="__blank">{{ rivale.username }}</a>
+		<button type="submit" class="btn btn-default">aa</button>
+		</form>
+	</li>
 	{% endfor %}	
 </ul>	
 

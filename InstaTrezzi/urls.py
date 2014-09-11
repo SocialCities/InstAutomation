@@ -52,23 +52,27 @@ urlpatterns = patterns('',
     url(r'^logout$', 'accesso.views.uscita'),
     url(r'^access$', 'accesso.views.access'),
     url(r'^home$', 'accesso.views.home_page'),
-    #url(r'^task_esistente$', 'accesso.views.task_esistente'),  
     url(r'^task_esistente$', task_esistente.as_view()),
     url(r'^follow$', 'accesso.views.follow_home'),     
-    url(r'^cerca_competitor$', 'accesso.views.cerca_competitor'),       
-    url(r'^aggiungi_competitor$', 'accesso.views.aggiungi_competitor'), 
     
+    
+    url(r'^cerca_competitor$', 'instagram_follow.views.cerca_competitor'),       
+    url(r'^aggiungi_competitor$', 'instagram_follow.views.aggiungi_competitor'), 
+    
+    
+    
+    #url(r'^how_i_met_your_follower$', 'instagram_follow.views.prendi_follower'),  
+    #url(r'^ferma_follow$', 'instagram_follow.views.ferma_follow'),  
+    #url(r'^pulizia_follower$', 'instagram_follow.views.avvia_pulizia_follower'), 
+    #url(r'^whitelist_follower$', 'instagram_follow.views.follower_whitelist'),
+    #url(r'^porco$', 'instagram_follow.views.porco_giuda'),    
      
     url(r'^tag$', 'instagram_like.views.aggiungi_tag'), 
     url(r'^avvia_like$', 'instagram_like.views.avvia_like'),    
     url(r'^ferma_like$', 'instagram_like.views.ferma_like'),
     
-    url(r'^how_i_met_your_follower$', 'instagram_follow.views.prendi_follower'),  
-    url(r'^ferma_follow$', 'instagram_follow.views.ferma_follow'),  
-    url(r'^pulizia_follower$', 'instagram_follow.views.avvia_pulizia_follower'), 
-    url(r'^whitelist_follower$', 'instagram_follow.views.follower_whitelist'),
     
-    url(r'^porco$', 'instagram_follow.views.porco_giuda'),
+
     
     url(r'^localize$', 'geoinstagram.views.localize'),
     url(r'^mappa$', 'geoinstagram.views.mappa'),

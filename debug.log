@@ -2461,3 +2461,161 @@ Traceback (most recent call last):
   File "/home/riccardo/Scrivania/InstaTrezzi/accesso/views.py", line 81, in post
     revoke(id_task, terminate=True, signal="KILL")
 NameError: global name 'id_task' is not defined
+ERROR 2014-09-11 12:15:20,445 base 6406 139766545700608 Internal Server Error: /home
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 114, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/usr/local/lib/python2.7/dist-packages/django/contrib/auth/decorators.py", line 22, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/riccardo/Scrivania/InstaTrezzi/debug/decorators.py", line 3, in wrap
+    instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
+NameError: global name 'UserSocialAuth' is not defined
+ERROR 2014-09-11 12:16:15,436 base 6427 139637762217728 Internal Server Error: /home
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 114, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/usr/local/lib/python2.7/dist-packages/django/contrib/auth/decorators.py", line 22, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/riccardo/Scrivania/InstaTrezzi/debug/decorators.py", line 15, in wrap
+    return HttpResponseRedirect('/task_esistente')
+NameError: global name 'HttpResponseRedirect' is not defined
+ERROR 2014-09-11 12:30:06,748 base 6695 139712334485248 Internal Server Error: /
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 114, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/riccardo/Scrivania/InstaTrezzi/accesso/views.py", line 23, in index
+    return render_to_response('instalogin.html', context_instance=RequestContext(request))
+  File "/usr/local/lib/python2.7/dist-packages/django/shortcuts/__init__.py", line 29, in render_to_response
+    return HttpResponse(loader.render_to_string(*args, **kwargs), **httpresponse_kwargs)
+  File "/usr/local/lib/python2.7/dist-packages/django/template/loader.py", line 169, in render_to_string
+    return t.render(context_instance)
+  File "/usr/local/lib/python2.7/dist-packages/django/template/base.py", line 140, in render
+    return self._render(context)
+  File "/usr/local/lib/python2.7/dist-packages/django/template/base.py", line 134, in _render
+    return self.nodelist.render(context)
+  File "/usr/local/lib/python2.7/dist-packages/django/template/base.py", line 840, in render
+    bit = self.render_node(node, context)
+  File "/usr/local/lib/python2.7/dist-packages/django/template/debug.py", line 78, in render_node
+    return node.render(context)
+  File "/usr/local/lib/python2.7/dist-packages/django/template/loader_tags.py", line 53, in render
+    result = self.nodelist.render(context)
+  File "/usr/local/lib/python2.7/dist-packages/django/template/base.py", line 840, in render
+    bit = self.render_node(node, context)
+  File "/usr/local/lib/python2.7/dist-packages/django/template/debug.py", line 78, in render_node
+    return node.render(context)
+  File "/usr/local/lib/python2.7/dist-packages/django/template/defaulttags.py", line 433, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=context.current_app)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/urlresolvers.py", line 509, in reverse
+    return iri_to_uri(resolver._reverse_with_prefix(view, prefix, *args, **kwargs))
+  File "/usr/local/lib/python2.7/dist-packages/django/core/urlresolvers.py", line 387, in _reverse_with_prefix
+    possibilities = self.reverse_dict.getlist(lookup_view)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/urlresolvers.py", line 296, in reverse_dict
+    self._populate()
+  File "/usr/local/lib/python2.7/dist-packages/django/core/urlresolvers.py", line 285, in _populate
+    lookups.appendlist(pattern.callback, (bits, p_pattern, pattern.default_args))
+  File "/usr/local/lib/python2.7/dist-packages/django/core/urlresolvers.py", line 229, in callback
+    self._callback = get_callable(self._callback_str)
+  File "/usr/local/lib/python2.7/dist-packages/django/utils/functional.py", line 32, in wrapper
+    result = func(*args)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/urlresolvers.py", line 96, in get_callable
+    mod = import_module(mod_name)
+  File "/usr/local/lib/python2.7/dist-packages/django/utils/importlib.py", line 40, in import_module
+    __import__(name)
+  File "/home/riccardo/Scrivania/InstaTrezzi/instagram_follow/views.py", line 4, in <module>
+    @login_required(login_url='/')
+NameError: name 'login_required' is not defined
+ERROR 2014-09-11 12:30:16,438 base 6695 139712326092544 Internal Server Error: /
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 114, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/home/riccardo/Scrivania/InstaTrezzi/accesso/views.py", line 23, in index
+    return render_to_response('instalogin.html', context_instance=RequestContext(request))
+  File "/usr/local/lib/python2.7/dist-packages/django/shortcuts/__init__.py", line 29, in render_to_response
+    return HttpResponse(loader.render_to_string(*args, **kwargs), **httpresponse_kwargs)
+  File "/usr/local/lib/python2.7/dist-packages/django/template/loader.py", line 169, in render_to_string
+    return t.render(context_instance)
+  File "/usr/local/lib/python2.7/dist-packages/django/template/base.py", line 140, in render
+    return self._render(context)
+  File "/usr/local/lib/python2.7/dist-packages/django/template/base.py", line 134, in _render
+    return self.nodelist.render(context)
+  File "/usr/local/lib/python2.7/dist-packages/django/template/base.py", line 840, in render
+    bit = self.render_node(node, context)
+  File "/usr/local/lib/python2.7/dist-packages/django/template/debug.py", line 78, in render_node
+    return node.render(context)
+  File "/usr/local/lib/python2.7/dist-packages/django/template/loader_tags.py", line 53, in render
+    result = self.nodelist.render(context)
+  File "/usr/local/lib/python2.7/dist-packages/django/template/base.py", line 840, in render
+    bit = self.render_node(node, context)
+  File "/usr/local/lib/python2.7/dist-packages/django/template/debug.py", line 78, in render_node
+    return node.render(context)
+  File "/usr/local/lib/python2.7/dist-packages/django/template/defaulttags.py", line 433, in render
+    url = reverse(view_name, args=args, kwargs=kwargs, current_app=context.current_app)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/urlresolvers.py", line 509, in reverse
+    return iri_to_uri(resolver._reverse_with_prefix(view, prefix, *args, **kwargs))
+  File "/usr/local/lib/python2.7/dist-packages/django/core/urlresolvers.py", line 387, in _reverse_with_prefix
+    possibilities = self.reverse_dict.getlist(lookup_view)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/urlresolvers.py", line 296, in reverse_dict
+    self._populate()
+  File "/usr/local/lib/python2.7/dist-packages/django/core/urlresolvers.py", line 285, in _populate
+    lookups.appendlist(pattern.callback, (bits, p_pattern, pattern.default_args))
+  File "/usr/local/lib/python2.7/dist-packages/django/core/urlresolvers.py", line 229, in callback
+    self._callback = get_callable(self._callback_str)
+  File "/usr/local/lib/python2.7/dist-packages/django/utils/functional.py", line 32, in wrapper
+    result = func(*args)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/urlresolvers.py", line 117, in get_callable
+    (lookup_view, mod_name))
+ViewDoesNotExist: Could not import instagram_follow.views.porco_giuda. View does not exist in module instagram_follow.views.
+ERROR 2014-09-11 12:31:14,537 base 6788 139745539577600 Internal Server Error: /cerca_competitor
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 114, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/usr/local/lib/python2.7/dist-packages/django/contrib/auth/decorators.py", line 22, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/riccardo/Scrivania/InstaTrezzi/instagram_follow/views.py", line 6, in cerca_competitor
+    instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
+NameError: global name 'UserSocialAuth' is not defined
+ERROR 2014-09-11 12:31:25,811 base 6813 139912641173248 Internal Server Error: /cerca_competitor
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 114, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/usr/local/lib/python2.7/dist-packages/django/contrib/auth/decorators.py", line 22, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/riccardo/Scrivania/InstaTrezzi/instagram_follow/views.py", line 11, in cerca_competitor
+    cerca_competitor_form = CercaCompetitorForm(request.GET)
+NameError: global name 'CercaCompetitorForm' is not defined
+ERROR 2014-09-11 12:32:11,823 base 6827 140496304891648 Internal Server Error: /cerca_competitor
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 114, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/usr/local/lib/python2.7/dist-packages/django/contrib/auth/decorators.py", line 22, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/riccardo/Scrivania/InstaTrezzi/instagram_follow/views.py", line 16, in cerca_competitor
+    api = InstagramAPI(
+NameError: global name 'InstagramAPI' is not defined
+ERROR 2014-09-11 12:32:27,138 base 6850 140179406657280 Internal Server Error: /cerca_competitor
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 114, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/usr/local/lib/python2.7/dist-packages/django/contrib/auth/decorators.py", line 22, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/riccardo/Scrivania/InstaTrezzi/instagram_follow/views.py", line 23, in cerca_competitor
+    rivali = UtentiRivali.objects.filter(utente = instance)
+NameError: global name 'UtentiRivali' is not defined
+ERROR 2014-09-11 12:33:01,678 base 6865 140502536218368 Internal Server Error: /cerca_competitor
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 114, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/usr/local/lib/python2.7/dist-packages/django/contrib/auth/decorators.py", line 22, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/riccardo/Scrivania/InstaTrezzi/instagram_follow/views.py", line 30, in cerca_competitor
+    template = loader.get_template('follow_home_ricerca.html')
+NameError: global name 'loader' is not defined
+ERROR 2014-09-11 12:33:21,039 base 6888 139951172814592 Internal Server Error: /cerca_competitor
+Traceback (most recent call last):
+  File "/usr/local/lib/python2.7/dist-packages/django/core/handlers/base.py", line 114, in get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "/usr/local/lib/python2.7/dist-packages/django/contrib/auth/decorators.py", line 22, in _wrapped_view
+    return view_func(request, *args, **kwargs)
+  File "/home/riccardo/Scrivania/InstaTrezzi/instagram_follow/views.py", line 38, in cerca_competitor
+    return HttpResponse(template.render(context))
+NameError: global name 'HttpResponse' is not defined
