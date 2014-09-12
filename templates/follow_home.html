@@ -7,11 +7,12 @@
 	<li class="nav-header">Lista dei rivali inseriti:</li>
 	{% for rivale in rivali %}
 	<li>
-		<form action="/how_i_met_your_follower////" method="post">{% csrf_token %}
+		<form action="/how_i_met_your_follower" method="post">{% csrf_token %}
 		<input type ="hidden" value="{{rivale.username }}" name="username"/> 
-		<input type ="hidden" value="{{rivale.id }}" name="id_utente"/> 		
+		<input type ="hidden" value="{{rivale.id_utente }}" name="id_utente"/> 		
 		<a href="http://instagram.com/{{ rivale.username }}" target="__blank">{{ rivale.username }}</a>
-		<button type="submit" class="btn btn-default">aa</button>
+		<button onclick="stima_tempo('{{rivale.id_utente}}')" type="button" class="btn btn-default">Stima il tempo dell'operazione</button>
+		<button type="submit" class="btn btn-default">Avvia operazione</button>
 		</form>
 	</li>
 	{% endfor %}	

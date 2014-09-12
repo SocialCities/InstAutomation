@@ -18,6 +18,7 @@ from celery.task.control import revoke
 from social_auth.models import UserSocialAuth
 from instagram.client import InstagramAPI
 
+MIOIP = "79.47.52.179"
 	
 def index(request):	
 	return render_to_response('instalogin.html', context_instance=RequestContext(request))
@@ -76,6 +77,12 @@ def follow_home(request):
 	cerca_competitor_form.fields['username'].label = 'Cerca un competitor'
 	
 	rivali = UtentiRivali.objects.filter(utente = instance) 	
+
+	api = InstagramAPI(
+			access_token = access_token,
+			client_ips = MIOIP,
+			client_secret = "e42bb095bdc6494aa351872ea17581ac"
+	)	
 	
 	context = RequestContext(request, {
 		'rivali' : rivali,

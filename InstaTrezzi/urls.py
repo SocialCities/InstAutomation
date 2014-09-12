@@ -57,29 +57,19 @@ urlpatterns = patterns('',
       
     url(r'^cerca_competitor$', 'instagram_follow.views.cerca_competitor'),       
     url(r'^aggiungi_competitor$', 'instagram_follow.views.aggiungi_competitor'), 
+    url(r'^how_i_met_your_follower$', 'instagram_follow.views.prendi_follower'),
+    url(r'^get_info$', 'instagram_follow.views.get_info'),  
     
-    
-    
-    #url(r'^how_i_met_your_follower$', 'instagram_follow.views.prendi_follower'),  
-    #url(r'^ferma_follow$', 'instagram_follow.views.ferma_follow'),  
     #url(r'^pulizia_follower$', 'instagram_follow.views.avvia_pulizia_follower'), 
-    #url(r'^whitelist_follower$', 'instagram_follow.views.follower_whitelist'),
-    #url(r'^porco$', 'instagram_follow.views.porco_giuda'),    
-     
+   
     url(r'^tag$', 'instagram_like.views.aggiungi_tag'), 
     url(r'^avvia_like$', 'instagram_like.views.avvia_like'),    
     url(r'^ferma_like$', 'instagram_like.views.ferma_like'),
     
-    
-
-    
     url(r'^localize$', 'geoinstagram.views.localize'),
     url(r'^mappa$', 'geoinstagram.views.mappa'),
     
-    url(r'^test_statistiche$', 'statistiche.views.test_statistica'),    
-       
-           
-     
+    url(r'^test_statistiche$', 'statistiche.views.test_statistica'),        
    
 )
 

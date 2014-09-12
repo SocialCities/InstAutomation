@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 
 from celery import shared_task
-from .models import BlacklistUtenti, WhitelistUtenti
+from .models import BlacklistUtenti, WhitelistUtenti, FollowTaskStatus
 from social_auth.models import UserSocialAuth
 from instagram.client import InstagramAPI
 import time
@@ -9,21 +9,16 @@ import urlparse
 import logging
 logger = logging.getLogger('django')
 
-
-MIOIP = '79.47.52.179'
-
+MIOIP = "79.47.52.179"
     
 @shared_task   
-def how_i_met_your_follower(access_token, instance):
+def how_i_met_your_follower(access_token, instance, id_rivale):
 		
 	api = InstagramAPI(
         access_token=access_token,
         client_ips = MIOIP,
         client_secret = "e42bb095bdc6494aa351872ea17581ac"
     )
-    
-	id_rivale = '6012448'
-	#workingcapital	6012448	
     
 	check_limite(api)
     
@@ -82,11 +77,6 @@ def how_i_met_your_follower(access_token, instance):
 										
 		cursore = get_cursore(follow_ricorsione)     
 	
-	#Unfollow su reverse list
-	#mega_lista_utenti.reverse()
-	#ERRORE: NON DEVO REVERSARE
-	#SE REVERSO FORZO UN LIFO, IO VOGLIO FIFO
-	
 	for utente_id in mega_lista_utenti:
 		try:
 			api.unfollow_user(user_id = utente_id)
@@ -100,6 +90,13 @@ def how_i_met_your_follower(access_token, instance):
 		except:
 			logger.error("how_i_met_your_follower-unfollow", exc_info=True)
 			pass
+	
+	avvia_task_pulizia_follower(access_token, instance)
+		
+	#Finito il ciclo chiudo il task
+	ts = FollowTaskStatus.objects.get(completato = False, utente = instance)
+	ts.completato = True
+	ts.save()
 						
 	return 'Fine follower'
 
@@ -146,3 +143,5 @@ def avvia_task_pulizia_follower(token, instance):
 	return "Fine pulizia"				
 	
 
+
+	
