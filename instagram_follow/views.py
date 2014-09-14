@@ -139,6 +139,33 @@ def get_info(request):
 	id_utente = request.GET['id']
 	informazioni = api.user(id_utente)
 	followed_by = informazioni.counts['followed_by']
-	stima = followed_by*2*1.05
+	
+	minuti_totali = followed_by*2
+	minuti_totali = float(minuti_totali)
+	stima = "circa " + str(minuti_totali) + " minuti"
+	
+	if minuti_totali > 60:
+		ore_totali = minuti_totali/60
+		stima = "circa " + str(ore_totali) + " ore"
+				
+		if ore_totali > 24:
+			giorni_totali = ore_totali/24
+			giorni_totali = round(giorni_totali, 2)
+			stima = "circa " + str(giorni_totali) + " giorni" 
 			
+			if giorni_totali > 7:
+				settimana_totale = giorni_totali/7
+				settimana_totale = round(settimana_totale, 2)
+				stima = "circa " + str(settimana_totale) + " settimane"				
+				
+				if settimana_totale > 4:
+					mese_totali = settimana_totale/4
+					mese_totali = round(mese_totali, 2)
+					stima = "circa " + str(mese_totali) + " mesi"
+					
+					if mese_totali > 12:
+						anni_totali = mese_totali/12
+						anni_totali = round(anni_totali, 2)
+						stima = "circa " + str(anni_totali) + " anni"
+		
 	return HttpResponse(stima)
