@@ -153,19 +153,14 @@ def get_info(request):
 			giorni_totali = round(giorni_totali, 2)
 			stima = "circa " + str(giorni_totali) + " giorni" 
 			
-			if giorni_totali > 7:
-				settimana_totale = giorni_totali/7
-				settimana_totale = round(settimana_totale, 2)
-				stima = "circa " + str(settimana_totale) + " settimane"				
+			if giorni_totali > 30:
+				mesi_totali = giorni_totali/30
+				mesi_totali = round(mesi_totali, 2)
+				stima = "circa " + str(mesi_totali) + " mesi"
 				
-				if settimana_totale > 4:
-					mese_totali = settimana_totale/4
-					mese_totali = round(mese_totali, 2)
-					stima = "circa " + str(mese_totali) + " mesi"
-					
-					if mese_totali > 12:
-						anni_totali = mese_totali/12
-						anni_totali = round(anni_totali, 2)
-						stima = "circa " + str(anni_totali) + " anni"
+				if mesi_totali > 12:
+					anni_totali = mesi_totali/12
+					anni_totali = round(anni_totali, 2)
+					stima = "circa " + str(anni_totali) + " anni"
 		
 	return HttpResponse(stima)
