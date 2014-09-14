@@ -53,6 +53,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'InstaTrezzi.middleware.BetaMiddleware',
 )
 
 ROOT_URLCONF = 'InstaTrezzi.urls'

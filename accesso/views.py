@@ -30,6 +30,9 @@ def uscita(request):
 def access(request):
     return HttpResponseRedirect('/home') 	    
 
+def beta_home(request):
+	return render_to_response('beta_home.html')	
+
 @login_required(login_url='/')
 @task_non_completati
 def home_page(request):	
