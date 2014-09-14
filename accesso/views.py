@@ -30,8 +30,23 @@ def uscita(request):
 def access(request):
     return HttpResponseRedirect('/home') 	    
 
-def beta_home(request):
-	return render_to_response('beta_home.html')	
+class beta_home(View):
+    template_name = 'beta_home.html'
+    codice_beta = "pota"
+
+    def dispatch(self, *args, **kwargs):
+        return super(beta_home, self).dispatch(*args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+	
+    def post(self, request, *args, **kwargs):   
+		beta_code = request.POST['beta_code'] 
+		if beta_code == self.codice_beta: 
+			request.session['in_beta'] = True   
+			return HttpResponseRedirect('/home')
+		else:
+			return HttpResponseRedirect('/beta/')	
 
 @login_required(login_url='/')
 @task_non_completati

@@ -5,7 +5,7 @@ from instagram_like.models import ListaTag, BlacklistFoto, LikeTaskStatus
 from instagram_follow.models import BlacklistUtenti, UtentiRivali, WhitelistUtenti, FollowTaskStatus
 from social_auth.models import UserSocialAuth
 
-from accesso.views import task_esistente
+from accesso.views import task_esistente, beta_home
 	
 class TagAdmin(admin.ModelAdmin):
 	fields=['keyword', 'utente']
@@ -54,7 +54,7 @@ urlpatterns = patterns('',
     url(r'^home$', 'accesso.views.home_page'),
     url(r'^task_esistente$', task_esistente.as_view()),
     url(r'^follow$', 'accesso.views.follow_home'),  
-    url(r'^beta/$', 'accesso.views.beta_home'),      
+    url(r'^beta/$', beta_home.as_view()),      
       
     url(r'^cerca_competitor$', 'instagram_follow.views.cerca_competitor'),       
     url(r'^aggiungi_competitor$', 'instagram_follow.views.aggiungi_competitor'), 
