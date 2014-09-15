@@ -5,3 +5,7 @@ body {
   padding: 40px 15px;
   text-align: center;
 }
+
+.pulsante_avvio_follow_task {
+	visibility:hidden;
+}

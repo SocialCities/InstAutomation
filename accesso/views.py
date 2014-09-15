@@ -61,7 +61,17 @@ class task_esistente(View):
         return super(task_esistente, self).dispatch(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
+		
+		instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
+		
+		follow_task_attivi = FollowTaskStatus.objects.filter(completato = False, utente = instance).exists()
+		like_task_attivi = LikeTaskStatus.objects.filter(completato = False, utente = instance).exists()	
+		print follow_task_attivi
+		print like_task_attivi
+		if(follow_task_attivi is not True) and (like_task_attivi is not True):
+			return HttpResponseRedirect('/home')
+		else:			
+			return render(request, self.template_name)
 	
     def post(self, request, *args, **kwargs):
 		instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
