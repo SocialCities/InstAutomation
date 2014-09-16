@@ -48,6 +48,7 @@ admin.site.register(BlacklistUtenti, BlacklistUtentiAdmin)
 admin.site.register(UtentiRivali, UtentiRivaliAdmin)
 admin.site.register(WhitelistUtenti, WhitelistUtentiAdmin)
 admin.site.register(FollowTaskStatus, FollowTaskStatusAdmin)
+admin.site.register(trackStats, InitialStatsAdmin)
 
 urlpatterns = patterns('',
     url(r'', include('social_auth.urls')),

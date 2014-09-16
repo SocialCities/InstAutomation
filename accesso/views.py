@@ -10,7 +10,9 @@ from instagram_like.models import ListaTag, BlacklistFoto, LikeTaskStatus
 from instagram_like.forms import TagForm
 from instagram_follow.models import UtentiRivali, FollowTaskStatus
 from instagram_follow.forms import CercaCompetitorForm
+from .models import trackStats
 from .decorators import task_non_completati
+
 
 from celery.result import AsyncResult
 from celery.task.control import revoke
@@ -28,7 +30,27 @@ def uscita(request):
     return HttpResponseRedirect('/access') 	
 
 def access(request):
-    return HttpResponseRedirect('/home') 	    
+	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
+	access_token = instance.tokens['access_token']
+	
+	esistenza_track = trackStats.objects.filter(utente = instance).exists()
+    
+	if esistenza_track:
+		return HttpResponseRedirect('/home')
+	else:
+				
+		api = InstagramAPI(
+				access_token = access_token,
+				client_ips = MIOIP,
+				client_secret = "e42bb095bdc6494aa351872ea17581ac"
+		)
+		
+		informazioni = api.user()			
+		followed_by = informazioni.counts['followed_by']
+		nuove_stats = trackStats(utente = instance, follower_iniziali = followed_by)
+		nuove_stats.save()
+		
+		return HttpResponseRedirect('/home')   
 
 class beta_home(View):
     template_name = 'beta_home.html'
