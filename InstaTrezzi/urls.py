@@ -3,6 +3,7 @@ from django.contrib import admin
 
 from instagram_like.models import ListaTag, BlacklistFoto, LikeTaskStatus
 from instagram_follow.models import BlacklistUtenti, UtentiRivali, WhitelistUtenti, FollowTaskStatus
+from accesso.models import trackStats
 from social_auth.models import UserSocialAuth
 
 from accesso.views import task_esistente, beta_home
@@ -34,6 +35,10 @@ class WhitelistUtentiAdmin(admin.ModelAdmin):
 class FollowTaskStatusAdmin(admin.ModelAdmin):
 	fields=['task_id', 'completato', 'utente']
 	list_display = ('task_id', 'completato', 'utente')		
+	
+class InitialStatsAdmin(admin.ModelAdmin):
+	fields = ['utente', 'follower_iniziali']
+	list_display = ('utente', 'follower_iniziali')	
 
 admin.site.register(ListaTag, TagAdmin)
 admin.site.register(BlacklistFoto, BlacklistFotoAdmin)
@@ -54,16 +59,16 @@ urlpatterns = patterns('',
     url(r'^home$', 'accesso.views.home_page'),
     url(r'^task_esistente$', task_esistente.as_view()),
     url(r'^follow$', 'accesso.views.follow_home'),  
+    url(r'^like$', 'accesso.views.like_home'),  
     url(r'^beta/$', beta_home.as_view()),      
       
     url(r'^cerca_competitor$', 'instagram_follow.views.cerca_competitor'),       
     url(r'^aggiungi_competitor$', 'instagram_follow.views.aggiungi_competitor'), 
     url(r'^how_i_met_your_follower$', 'instagram_follow.views.prendi_follower'),
-    url(r'^get_info$', 'instagram_follow.views.get_info'),  
+    url(r'^get_info$', 'instagram_follow.views.get_info'),      
     
-    #url(r'^pulizia_follower$', 'instagram_follow.views.avvia_pulizia_follower'), 
-   
-    url(r'^tag$', 'instagram_like.views.aggiungi_tag'), 
+    
+    url(r'^aggiungi_tag$', 'instagram_like.views.aggiungi_tag'), 
     url(r'^avvia_like$', 'instagram_like.views.avvia_like'),    
     url(r'^ferma_like$', 'instagram_like.views.ferma_like'),
     

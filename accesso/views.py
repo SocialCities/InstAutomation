@@ -18,7 +18,7 @@ from celery.task.control import revoke
 from social_auth.models import UserSocialAuth
 from instagram.client import InstagramAPI
 
-MIOIP = "79.47.52.179"
+MIOIP = "213.174.182.251"
 	
 def index(request):	
 	return render_to_response('instalogin.html', context_instance=RequestContext(request))
@@ -66,8 +66,7 @@ class task_esistente(View):
 		
 		follow_task_attivi = FollowTaskStatus.objects.filter(completato = False, utente = instance).exists()
 		like_task_attivi = LikeTaskStatus.objects.filter(completato = False, utente = instance).exists()	
-		print follow_task_attivi
-		print like_task_attivi
+
 		if(follow_task_attivi is not True) and (like_task_attivi is not True):
 			return HttpResponseRedirect('/home')
 		else:			
@@ -115,6 +114,28 @@ def follow_home(request):
 	context = RequestContext(request, {
 		'rivali' : rivali,
 		'form' : cerca_competitor_form,
+	})
+		
+	return HttpResponse(template.render(context))	
+	
+@login_required(login_url='/')	
+def like_home(request):
+	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
+	access_token = instance.tokens['access_token']	
+	template = loader.get_template('like_home.html')
+		
+	lista_tag = ListaTag.objects.filter(utente = instance) 	
+	form = TagForm()
+
+	api = InstagramAPI(
+			access_token = access_token,
+			client_ips = MIOIP,
+			client_secret = "e42bb095bdc6494aa351872ea17581ac"
+	)	
+	
+	context = RequestContext(request, {
+		'lista_tag' : lista_tag,
+		'form' : form,
 	})
 		
 	return HttpResponse(template.render(context))	

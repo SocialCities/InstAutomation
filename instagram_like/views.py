@@ -20,7 +20,7 @@ def aggiungi_tag(request):
 		nuovo_tag = ListaTag(keyword = testo_tag, utente = instance)
 		nuovo_tag.save()
 			
-		return HttpResponseRedirect('/access') 
+		return HttpResponseRedirect('/like') 
  
 @login_required(login_url='/')   
 def avvia_like(request):    

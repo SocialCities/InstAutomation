@@ -9,15 +9,15 @@ import logging
 logger = logging.getLogger('django')
 
 
-MIOIP = '95.238.61.84'
+MIOIP = '213.174.182.251'
     
 @shared_task   
 def insta_task(access_token, user_instance):
 	
 	api = InstagramAPI(
-        access_token=access_token,
+        access_token = access_token,
         client_ips = MIOIP,
-        client_secret="e42bb095bdc6494aa351872ea17581ac"
+        client_secret = "e42bb095bdc6494aa351872ea17581ac"
     )
     
 	check_limite(api)
@@ -30,11 +30,16 @@ def insta_task(access_token, user_instance):
 	
 		try:
 			chiamata_like(api, nome_tag, user_instance)
-
+			
 		except:
 			pass
 			logger.error("insta_like", exc_info=True)
-	#fine while						
+	#fine while	
+		
+	#Finito il ciclo chiudo il task
+	ts = LikeTaskStatus.objects.get(completato = False, utente = user_instance)
+	ts.completato = True
+	ts.save()				
 	return 'Fine Like'
 		
 def chiamata_like(api, nome_tag, user_instance):
@@ -68,4 +73,5 @@ def chiamata_like(api, nome_tag, user_instance):
 def check_limite(api):
 	x_ratelimit_remaining = api.x_ratelimit_remaining
 	if (x_ratelimit_remaining < 10) and (x_ratelimit_remaining is not None):
+		print 'raggiunto il limite'
 		time.sleep(3600)
