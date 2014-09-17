@@ -8,6 +8,7 @@ import time
 import logging
 logger = logging.getLogger('django')
 
+from InstaTrezzi.utility import check_limite
 
 MIOIP = '213.174.182.251'
     
@@ -70,8 +71,3 @@ def chiamata_like(api, nome_tag, user_instance):
 					logger.error("chiamata_like", exc_info=True)
 					pass
 					
-def check_limite(api):
-	x_ratelimit_remaining = api.x_ratelimit_remaining
-	if (x_ratelimit_remaining < 10) and (x_ratelimit_remaining is not None):
-		print 'raggiunto il limite'
-		time.sleep(3600)

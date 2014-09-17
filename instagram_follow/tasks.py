@@ -4,8 +4,10 @@ from celery import shared_task
 from .models import BlacklistUtenti, WhitelistUtenti, FollowTaskStatus
 from social_auth.models import UserSocialAuth
 from instagram.client import InstagramAPI
+
+from InstaTrezzi.utility import get_cursore, check_limite
+
 import time
-import urlparse
 import logging
 logger = logging.getLogger('django')
 
@@ -99,23 +101,6 @@ def how_i_met_your_follower(access_token, instance, id_rivale):
 	ts.save()
 						
 	return 'Fine follower'
-
-def get_cursore(followed_obj):	
-	blocco_pagination = followed_obj[1]
-	
-	if blocco_pagination is None:
-		return None
-	else:
-		o = urlparse.urlparse(blocco_pagination)
-		query = o.query
-		query_parsed = urlparse.parse_qs(query)
-		cursore = query_parsed['cursor'][0]
-		return cursore
-
-def check_limite(api):
-	x_ratelimit_remaining = api.x_ratelimit_remaining
-	if (x_ratelimit_remaining < 10) and (x_ratelimit_remaining is not None):
-		time.sleep(3600)
 	
 @shared_task   
 def avvia_task_pulizia_follower(token, instance):	

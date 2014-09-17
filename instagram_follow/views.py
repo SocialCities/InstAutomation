@@ -10,21 +10,11 @@ from .forms import CercaCompetitorForm, RivaliForm
 
 from .tasks import how_i_met_your_follower
 
+from InstaTrezzi.utility import get_cursore
+
 import urlparse
 
 MIOIP = "79.47.52.179"
-
-def get_cursore(followed_obj):	
-	blocco_pagination = followed_obj[1]
-	
-	if blocco_pagination is None:
-		return None
-	else:
-		o = urlparse.urlparse(blocco_pagination)
-		query = o.query
-		query_parsed = urlparse.parse_qs(query)
-		cursore = query_parsed['cursor'][0]
-		return cursore
 
 @login_required(login_url='/')
 def cerca_competitor(request):
