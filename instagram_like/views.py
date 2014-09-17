@@ -11,6 +11,8 @@ from celery.task.control import revoke
 from celery.result import AsyncResult	
 from .tasks import insta_task
 
+MIOIP = "79.49.55.89"
+
 @login_required(login_url='/')
 def aggiungi_tag(request):
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
@@ -49,6 +51,6 @@ def ferma_like(request):
 	revoke(id_task, terminate=True)	
 	
 	return HttpResponseRedirect('/access')  
-	
+
 
 

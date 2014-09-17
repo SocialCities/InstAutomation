@@ -67,8 +67,7 @@ urlpatterns = patterns('',
     url(r'^aggiungi_competitor$', 'instagram_follow.views.aggiungi_competitor'), 
     url(r'^how_i_met_your_follower$', 'instagram_follow.views.prendi_follower'),
     url(r'^get_info$', 'instagram_follow.views.get_info'),      
-    
-    
+     
     url(r'^aggiungi_tag$', 'instagram_like.views.aggiungi_tag'), 
     url(r'^avvia_like$', 'instagram_like.views.avvia_like'),    
     url(r'^ferma_like$', 'instagram_like.views.ferma_like'),
@@ -78,6 +77,7 @@ urlpatterns = patterns('',
     
     url(r'^test_statistiche$', 'statistiche.views.test_statistica'),        
    
+    url(r'^miei_like$', 'statistiche.views.statistiche_mie_foto'), 
 )
 
 # Instagram only allows one callback url so you'll have to change your urls.py to accomodate
