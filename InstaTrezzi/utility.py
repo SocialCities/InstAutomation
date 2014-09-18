@@ -23,9 +23,4 @@ def prendi_valore_indice(stringa, object_to_check):
 def check_limite(api):
 	x_ratelimit_remaining = api.x_ratelimit_remaining
 	if (x_ratelimit_remaining < 10) and (x_ratelimit_remaining is not None):
-		time.sleep(3600)		 
-		
-def check_limite(api):
-	x_ratelimit_remaining = api.x_ratelimit_remaining
-	if (x_ratelimit_remaining < 10) and (x_ratelimit_remaining is not None):
-		time.sleep(3600)		
+		time.sleep(3600)		 	

@@ -145,12 +145,11 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['debug_file', 'error_file','mail_admins'],
-            'level': 'ERROR',
+            'level': 'INFO',
             'propagate': True,
             },
         }
     }
 
 
-
-
+IP_LOCALE = '79.49.55.89'

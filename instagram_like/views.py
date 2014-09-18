@@ -1,5 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
 
 from social_auth.models import UserSocialAuth
 from instagram.client import InstagramAPI
@@ -11,7 +12,7 @@ from celery.task.control import revoke
 from celery.result import AsyncResult	
 from .tasks import insta_task
 
-MIOIP = "79.49.55.89"
+MIOIP = settings.IP_LOCALE
 
 @login_required(login_url='/')
 def aggiungi_tag(request):

@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext, loader
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
+from django.conf import settings
 
 from social_auth.models import UserSocialAuth
 from instagram.client import InstagramAPI
@@ -14,7 +15,7 @@ from InstaTrezzi.utility import get_cursore
 
 import urlparse
 
-MIOIP = "79.47.52.179"
+MIOIP = settings.IP_LOCALE
 
 @login_required(login_url='/')
 def cerca_competitor(request):

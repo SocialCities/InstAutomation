@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.contrib.auth import logout
 from django.views.generic import View
+from django.conf import settings
 
 from instagram_like.models import ListaTag, BlacklistFoto, LikeTaskStatus
 from instagram_like.forms import TagForm
@@ -20,7 +21,7 @@ from celery.task.control import revoke
 from social_auth.models import UserSocialAuth
 from instagram.client import InstagramAPI
 
-MIOIP = "213.174.182.251"
+MIOIP = settings.IP_LOCALE
 	
 def index(request):	
 	return render_to_response('instalogin.html', context_instance=RequestContext(request))

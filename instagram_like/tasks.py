@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+from django.conf import settings
 from celery import shared_task
 from .models import ListaTag, BlacklistFoto, LikeTaskStatus
 from social_auth.models import UserSocialAuth
@@ -10,7 +11,7 @@ logger = logging.getLogger('django')
 
 from InstaTrezzi.utility import check_limite
 
-MIOIP = '213.174.182.251'
+MIOIP = settings.IP_LOCALE
     
 @shared_task   
 def insta_task(access_token, user_instance):

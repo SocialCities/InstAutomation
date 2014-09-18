@@ -4,8 +4,9 @@ from django.contrib.auth.decorators import login_required
 from django.template import RequestContext, loader
 from social_auth.models import UserSocialAuth
 from instagram.client import InstagramAPI
+from django.conf import settings
 
-MIOIP = "95.238.61.84"
+MIOIP = settings.IP_LOCALE
 
 @login_required(login_url='/')
 def localize(request):

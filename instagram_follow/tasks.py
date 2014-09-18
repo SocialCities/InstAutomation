@@ -7,11 +7,12 @@ from instagram.client import InstagramAPI
 
 from InstaTrezzi.utility import get_cursore, check_limite
 
+from django.conf import settings
 import time
 import logging
 logger = logging.getLogger('django')
 
-MIOIP = "79.47.52.179"
+MIOIP = settings.IP_LOCALE
     
 @shared_task   
 def how_i_met_your_follower(access_token, instance, id_rivale):
