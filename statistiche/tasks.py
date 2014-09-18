@@ -150,7 +150,6 @@ def statistiche_tag(api):
 		
 		cursore_pagina = get_max_id(lista_ricorsiva)
 	
-	
 	lista_ordinata = sorted(lista_tag, key=lista_tag.get, reverse=True)	
 		
 	return lista_ordinata, lista_tag
