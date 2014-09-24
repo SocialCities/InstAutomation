@@ -59,7 +59,8 @@ urlpatterns = patterns('',
     
     url(r'^beta/$', beta_home.as_view()),      
           
-    url(r'^aggiungi_competitor$', 'instagram_follow.views.aggiungi_competitor'),      
+    url(r'^aggiungi_competitor$', 'instagram_follow.views.aggiungi_competitor'),   
+      
     url(r'^aggiungi_tag$', 'instagram_like.views.aggiungi_tag'), 
 
     #Cose a caso esterne

@@ -17,10 +17,20 @@ MIOIP = settings.IP_LOCALE
 
 from instagram_like.tasks import insta_task
 from instagram_follow.tasks import how_i_met_your_follower
+from instagram_follow.views import update_whitelist
 
 
 @shared_task   
 def start_task(token, instance):
+	
+	api = InstagramAPI(
+		access_token = token,
+		client_ips = MIOIP,
+		client_secret = "e42bb095bdc6494aa351872ea17581ac"
+	)
+	
+	update_whitelist(api, instance)
+	
 	res1 = insta_task.delay(token, instance)	
 	res2 = how_i_met_your_follower.delay(token, instance, '1439702168')
 	

@@ -8,7 +8,7 @@ from instagram.client import InstagramAPI
 
 from instagram_like.models import ListaTag
 
-from .models import UtentiRivali, WhitelistUtenti
+from .models import UtentiRivali, WhitelistUtenti, BlacklistUtenti
 from .forms import CercaCompetitorForm, RivaliForm
 from .tasks import how_i_met_your_follower
 
@@ -32,57 +32,31 @@ def aggiungi_competitor(request):
 	return HttpResponseRedirect('/home')      	
 
 
-#
-#def update_whitelist(api, instance):
+def update_whitelist(api, instance):
 	
-#	followed_by_obj = api.user_follows()
-#	utenti = followed_by_obj[0]
+	followed_by_obj = api.user_follows()
+	utenti = followed_by_obj[0]
 	
-#	for utente in utenti:
-#		esistenza_nuovo_user = WhitelistUtenti.objects.filter(username = utente.username, id_utente = utente.id, utente = instance).exists()
-#		if esistenza_nuovo_user is False:
-#			nuovo_user_whitelist = WhitelistUtenti(username = utente.username, id_utente = utente.id, utente = instance)
-#			nuovo_user_whitelist.save()		
+	for utente in utenti:
+		esistenza_nuovo_user = WhitelistUtenti.objects.filter(username = utente.username, id_utente = utente.id, utente = instance).exists()
+		if esistenza_nuovo_user is False:
+			nuovo_user_whitelist = WhitelistUtenti(username = utente.username, id_utente = utente.id, utente = instance)
+			nuovo_user_whitelist.save()		
 
-#	cursore = get_cursore(followed_by_obj)	
+	cursore = get_cursore(followed_by_obj)	
 	
-#	while cursore is not None:		
-#		follow_ricorsione = api.user_follows(cursor = cursore)
-#		
-#		utenti_ricorsione = follow_ricorsione[0]
-#		for utente_ricorsione in utenti_ricorsione:
-#			esistenza_nuovo_user_ricorsione = WhitelistUtenti.objects.filter(username = utente_ricorsione.username, id_utente = utente_ricorsione.id, utente = instance).exists()
-#			if esistenza_nuovo_user_ricorsione is False:
-#				nuovo_user_whitelist2 = WhitelistUtenti(username = utente_ricorsione.username, id_utente = utente_ricorsione.id, utente = instance)
-#				nuovo_user_whitelist2.save()
-						
-#		cursore = get_cursore(follow_ricorsione)  	
-	
-#@login_required(login_url='/')
-#def prendi_follower(request):
-#	rivale_form = RivaliForm(request.POST)
-	
-#	if rivale_form.is_valid():
-#		username_rivale = rivale_form.cleaned_data['username']
-#		id_utente = rivale_form.cleaned_data['id_utente']
-	
-#		instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
-#		token = instance.tokens['access_token']	
-	
-#		api = InstagramAPI(
-#			access_token = token,
-#			client_ips = MIOIP,
-#			client_secret = "e42bb095bdc6494aa351872ea17581ac"
-#		)
-	
-#		update_whitelist(api, instance)
-				
-#		result = how_i_met_your_follower.delay(token, instance, id_utente)
+	while cursore is not None:		
+		follow_ricorsione = api.user_follows(cursor = cursore)
 		
-#		id_task = result.task_id	
-#		ts = FollowTaskStatus(task_id =  id_task, completato = False, utente = instance)
-#		ts.save()	   
-			
-#		return HttpResponseRedirect('/home')	
-#	else:
-#		return HttpResponseBadRequest()
+		utenti_ricorsione = follow_ricorsione[0]
+		for utente_ricorsione in utenti_ricorsione:
+			esistenza_nuovo_user_ricorsione = WhitelistUtenti.objects.filter(username = utente_ricorsione.username, id_utente = utente_ricorsione.id, utente = instance).exists()
+			if esistenza_nuovo_user_ricorsione is False:
+				nuovo_user_whitelist2 = WhitelistUtenti(username = utente_ricorsione.username, id_utente = utente_ricorsione.id, utente = instance)
+				nuovo_user_whitelist2.save()
+						
+		cursore = get_cursore(follow_ricorsione)  	
+	
+
+	
+	
