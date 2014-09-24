@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 
 from celery import shared_task
-from .models import BlacklistUtenti, WhitelistUtenti, FollowTaskStatus
+from .models import BlacklistUtenti, WhitelistUtenti
 from social_auth.models import UserSocialAuth
 from instagram.client import InstagramAPI
 

@@ -39,15 +39,3 @@ class UtentiRivali(models.Model):
 	class Meta:
 		verbose_name = "Utente rivale"
 		verbose_name_plural = "Utenti rivali"	
-		
-class FollowTaskStatus(models.Model):
-	task_id = models.CharField(max_length=300)
-	completato = models.NullBooleanField()
-	utente = models.ForeignKey(UserSocialAuth)
-	
-	def __unicode__(self):
-		return str(self.task_id)
-	
-	class Meta:
-		verbose_name = "Follow task status"
-		verbose_name_plural = "Follow task status"		

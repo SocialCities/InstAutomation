@@ -26,17 +26,3 @@ class BlacklistFoto(models.Model):
 	class Meta:
 		verbose_name = "Foto in blacklist"
 		verbose_name_plural = "Foto in blacklist"	
-		
-		
-class LikeTaskStatus(models.Model):
-	task_id = models.CharField(max_length=300)
-	completato = models.NullBooleanField()
-	utente = models.ForeignKey(UserSocialAuth)
-	
-	def __unicode__(self):
-		return str(self.task_id)
-	
-	class Meta:
-		verbose_name = "Like task status"
-		verbose_name_plural = "Like task status"
-	

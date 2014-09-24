@@ -7,13 +7,11 @@ from django.contrib.auth import logout
 from django.views.generic import View
 from django.conf import settings
 
-from instagram_like.models import ListaTag, BlacklistFoto, LikeTaskStatus
+from instagram_like.models import ListaTag, BlacklistFoto
 from instagram_like.forms import TagForm
-from instagram_follow.models import UtentiRivali, FollowTaskStatus
+from instagram_follow.models import UtentiRivali
 from instagram_follow.forms import CercaCompetitorForm
-from .models import trackStats
-from .decorators import task_non_completati
-
+from .models import trackStats, TaskStatus
 
 from celery.result import AsyncResult
 from celery.task.control import revoke
@@ -52,7 +50,7 @@ def access(request):
 		nuove_stats.save()
 		
 		return HttpResponseRedirect('/home')   
-
+		
 class beta_home(View):
     template_name = 'beta_home.html'
     codice_beta = "pota"
@@ -69,64 +67,23 @@ class beta_home(View):
 			request.session['in_beta'] = True   
 			return HttpResponseRedirect('/home')
 		else:
-			return HttpResponseRedirect('/beta/')	
-
+			return HttpResponseRedirect('/beta/')			
+		
 @login_required(login_url='/')
-@task_non_completati
 def home_page(request):	
-	return render_to_response('index.html')	
-
-class task_esistente(View):
-    template_name = 'task_esistente.html'
-
-    @method_decorator(login_required(login_url='/'))
-    def dispatch(self, *args, **kwargs):
-        return super(task_esistente, self).dispatch(*args, **kwargs)
-
-    def get(self, request, *args, **kwargs):
-		
-		instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
-		
-		follow_task_attivi = FollowTaskStatus.objects.filter(completato = False, utente = instance).exists()
-		like_task_attivi = LikeTaskStatus.objects.filter(completato = False, utente = instance).exists()	
-
-		if(follow_task_attivi is not True) and (like_task_attivi is not True):
-			return HttpResponseRedirect('/home')
-		else:			
-			return render(request, self.template_name)
-	
-    def post(self, request, *args, **kwargs):
-		instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
-	  	
-		follow_task_attivi = FollowTaskStatus.objects.filter(completato = False, utente = instance).exists()
-		like_task_attivi = LikeTaskStatus.objects.filter(completato = False, utente = instance).exists()
-		
-		if follow_task_attivi:
-			task_attivo = FollowTaskStatus.objects.get(completato = False, utente = instance)
-			task_id = task_attivo.task_id
-			task_attivo.completato = True
-			task_attivo.save()
-			revoke(task_id, terminate=True, signal="KILL")	
-			
-		if like_task_attivi:
-			like_attivo = LikeTaskStatus.objects.get(completato = False, utente = instance)
-			task_id = like_attivo.task_id
-			like_attivo.completato = True
-			like_attivo.save()
-			revoke(task_id, terminate=True, signal="KILL")	
-        
-		return HttpResponseRedirect('/home')
-
-@login_required(login_url='/')
-def follow_home(request):
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
 	access_token = instance.tokens['access_token']	
-	template = loader.get_template('follow_home.html')
+	template = loader.get_template('home_page.html')
 	
 	cerca_competitor_form = CercaCompetitorForm()
 	cerca_competitor_form.fields['username'].label = 'Cerca un competitor'
 	
 	rivali = UtentiRivali.objects.filter(utente = instance) 	
+	
+	lista_tag = ListaTag.objects.filter(utente = instance) 	
+	tag_form = TagForm()
+	
+	status_obj_attivi = TaskStatus.objects.filter(utente = instance, completato = False).exists()
 
 	api = InstagramAPI(
 			access_token = access_token,
@@ -136,29 +93,74 @@ def follow_home(request):
 	
 	context = RequestContext(request, {
 		'rivali' : rivali,
-		'form' : cerca_competitor_form,
+		'competitor_form' : cerca_competitor_form,
+		'lista_tag' : lista_tag,
+		'tag_form' : tag_form,
+		'status_obj_attivi' : status_obj_attivi,
 	})
 		
 	return HttpResponse(template.render(context))	
 	
-@login_required(login_url='/')	
-def like_home(request):
+@login_required(login_url='/')
+def cerca_competitor(request):	
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
 	access_token = instance.tokens['access_token']	
-	template = loader.get_template('like_home.html')
-		
+	
+	cerca_competitor_form = CercaCompetitorForm(request.GET)
+	if cerca_competitor_form.is_valid():
+		nome_da_cercare = cerca_competitor_form.cleaned_data['username']
+	
+	template = loader.get_template('home_page_rivali.html')
+	
+	cerca_competitor_form = CercaCompetitorForm()
+	cerca_competitor_form.fields['username'].label = 'Cerca un competitor'
+	
+	rivali = UtentiRivali.objects.filter(utente = instance) 	
+	
 	lista_tag = ListaTag.objects.filter(utente = instance) 	
-	form = TagForm()
-
+	tag_form = TagForm()
+	
+	status_obj_attivi = TaskStatus.objects.filter(utente = instance, completato = False).exists()
+	
 	api = InstagramAPI(
 			access_token = access_token,
 			client_ips = MIOIP,
 			client_secret = "e42bb095bdc6494aa351872ea17581ac"
 	)	
 	
+	tutti_nomi = api.user_search(q = nome_da_cercare)	
+	
 	context = RequestContext(request, {
+		'rivali' : rivali,
+		'competitor_form' : cerca_competitor_form,
 		'lista_tag' : lista_tag,
-		'form' : form,
+		'tag_form' : tag_form,
+		'tutti_nomi' : tutti_nomi,
+		'status_obj_attivi' : status_obj_attivi,
 	})
 		
 	return HttpResponse(template.render(context))	
+
+@login_required(login_url='/')
+def ferma_task(request):
+	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
+	task_attivi = TaskStatus.objects.filter(completato = False, utente = instance).exists()
+	
+	if task_attivi:
+		task_attivo = TaskStatus.objects.get(completato = False, utente = instance)
+		task_id = task_attivo.task_id
+		task_attivo.completato = True
+		task_attivo.save()
+		revoke(task_id, terminate=True, signal="KILL")
+		
+	return HttpResponseRedirect('/home')
+
+@login_required(login_url='/')
+def avvia_task(request):
+	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
+	nuovo_task = TaskStatus(completato = False, utente = instance)
+	nuovo_task.save()
+	
+	print 'aaaaaaaaaaa'
+		
+	return HttpResponseRedirect('/home')

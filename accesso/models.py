@@ -13,3 +13,16 @@ class trackStats(models.Model):
 	class Meta:
 		verbose_name = "Statistiche iniziali"
 		verbose_name_plural = "Statistiche iniziali"	
+
+class TaskStatus(models.Model):
+	task_id = models.CharField(max_length=300)
+	completato = models.NullBooleanField()
+	utente = models.ForeignKey(UserSocialAuth)
+	
+	def __unicode__(self):
+		return str(self.task_id)
+	
+	class Meta:
+		verbose_name = "Task status"
+		verbose_name_plural = "Task status"
+	
