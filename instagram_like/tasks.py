@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from django.conf import settings
 from celery import shared_task
 from .models import ListaTag, BlacklistFoto
+from accesso.models import TaskStatus
 from social_auth.models import UserSocialAuth
 from instagram.client import InstagramAPI
 import time

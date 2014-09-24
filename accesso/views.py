@@ -11,7 +11,10 @@ from instagram_like.models import ListaTag, BlacklistFoto
 from instagram_like.forms import TagForm
 from instagram_follow.models import UtentiRivali
 from instagram_follow.forms import CercaCompetitorForm
+
 from .models import trackStats, TaskStatus
+from .tasks import start_task
+
 
 from celery.result import AsyncResult
 from celery.task.control import revoke
@@ -144,23 +147,28 @@ def cerca_competitor(request):
 @login_required(login_url='/')
 def ferma_task(request):
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
-	task_attivi = TaskStatus.objects.filter(completato = False, utente = instance).exists()
+	task_attivi_esistenza = TaskStatus.objects.filter(completato = False, utente = instance).exists()
 	
-	if task_attivi:
-		task_attivo = TaskStatus.objects.get(completato = False, utente = instance)
-		task_id = task_attivo.task_id
-		task_attivo.completato = True
-		task_attivo.save()
-		revoke(task_id, terminate=True, signal="KILL")
+	if task_attivi_esistenza:
+		task_attivi = TaskStatus.objects.filter(completato = False, utente = instance)
+		for task_attivo in task_attivi:
+			task_id = task_attivo.task_id
+			task_attivo.completato = True
+			task_attivo.save()
+			revoke(task_id, terminate=True, signal="KILL")
 		
 	return HttpResponseRedirect('/home')
 
 @login_required(login_url='/')
-def avvia_task(request):
+def avvia_task(request):	
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
-	nuovo_task = TaskStatus(completato = False, utente = instance)
-	nuovo_task.save()
+	access_token = instance.tokens['access_token']		
 	
-	print 'aaaaaaaaaaa'
+	result = start_task.delay(access_token, instance)
+	
+	id_task = result.task_id
+	
+	nuovo_task1 = TaskStatus(task_id = id_task, completato = False, utente = instance)
+	nuovo_task1.save()
 		
 	return HttpResponseRedirect('/home')
