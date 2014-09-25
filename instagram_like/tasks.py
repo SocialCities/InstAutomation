@@ -38,11 +38,7 @@ def insta_task(access_token, user_instance):
 			pass
 			logger.error("insta_like", exc_info=True)
 	#fine while	
-		
-	#Finito il ciclo chiudo il task
-	ts = LikeTaskStatus.objects.get(completato = False, utente = user_instance)
-	ts.completato = True
-	ts.save()				
+				
 	return 'Fine Like'
 		
 def chiamata_like(api, nome_tag, user_instance):

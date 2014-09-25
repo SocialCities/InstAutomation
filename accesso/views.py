@@ -11,6 +11,7 @@ from instagram_like.models import ListaTag, BlacklistFoto
 from instagram_like.forms import TagForm
 from instagram_follow.models import UtentiRivali
 from instagram_follow.forms import CercaCompetitorForm
+from instagram_follow.tasks import avvia_task_pulizia_follower
 
 from .models import trackStats, TaskStatus
 from .tasks import start_task
@@ -172,3 +173,17 @@ def avvia_task(request):
 	nuovo_task1.save()
 		
 	return HttpResponseRedirect('/home')
+
+@login_required(login_url='/')
+def clean(request):
+	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
+	access_token = instance.tokens['access_token']		
+	
+	result = avvia_task_pulizia_follower.delay(access_token, instance)
+	
+	id_task = result.task_id
+	
+	nuovo_task1 = TaskStatus(task_id = id_task, completato = False, utente = instance)
+	nuovo_task1.save()
+		
+	return HttpResponseRedirect('/home')	

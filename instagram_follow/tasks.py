@@ -96,11 +96,6 @@ def how_i_met_your_follower(access_token, instance, id_rivale):
 			pass
 	
 	avvia_task_pulizia_follower(access_token, instance)
-		
-	#Finito il ciclo chiudo il task
-	ts = FollowTaskStatus.objects.get(completato = False, utente = instance)
-	ts.completato = True
-	ts.save()
 						
 	return 'Fine follower'
 	
@@ -126,6 +121,10 @@ def avvia_task_pulizia_follower(token, instance):
 		except:
 			logger.error("avvia_task_pulizia_follower", exc_info=True)
 			pass
+	
+	task = TaskStatus.objects.get(completato = False, utente = instance)	
+	task.completato = True
+	task.save()	
 			
 	return "Fine pulizia"				
 	

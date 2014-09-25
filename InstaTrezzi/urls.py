@@ -56,6 +56,7 @@ urlpatterns = patterns('',
     url(r'^cerca_competitor$', 'accesso.views.cerca_competitor'),  
     url(r'^stop$', 'accesso.views.ferma_task'),   
     url(r'^start$', 'accesso.views.avvia_task'), 
+    url(r'^clean$', 'accesso.views.clean'), 
     
     url(r'^beta/$', beta_home.as_view()),      
           
