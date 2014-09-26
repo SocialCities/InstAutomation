@@ -24,6 +24,7 @@ from social_auth.models import UserSocialAuth
 from instagram.client import InstagramAPI
 
 MIOIP = settings.IP_LOCALE
+CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
 	
 def index(request):	
 	return render_to_response('instalogin.html', context_instance=RequestContext(request))
@@ -45,7 +46,7 @@ def access(request):
 		api = InstagramAPI(
 				access_token = access_token,
 				client_ips = MIOIP,
-				client_secret = "e42bb095bdc6494aa351872ea17581ac"
+				client_secret = CLIENT_SECRET
 		)
 		
 		informazioni = api.user()			
@@ -92,7 +93,7 @@ def home_page(request):
 	api = InstagramAPI(
 			access_token = access_token,
 			client_ips = MIOIP,
-			client_secret = "e42bb095bdc6494aa351872ea17581ac"
+			client_secret = CLIENT_SECRET 
 	)	
 	
 	context = RequestContext(request, {
@@ -129,7 +130,7 @@ def cerca_competitor(request):
 	api = InstagramAPI(
 			access_token = access_token,
 			client_ips = MIOIP,
-			client_secret = "e42bb095bdc6494aa351872ea17581ac"
+			client_secret = CLIENT_SECRET 
 	)	
 	
 	tutti_nomi = api.user_search(q = nome_da_cercare)	

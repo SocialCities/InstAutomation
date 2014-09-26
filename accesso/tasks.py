@@ -11,9 +11,10 @@ from .models import TaskStatus
 import logging
 logger = logging.getLogger('django')
 
-from InstaTrezzi.utility import check_limite
+from instautomation.utility import check_limite
 
 MIOIP = settings.IP_LOCALE
+CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
 
 from instagram_like.tasks import insta_task
 from instagram_follow.tasks import how_i_met_your_follower
@@ -26,7 +27,7 @@ def start_task(token, instance):
 	api = InstagramAPI(
 		access_token = token,
 		client_ips = MIOIP,
-		client_secret = "e42bb095bdc6494aa351872ea17581ac"
+		client_secret = CLIENT_SECRET
 	)
 	
 	update_whitelist(api, instance)

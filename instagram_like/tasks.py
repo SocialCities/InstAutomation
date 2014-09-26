@@ -10,9 +10,10 @@ import time
 import logging
 logger = logging.getLogger('django')
 
-from InstaTrezzi.utility import check_limite
+from instautomation.utility import check_limite
 
 MIOIP = settings.IP_LOCALE
+CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
     
 @shared_task   
 def insta_task(access_token, user_instance):
@@ -20,7 +21,7 @@ def insta_task(access_token, user_instance):
 	api = InstagramAPI(
         access_token = access_token,
         client_ips = MIOIP,
-        client_secret = "e42bb095bdc6494aa351872ea17581ac"
+        client_secret = CLIENT_SECRET 
     )
     
 	check_limite(api)

@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 
 from accesso.models import trackStats
-from InstaTrezzi.utility import get_cursore, check_limite, get_max_id
+from instautomation.utility import get_cursore, check_limite, get_max_id
 
 from django.conf import settings
 from django.core.mail import send_mail, EmailMultiAlternatives
@@ -14,9 +14,10 @@ import time
 import logging
 logger = logging.getLogger('django')
 
-from InstaTrezzi.utility import check_limite
+from instautomation.utility import check_limite
 
 MIOIP = settings.IP_LOCALE
+CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
     
 @shared_task   
 def report_task(instance):		
@@ -25,7 +26,7 @@ def report_task(instance):
 	api = InstagramAPI(
 			access_token = access_token,
 			client_ips = MIOIP,
-			client_secret = "e42bb095bdc6494aa351872ea17581ac"
+			client_secret = CLIENT_SECRET
 	)	
 	
 	stats_obj = trackStats.objects.get(utente = instance)	

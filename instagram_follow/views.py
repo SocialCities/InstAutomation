@@ -12,11 +12,12 @@ from .models import UtentiRivali, WhitelistUtenti, BlacklistUtenti
 from .forms import CercaCompetitorForm, RivaliForm
 from .tasks import how_i_met_your_follower
 
-from InstaTrezzi.utility import get_cursore
+from instautomation.utility import get_cursore
 
 import urlparse
 
 MIOIP = settings.IP_LOCALE
+CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
 
 @login_required(login_url='/')
 def aggiungi_competitor(request):

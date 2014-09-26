@@ -13,6 +13,7 @@ from celery.result import AsyncResult
 from .tasks import insta_task
 
 MIOIP = settings.IP_LOCALE
+CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
 
 @login_required(login_url='/')
 def aggiungi_tag(request):

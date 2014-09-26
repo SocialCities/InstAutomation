@@ -7,6 +7,7 @@ from instagram.client import InstagramAPI
 from django.conf import settings
 
 MIOIP = settings.IP_LOCALE
+CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
 
 @login_required(login_url='/')
 def localize(request):
@@ -28,7 +29,7 @@ def mappa(request):
 	api = InstagramAPI(
         access_token = access_token,
         client_ips = MIOIP,
-        client_secret = "e42bb095bdc6494aa351872ea17581ac"
+        client_secret = CLIENT_SECRET 
     )
 	
 	media_vicini = api.media_search(lat = latitudine, lng = longitudine, count = 100, distance = 5000)	

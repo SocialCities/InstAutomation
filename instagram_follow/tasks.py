@@ -6,7 +6,7 @@ from accesso.models import TaskStatus
 from social_auth.models import UserSocialAuth
 from instagram.client import InstagramAPI
 
-from InstaTrezzi.utility import get_cursore, check_limite
+from instautomation.utility import get_cursore, check_limite
 
 from django.conf import settings
 import time
@@ -14,6 +14,7 @@ import logging
 logger = logging.getLogger('django')
 
 MIOIP = settings.IP_LOCALE
+CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
     
 @shared_task   
 def how_i_met_your_follower(access_token, instance, id_rivale):
@@ -21,7 +22,7 @@ def how_i_met_your_follower(access_token, instance, id_rivale):
 	api = InstagramAPI(
         access_token=access_token,
         client_ips = MIOIP,
-        client_secret = "e42bb095bdc6494aa351872ea17581ac"
+        client_secret = CLIENT_SECRET 
     )
     
 	check_limite(api)
@@ -105,7 +106,7 @@ def avvia_task_pulizia_follower(token, instance):
 	api = InstagramAPI(
 		access_token = token,
 		client_ips = MIOIP,
-		client_secret = "e42bb095bdc6494aa351872ea17581ac"
+		client_secret = CLIENT_SECRET 
 	)
 	
 	utenti_da_unfolloware = BlacklistUtenti.objects.filter(utente = instance, unfollowato = False)

@@ -7,12 +7,13 @@ from django.conf import settings
 from social_auth.models import UserSocialAuth
 from instagram.client import InstagramAPI
 
-from InstaTrezzi.utility import get_cursore, check_limite, get_max_id
+from instautomation.utility import get_cursore, check_limite, get_max_id
 from .tasks import report_task
 
 import urlparse
 
 MIOIP = settings.IP_LOCALE
+CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
 	
 @login_required(login_url='/')	
 def report_statistico(request):
