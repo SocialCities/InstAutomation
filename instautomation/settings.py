@@ -70,9 +70,15 @@ USE_L10N = True
 
 USE_TZ = True
 
-STATIC_URL = '/static/'
+#Production
+#STATIC_URL = '/static/'
+#STATIC_ROOT = '/webapps/static'
 
-STATIC_ROOT = '/webapps/static'
+#Dev - Locale
+STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    '/home/riccardo/Scrivania/InstaTrezzi/static/',
+)
 
 AUTHENTICATION_BACKENDS = (
     'social_auth.backends.contrib.instagram.InstagramBackend',
@@ -81,8 +87,14 @@ AUTHENTICATION_BACKENDS = (
 
 SOCIAL_AUTH_ENABLED_BACKENDS = ('instagram')
 
-INSTAGRAM_CLIENT_ID = '2b1ae8cc46c744708b86204315588912'
-INSTAGRAM_CLIENT_SECRET = 'a8a4ff3b196a424b9de2c42d8d781a41'
+#Dev - Locale
+INSTAGRAM_CLIENT_ID = '9866db39f3924bf981581de816d60607'
+INSTAGRAM_CLIENT_SECRET = 'e42bb095bdc6494aa351872ea17581ac'
+
+#Production
+#INSTAGRAM_CLIENT_ID = '2b1ae8cc46c744708b86204315588912'
+#INSTAGRAM_CLIENT_SECRET = 'a8a4ff3b196a424b9de2c42d8d781a41'
+
 
 INSTAGRAM_REDIRECT_URI = "http://instautomation.com/complete/instagram/"
 
@@ -133,13 +145,13 @@ LOGGING = {
         'debug_file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/webapps/instautomation/debug.log',
+            'filename': '../instautomation/debug.log',
             'formatter': 'verbose'
             },
         'error_file': {
             'level': 'ERROR',
             'class': 'logging.FileHandler',
-            'filename': '/webapps/instautomation/error.log',
+            'filename': '../instautomation/error.log',
             'formatter': 'verbose'
             },
         },
@@ -152,4 +164,9 @@ LOGGING = {
         }
     }
 
+
+#Dev - Locale
+IP_LOCALE = '93.39.215.139'
+
+#Production
 IP_LOCALE = '178.62.48.51'
