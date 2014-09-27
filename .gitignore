@@ -4,3 +4,5 @@ error.log
 *.pyc
 admin/
 static/admin/
+error.log.save
+
