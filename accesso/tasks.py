@@ -17,7 +17,7 @@ MIOIP = settings.IP_LOCALE
 CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
 
 from instagram_like.tasks import insta_task
-from instagram_follow.tasks import how_i_met_your_follower
+from instagram_follow.tasks import start_follow
 from instagram_follow.views import update_whitelist
 
 
@@ -33,7 +33,7 @@ def start_task(token, instance):
 	update_whitelist(api, instance)
 	
 	res1 = insta_task.delay(token, instance)	
-	res2 = how_i_met_your_follower.delay(token, instance, '1439702168')
+	res2 = start_follow.delay(instance)
 	
 	id_task1 = res1.task_id
 	id_task2 = res2.task_id
@@ -43,6 +43,5 @@ def start_task(token, instance):
 	
 	nuovo_task2 = TaskStatus(task_id = id_task2, completato = False, utente = instance)
 	nuovo_task2.save()
-	
 		
 	return 'yo'

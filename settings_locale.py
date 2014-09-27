@@ -7,7 +7,6 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = (
@@ -44,21 +43,10 @@ WSGI_APPLICATION = 'instautomation.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME' : '/home/riccardo/Scrivania/InstaTrezzi/db.sqlite3'
     }
 }
 
-#DATABASES = {
-#	'default': {
-#		'ENGINE': 'django.db.backends.postgresql_psycopg2', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-#		'NAME': 'instadb',                      # Or path to database file if using sqlite3.
-#		# The following settings are not used with sqlite3:
-#		'USER': 'instauser',
-#		'PASSWORD': 'Ottimo310188',
-#		'HOST': 'localhost',                      # Empty for localhost through domain sockets or           '127.0.0.1' for localhost through TCP.
-#		'PORT': '',                      # Set to empty string for default.
-#		}
-#	}
 
 LANGUAGE_CODE = 'en-us'
 
@@ -72,7 +60,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = '/webapps/static'
+STATICFILES_DIRS = (
+    #os.path.join(BASE_DIR, "static"),
+    '/home/riccardo/Scrivania/InstaTrezzi/static/',
+)
 
 AUTHENTICATION_BACKENDS = (
     'social_auth.backends.contrib.instagram.InstagramBackend',
@@ -81,8 +72,8 @@ AUTHENTICATION_BACKENDS = (
 
 SOCIAL_AUTH_ENABLED_BACKENDS = ('instagram')
 
-INSTAGRAM_CLIENT_ID = '2b1ae8cc46c744708b86204315588912'
-INSTAGRAM_CLIENT_SECRET = 'a8a4ff3b196a424b9de2c42d8d781a41'
+INSTAGRAM_CLIENT_ID = '9866db39f3924bf981581de816d60607'
+INSTAGRAM_CLIENT_SECRET = 'e42bb095bdc6494aa351872ea17581ac'
 
 INSTAGRAM_REDIRECT_URI = "http://instautomation.com/complete/instagram/"
 
@@ -92,9 +83,7 @@ LOGIN_URL          = '/login'
 LOGIN_REDIRECT_URL = '/access'
 LOGIN_ERROR_URL    = '/login-error/'
 
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'templates'),
-)
+TEMPLATE_DIRS = "/home/riccardo/Scrivania/InstaTrezzi/templates"
 
 INSTAGRAM_AUTH_EXTRA_ARGUMENTS = {'scope': 'likes comments relationships'}
 
@@ -152,4 +141,4 @@ LOGGING = {
         }
     }
 
-IP_LOCALE = '178.62.48.51'
+IP_LOCALE = '93.39.215.139'

@@ -28,16 +28,16 @@ def insta_task(access_token, user_instance):
 	
 	tutti_tag = ListaTag.objects.filter(utente = user_instance)
 	
-	#while True: 
-	for singolo_tag in tutti_tag:
-		nome_tag = singolo_tag.keyword
-	
-		try:
-			chiamata_like(api, nome_tag, user_instance)
-			
-		except:
-			pass
-			logger.error("insta_like", exc_info=True)
+	while True: 
+		for singolo_tag in tutti_tag:
+			nome_tag = singolo_tag.keyword
+		
+			try:
+				chiamata_like(api, nome_tag, user_instance)
+				
+			except:
+				pass
+				logger.error("insta_like", exc_info=True)
 	#fine while	
 				
 	return 'Fine Like'

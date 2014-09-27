@@ -58,7 +58,7 @@ def access(request):
 		
 class beta_home(View):
     template_name = 'beta_home.html'
-    codice_beta = "pota"
+    codice_beta = "Xyiu753!qa4?"
 
     def dispatch(self, *args, **kwargs):
         return super(beta_home, self).dispatch(*args, **kwargs)
@@ -180,7 +180,7 @@ def clean(request):
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
 	access_token = instance.tokens['access_token']		
 	
-	result = avvia_task_pulizia_follower.delay(access_token, instance)
+	result = avvia_task_pulizia_follower.delay(access_token, instance, True)
 	
 	id_task = result.task_id
 	
