@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 
-from accesso.models import trackStats
+from accesso.models import Utente
 from instautomation.utility import get_cursore, check_limite, get_max_id
 
 from django.conf import settings
@@ -29,7 +29,7 @@ def report_task(instance):
 			client_secret = CLIENT_SECRET
 	)	
 	
-	stats_obj = trackStats.objects.get(utente = instance)	
+	stats_obj = Utente.objects.get(utente = instance)	
 	follower_iniziali = stats_obj.follower_iniziali
 	follower_iniziali = float(follower_iniziali)
 	

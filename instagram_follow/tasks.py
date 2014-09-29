@@ -5,8 +5,9 @@ from .models import BlacklistUtenti, WhitelistUtenti, UtentiRivali
 from accesso.models import TaskStatus
 from social_auth.models import UserSocialAuth
 from instagram.client import InstagramAPI
+from instagram import InstagramAPIError
 
-from instautomation.utility import get_cursore, check_limite
+from instautomation.utility import get_cursore, check_limite, errore_mortale
 
 from django.conf import settings
 import time
@@ -29,12 +30,17 @@ def avvia_task_pulizia_follower(token, instance, task_diretto):
 	for utente in utenti_da_unfolloware:
 		user_id = utente.id_utente 
 				
-		check_limite(api)			
+		check_limite(api)		
+			
 		try:
 			api.unfollow_user(user_id = user_id)
 			utente.unfollowato = True
 			utente.save()			
-			time.sleep(65)
+			time.sleep(65)			
+			
+		except InstagramAPIError as errore:
+			errore_mortale(errore, instance)
+											
 		except:
 			logger.error("avvia_task_pulizia_follower", exc_info=True)
 			pass
@@ -68,14 +74,17 @@ def start_follow(instance):
   
 def how_i_met_your_follower(api, access_token, instance, id_rivale, contatore):
 
-	check_limite(api)
-    
-	followed_by_obj = api.user_followed_by(id_rivale)
+    check_limite(api)
+    try:
+		followed_by_obj = api.user_followed_by(id_rivale)	
+		
+    except InstagramAPIError as errore:
+		errore_mortale(errore, instance)	
 	
-	check_limite(api)
+    check_limite(api)
     
-	utenti = followed_by_obj[0]
-	for utente in utenti:
+    utenti = followed_by_obj[0]
+    for utente in utenti:
 			try:
 				esistenza_nuovo_user = BlacklistUtenti.objects.filter(username = utente.username, id_utente = utente.id, utente = instance).exists()
 				esistenza_in_white = WhitelistUtenti.objects.filter(username = utente.username, id_utente = utente.id, utente = instance).exists()
@@ -96,14 +105,18 @@ def how_i_met_your_follower(api, access_token, instance, id_rivale, contatore):
 					contatore = check_contatore(contatore, access_token, instance)
 				
 					time.sleep(65)
+					
+			except InstagramAPIError as errore:
+				errore_mortale(errore, instance)	
+					
 			except:
 					logger.error("how_i_met_your_follower", exc_info=True)
 					pass
 
 		
-	cursore = get_cursore(followed_by_obj)
+    cursore = get_cursore(followed_by_obj)
 	
-	while cursore is not None:		
+    while cursore is not None:		
 		follow_ricorsione = api.user_followed_by(id_rivale, cursor = cursore)
 		
 		check_limite(api)
@@ -130,13 +143,17 @@ def how_i_met_your_follower(api, access_token, instance, id_rivale, contatore):
 					contatore = check_contatore(contatore, access_token, instance)
 					
 					time.sleep(65)
+					
+			except InstagramAPIError as errore:
+				errore_mortale(errore, instance)
+						
 			except:
 				logger.error("how_i_met_your_follower", exc_info=True)
 				pass
 										
 		cursore = get_cursore(follow_ricorsione)     
 						
-	return contatore 
+    return contatore 
 
 
 def check_contatore(contatore, token, instance):

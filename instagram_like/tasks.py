@@ -6,17 +6,19 @@ from .models import ListaTag, BlacklistFoto
 from accesso.models import TaskStatus
 from social_auth.models import UserSocialAuth
 from instagram.client import InstagramAPI
+from instagram import InstagramAPIError
+
 import time
 import logging
 logger = logging.getLogger('django')
 
-from instautomation.utility import check_limite
+from instautomation.utility import check_limite, errore_mortale
 
 MIOIP = settings.IP_LOCALE
 CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
     
 @shared_task   
-def insta_task(access_token, user_instance):
+def insta_task(access_token, user_instance):	
 	
 	api = InstagramAPI(
         access_token = access_token,
@@ -35,6 +37,9 @@ def insta_task(access_token, user_instance):
 			try:
 				chiamata_like(api, nome_tag, user_instance)
 				
+			except InstagramAPIError as errore:
+				errore_mortale(errore, user_instance)	
+				
 			except:
 				pass
 				logger.error("insta_like", exc_info=True)
@@ -49,6 +54,7 @@ def chiamata_like(api, nome_tag, user_instance):
 	tag_search = api.tag_recent_media(count = 10, tag_name = nome_tag)
 	
 	check_limite(api)
+	
 
 	for foto in tag_search[0]:		
 		id_elemento = foto.id

@@ -13,14 +13,17 @@ from instagram_follow.models import UtentiRivali
 from instagram_follow.forms import CercaCompetitorForm
 from instagram_follow.tasks import avvia_task_pulizia_follower
 
-from .models import trackStats, TaskStatus
-from .tasks import start_task
-
 from celery.result import AsyncResult
 from celery.task.control import revoke
 
+from .models import Utente, TaskStatus
+from .tasks import start_task
+from .decorators import token_error
+
 from social_auth.models import UserSocialAuth
 from instagram.client import InstagramAPI
+
+from instautomation.utility  import kill_all_tasks
 
 MIOIP = settings.IP_LOCALE
 CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
@@ -36,12 +39,17 @@ def access(request):
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
 	access_token = instance.tokens['access_token']
 	
-	esistenza_track = trackStats.objects.filter(utente = instance).exists()
+	esistenza_track = Utente.objects.filter(utente = instance).exists()
     
 	if esistenza_track:
+		
+		user_obj = Utente.objects.get(utente = instance)
+		user_obj.token_block = False
+		user_obj.save()		
+		
 		return HttpResponseRedirect('/')
-	else:
-				
+		
+	else:				
 		api = InstagramAPI(
 				access_token = access_token,
 				client_ips = MIOIP,
@@ -50,7 +58,7 @@ def access(request):
 		
 		informazioni = api.user()			
 		followed_by = informazioni.counts['followed_by']
-		nuove_stats = trackStats(utente = instance, follower_iniziali = followed_by)
+		nuove_stats = Utente(utente = instance, follower_iniziali = followed_by)
 		nuove_stats.save()
 		
 		return HttpResponseRedirect('/')   
@@ -72,8 +80,9 @@ class beta_home(View):
 			return HttpResponseRedirect('/')
 		else:
 			return HttpResponseRedirect('/beta/')			
-		
+				
 @login_required(login_url='/login')
+@token_error
 def home_page(request):	
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
 	access_token = instance.tokens['access_token']	
@@ -148,16 +157,8 @@ def cerca_competitor(request):
 @login_required(login_url='/login')
 def ferma_task(request):
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
-	task_attivi_esistenza = TaskStatus.objects.filter(completato = False, utente = instance).exists()
-	
-	if task_attivi_esistenza:
-		task_attivi = TaskStatus.objects.filter(completato = False, utente = instance)
-		for task_attivo in task_attivi:
-			task_id = task_attivo.task_id
-			task_attivo.completato = True
-			task_attivo.save()
-			revoke(task_id, terminate=True, signal="KILL")
-		
+	kill_all_tasks(instance)
+			
 	return HttpResponseRedirect('/')
 
 @login_required(login_url='/login')
@@ -187,3 +188,7 @@ def clean(request):
 	nuovo_task1.save()
 		
 	return HttpResponseRedirect('/')	
+	
+
+
+		

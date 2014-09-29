@@ -2,17 +2,17 @@ from django.db import models
 from social_auth.models import UserSocialAuth
 
 # Create your models here.
-
-class trackStats(models.Model):
-	utente = models.ForeignKey(UserSocialAuth)
-	follower_iniziali = models.IntegerField()	
 	
-	def __unicode__(self):
-		return self.utente
+class Utente(models.Model):
+	utente = models.ForeignKey(UserSocialAuth)
+	follower_iniziali = models.IntegerField()
+	email = models.EmailField(null = True, blank=True)
+	time_stamp = models.DateTimeField(null = True, blank = True, auto_now_add=True)	
+	token_block = models.NullBooleanField(null = True, blank=True, default = False)
 	
 	class Meta:
-		verbose_name = "Statistiche iniziali"
-		verbose_name_plural = "Statistiche iniziali"	
+		verbose_name = "Dati dell'utente"
+		verbose_name_plural = "Dati dell'utente"		
 
 class TaskStatus(models.Model):
 	task_id = models.CharField(max_length=300)

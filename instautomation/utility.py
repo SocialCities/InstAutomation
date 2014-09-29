@@ -1,4 +1,10 @@
+from __future__ import absolute_import
+
+from accesso.models import TaskStatus, Utente
 from instagram.client import InstagramAPI
+
+from celery.task.control import revoke
+
 import urlparse
 import time
 
@@ -23,4 +29,32 @@ def prendi_valore_indice(stringa, object_to_check):
 def check_limite(api):
 	x_ratelimit_remaining = api.x_ratelimit_remaining
 	if (x_ratelimit_remaining < 10) and (x_ratelimit_remaining is not None):
-		time.sleep(3600)		 	
+		time.sleep(3600)	
+		
+def kill_all_tasks(instance):
+	task_attivi_esistenza = TaskStatus.objects.filter(completato = False, utente = instance).exists()
+	
+	if task_attivi_esistenza:
+		task_attivi = TaskStatus.objects.filter(completato = False, utente = instance)
+		for task_attivo in task_attivi:
+			task_id = task_attivo.task_id
+			task_attivo.completato = True
+			task_attivo.save()
+			revoke(task_id, terminate=True, signal="KILL")		
+						
+def errore_mortale(errore, instance):
+	if errore.error_type == "OAuthAccessTokenException":
+		
+		utente_obj = Utente.objects.get(utente = instance)
+		email_utente = utente_obj.email
+		utente_obj.token_block = True
+		utente_obj.save()
+		
+		avviso_email(email_utente)	
+		
+		kill_all_tasks(instance)	
+	else:
+		pass
+				
+def avviso_email(email_utente):
+	print email_utente				 	
