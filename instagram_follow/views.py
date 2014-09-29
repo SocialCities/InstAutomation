@@ -19,7 +19,7 @@ import urlparse
 MIOIP = settings.IP_LOCALE
 CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
 
-@login_required(login_url='/')
+@login_required(login_url='/login')
 def aggiungi_competitor(request):
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
 	rivale_form = RivaliForm(request.POST)
@@ -30,7 +30,7 @@ def aggiungi_competitor(request):
 		nuovo_rivale = UtentiRivali(username = username, id_utente = id_utente, utente = instance)
 		nuovo_rivale.save()
 						
-	return HttpResponseRedirect('/home')      	
+	return HttpResponseRedirect('/')      	
 
 
 def update_whitelist(api, instance):

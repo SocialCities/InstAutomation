@@ -16,7 +16,6 @@ from instagram_follow.tasks import avvia_task_pulizia_follower
 from .models import trackStats, TaskStatus
 from .tasks import start_task
 
-
 from celery.result import AsyncResult
 from celery.task.control import revoke
 
@@ -40,7 +39,7 @@ def access(request):
 	esistenza_track = trackStats.objects.filter(utente = instance).exists()
     
 	if esistenza_track:
-		return HttpResponseRedirect('/home')
+		return HttpResponseRedirect('/')
 	else:
 				
 		api = InstagramAPI(
@@ -54,7 +53,7 @@ def access(request):
 		nuove_stats = trackStats(utente = instance, follower_iniziali = followed_by)
 		nuove_stats.save()
 		
-		return HttpResponseRedirect('/home')   
+		return HttpResponseRedirect('/')   
 		
 class beta_home(View):
     template_name = 'beta_home.html'
@@ -70,11 +69,11 @@ class beta_home(View):
 		beta_code = request.POST['beta_code'] 
 		if beta_code == self.codice_beta: 
 			request.session['in_beta'] = True   
-			return HttpResponseRedirect('/home')
+			return HttpResponseRedirect('/')
 		else:
 			return HttpResponseRedirect('/beta/')			
 		
-@login_required(login_url='/')
+@login_required(login_url='/login')
 def home_page(request):	
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
 	access_token = instance.tokens['access_token']	
@@ -106,7 +105,7 @@ def home_page(request):
 		
 	return HttpResponse(template.render(context))	
 	
-@login_required(login_url='/')
+@login_required(login_url='/login')
 def cerca_competitor(request):	
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
 	access_token = instance.tokens['access_token']	
@@ -146,7 +145,7 @@ def cerca_competitor(request):
 		
 	return HttpResponse(template.render(context))	
 
-@login_required(login_url='/')
+@login_required(login_url='/login')
 def ferma_task(request):
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
 	task_attivi_esistenza = TaskStatus.objects.filter(completato = False, utente = instance).exists()
@@ -159,9 +158,9 @@ def ferma_task(request):
 			task_attivo.save()
 			revoke(task_id, terminate=True, signal="KILL")
 		
-	return HttpResponseRedirect('/home')
+	return HttpResponseRedirect('/')
 
-@login_required(login_url='/')
+@login_required(login_url='/login')
 def avvia_task(request):	
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
 	access_token = instance.tokens['access_token']		
@@ -173,9 +172,9 @@ def avvia_task(request):
 	nuovo_task1 = TaskStatus(task_id = id_task, completato = False, utente = instance)
 	nuovo_task1.save()
 		
-	return HttpResponseRedirect('/home')
+	return HttpResponseRedirect('/')
 
-@login_required(login_url='/')
+@login_required(login_url='/login')
 def clean(request):
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
 	access_token = instance.tokens['access_token']		
@@ -187,4 +186,4 @@ def clean(request):
 	nuovo_task1 = TaskStatus(task_id = id_task, completato = False, utente = instance)
 	nuovo_task1.save()
 		
-	return HttpResponseRedirect('/home')	
+	return HttpResponseRedirect('/')	

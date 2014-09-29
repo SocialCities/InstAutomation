@@ -9,7 +9,7 @@ from django.conf import settings
 MIOIP = settings.IP_LOCALE
 CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
 
-@login_required(login_url='/')
+@login_required(login_url='/login')
 def localize(request):
 	template = loader.get_template('localizzami.html')
 	
@@ -17,7 +17,7 @@ def localize(request):
 		
 	return HttpResponse(template.render(context))	
 	
-@login_required(login_url='/')
+@login_required(login_url='/login')
 def mappa(request):
 	
 	latitudine = request.GET.get('lat')

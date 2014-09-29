@@ -166,7 +166,7 @@ LOGGING = {
 
 
 #Dev - Locale
-IP_LOCALE = '93.39.215.139'
+IP_LOCALE = '79.49.55.89'
 
 #Production
 IP_LOCALE = '178.62.48.51'

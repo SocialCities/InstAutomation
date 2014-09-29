@@ -44,6 +44,8 @@ def insta_task(access_token, user_instance):
 		
 def chiamata_like(api, nome_tag, user_instance):
 	
+	check_limite(api)
+	
 	tag_search = api.tag_recent_media(count = 10, tag_name = nome_tag)
 	
 	check_limite(api)

@@ -121,7 +121,7 @@ def how_i_met_your_follower(api, access_token, instance, id_rivale, contatore):
 				if (esistenza_nuovo_user_ricorsione is False) and (esistenza_in_white_ricorsione is False) and (is_private is False):
 					
 					check_limite(api)
-					#y = api.follow_user(user_id = utente_ricorsione.id)
+					y = api.follow_user(user_id = utente_ricorsione.id)
 					
 					nuovo_user_blackilist2 = BlacklistUtenti(username = utente_ricorsione.username, id_utente = utente_ricorsione.id, utente = instance, unfollowato = False)
 					nuovo_user_blackilist2.save()

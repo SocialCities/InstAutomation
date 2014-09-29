@@ -15,7 +15,7 @@ import urlparse
 MIOIP = settings.IP_LOCALE
 CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
 	
-@login_required(login_url='/')	
+@login_required(login_url='/login')	
 def report_statistico(request):
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
     

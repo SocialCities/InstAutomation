@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseBadReq
 from django.contrib.auth.decorators import login_required
 
 
-@login_required(login_url='/index')
+@login_required(login_url='/login')
 def aggiungi_like_debug(request):
 	
 	lista_tag = ['motivation', 'motivationshare', 'quote', 'dailymotivation', 'quoteoftheday', 'quotestoliveby', 'quotesgram', 'quotestags', 'quotesoftheday', 'quotesaboutlife', 'motivational', 'motivationmonday', 'motivationalmonday', 'motivationalquote', 'motivationforfitness', 'bestquotes', 'funnyquotes', 'funnyquote', 'inspirationalquotes', 'friendshipquotes', 'quotesandsaying', 'lovequotes', 'lifequotes', 'quotations']

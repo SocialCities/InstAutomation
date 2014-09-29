@@ -15,7 +15,7 @@ from .tasks import insta_task
 MIOIP = settings.IP_LOCALE
 CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
 
-@login_required(login_url='/')
+@login_required(login_url='/login')
 def aggiungi_tag(request):
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
 	tag_form = TagForm(request.POST)
@@ -24,7 +24,7 @@ def aggiungi_tag(request):
 		nuovo_tag = ListaTag(keyword = testo_tag, utente = instance)
 		nuovo_tag.save()
 			
-		return HttpResponseRedirect('/home')
+		return HttpResponseRedirect('/')
  
 
 

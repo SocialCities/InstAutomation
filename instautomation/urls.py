@@ -45,14 +45,21 @@ admin.site.register(TaskStatus, TaskStatusAdmin)
 admin.site.register(trackStats, InitialStatsAdmin)
 
 urlpatterns = patterns('',
+    url(r'^admin/', include(admin.site.urls)),
+
     url(r'', include('social_auth.urls')),
     
-    url(r'^admin/', include(admin.site.urls)),
     
-    url(r'^$', 'accesso.views.index'),     
-    url(r'^logout$', 'accesso.views.uscita'),
+    #url(r'^$', 'accesso.views.index'),     
+    #url(r'^access$', 'accesso.views.access'),
+    #url(r'^home$', 'accesso.views.home_page'),
+    url(r'^login$', 'accesso.views.index'),     
     url(r'^access$', 'accesso.views.access'),
-    url(r'^home$', 'accesso.views.home_page'),    
+    url(r'^$', 'accesso.views.home_page'),
+    
+    
+    url(r'^logout$', 'accesso.views.uscita'),
+        
     url(r'^cerca_competitor$', 'accesso.views.cerca_competitor'),  
     url(r'^stop$', 'accesso.views.ferma_task'),   
     url(r'^start$', 'accesso.views.avvia_task'), 
