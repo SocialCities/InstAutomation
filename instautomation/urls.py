@@ -61,8 +61,10 @@ urlpatterns = patterns('',
     url(r'^beta/$', beta_home.as_view()),      
           
     url(r'^aggiungi_competitor$', 'instagram_follow.views.aggiungi_competitor'),   
+    url(r'^rimuovi_competitor$', 'instagram_follow.views.rimuovi_competitor'), 
       
     url(r'^aggiungi_tag$', 'instagram_like.views.aggiungi_tag'), 
+    url(r'^rimuovi_tag$', 'instagram_like.views.rimuovi_tag'), 
     
     url(r'^num_like$', 'statistiche.views.get_like_messi'), 
     url(r'^num_follower$', 'statistiche.views.get_follower_messi'), 

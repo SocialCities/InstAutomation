@@ -26,6 +26,18 @@ def aggiungi_tag(request):
 			
 		return HttpResponseRedirect('/')
  
+@login_required(login_url='/login') 
+def rimuovi_tag(request):
+	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
+	
+	nome_tag = request.POST['keyword']
+	
+	tag_da_eliminare = ListaTag.objects.get(keyword = nome_tag, utente = instance)
+	tag_da_eliminare.delete()
+	
+	return HttpResponseRedirect('/')
+	
 
+ 
 
 

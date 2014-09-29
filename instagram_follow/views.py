@@ -30,8 +30,18 @@ def aggiungi_competitor(request):
 		nuovo_rivale = UtentiRivali(username = username, id_utente = id_utente, utente = instance)
 		nuovo_rivale.save()
 						
-	return HttpResponseRedirect('/')      	
-
+	return HttpResponseRedirect('/')     
+	
+@login_required(login_url='/login')
+def rimuovi_competitor(request):	 	
+	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
+	
+	nome_rivale = request.POST['nome_rivale']
+	
+	utente_da_eliminare = UtentiRivali.objects.get(username = nome_rivale, utente = instance)
+	utente_da_eliminare.delete()
+	
+	return HttpResponseRedirect('/')
 
 def update_whitelist(api, instance):
 	

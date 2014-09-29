@@ -33,7 +33,11 @@ Follow messi dal sistema: {{ numero_follow }}
 	<li class="nav-header">Lista dei tag inseriti:</li>
 	{% for tag in lista_tag %}
 	<li>
+		<form action ="/rimuovi_tag" method="POST">{% csrf_token %}
 		{{tag.keyword}}
+		<input type="hidden" value="{{tag.keyword}}" name = "keyword">
+		<input type="submit" value="Elimina" class="btn btn-default" />
+		</form>
 	</li>
 	{% endfor %}	
 </ul>	
@@ -49,7 +53,13 @@ Follow messi dal sistema: {{ numero_follow }}
 <ul class="nav nav-list">
 	<li class="nav-header">Lista dei rivali inseriti:</li>
 	{% for rivale in rivali %}
-		<li>{{ rivale.username }}</li>
+		<li>
+			<form action ="/rimuovi_competitor" method="POST">{% csrf_token %}
+			{{ rivale.username }}
+			<input type="hidden" value="{{rivale.username}}" name = "nome_rivale">
+			<input type="submit" value="Elimina" class="btn btn-default" />
+			</form>
+		</li>
 	{% endfor %}	
 </ul>
 
