@@ -9,7 +9,7 @@ from django.conf import settings
 
 from instagram_like.models import ListaTag, BlacklistFoto
 from instagram_like.forms import TagForm
-from instagram_follow.models import UtentiRivali
+from instagram_follow.models import UtentiRivali, BlacklistUtenti
 from instagram_follow.forms import CercaCompetitorForm
 from instagram_follow.tasks import avvia_task_pulizia_follower
 
@@ -97,6 +97,9 @@ def home_page(request):
 	tag_form = TagForm()
 	
 	status_obj_attivi = TaskStatus.objects.filter(utente = instance, completato = False).exists()
+	
+	numero_like = BlacklistFoto.objects.filter(utente = instance).count()
+	numero_follow = BlacklistUtenti.objects.filter(utente = instance).count()
 
 	api = InstagramAPI(
 			access_token = access_token,
@@ -110,6 +113,8 @@ def home_page(request):
 		'lista_tag' : lista_tag,
 		'tag_form' : tag_form,
 		'status_obj_attivi' : status_obj_attivi,
+		'numero_like' : numero_like,
+		'numero_follow' : numero_follow,
 	})
 		
 	return HttpResponse(template.render(context))	
@@ -135,6 +140,9 @@ def cerca_competitor(request):
 	
 	status_obj_attivi = TaskStatus.objects.filter(utente = instance, completato = False).exists()
 	
+	numero_like = BlacklistFoto.objects.filter(utente = instance).count()
+	numero_follow = BlacklistUtenti.objects.filter(utente = instance).count()
+	
 	api = InstagramAPI(
 			access_token = access_token,
 			client_ips = MIOIP,
@@ -150,6 +158,8 @@ def cerca_competitor(request):
 		'tag_form' : tag_form,
 		'tutti_nomi' : tutti_nomi,
 		'status_obj_attivi' : status_obj_attivi,
+		'numero_like' : numero_like,
+		'numero_follow' : numero_follow,
 	})
 		
 	return HttpResponse(template.render(context))	

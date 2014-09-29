@@ -48,16 +48,9 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
     url(r'', include('social_auth.urls')),
-    
-    
-    #url(r'^$', 'accesso.views.index'),     
-    #url(r'^access$', 'accesso.views.access'),
-    #url(r'^home$', 'accesso.views.home_page'),
     url(r'^login$', 'accesso.views.index'),     
     url(r'^access$', 'accesso.views.access'),
-    url(r'^$', 'accesso.views.home_page'),
-    
-    
+    url(r'^$', 'accesso.views.home_page'),  
     url(r'^logout$', 'accesso.views.uscita'),
         
     url(r'^cerca_competitor$', 'accesso.views.cerca_competitor'),  
@@ -70,6 +63,9 @@ urlpatterns = patterns('',
     url(r'^aggiungi_competitor$', 'instagram_follow.views.aggiungi_competitor'),   
       
     url(r'^aggiungi_tag$', 'instagram_like.views.aggiungi_tag'), 
+    
+    url(r'^num_like$', 'statistiche.views.get_like_messi'), 
+    url(r'^num_follower$', 'statistiche.views.get_follower_messi'), 
 
     #Cose a caso esterne
     url(r'^localize$', 'geoinstagram.views.localize'),

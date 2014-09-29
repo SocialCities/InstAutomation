@@ -9,6 +9,8 @@ from instagram.client import InstagramAPI
 
 from instautomation.utility import get_cursore, check_limite, get_max_id
 from .tasks import report_task
+from instagram_like.models import BlacklistFoto
+from instagram_follow.models import BlacklistUtenti
 
 import urlparse
 
@@ -22,3 +24,18 @@ def report_statistico(request):
 	report_task.delay(instance)
 	
 	return HttpResponse(1221321213)
+	
+
+def get_like_messi(request):
+	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
+	
+	numero_like = BlacklistFoto.objects.filter(utente = instance).count()
+	
+	return HttpResponse(numero_like)
+	
+def get_follower_messi(request):
+	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
+	
+	numero_follow = BlacklistUtenti.objects.filter(utente = instance).count()
+	
+	return HttpResponse(numero_follow)	

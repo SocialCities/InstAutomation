@@ -4,6 +4,11 @@
 
 <h2>Sezione operativa</h2>
 
+Like messi dal sistema: {{ numero_like }}
+<br/>
+Follow messi dal sistema: {{ numero_follow }}
+<br/>
+
 {% if not status_obj_attivi %}
 	<form action="/start" method="post">{% csrf_token %}
 		<button type="submit" class="btn btn-default">Avvia il sistema</button>
