@@ -151,12 +151,25 @@ def cerca_competitor(request):
 	
 	tutti_nomi = api.user_search(q = nome_da_cercare)	
 	
+	new_tutti_nomi = []
+	
+	for nome in tutti_nomi:
+		relationship = api.user_relationship(user_id = nome.id)
+		is_private = relationship.target_user_is_private
+		if is_private is False:
+			followed_by = api.user(nome.id).counts['followed_by']
+			nome.followed_by = followed_by
+			new_tutti_nomi.append(nome)
+	
+	new_tutti_nomi = sorted(new_tutti_nomi, key = lambda user_obj: user_obj.followed_by, reverse=True)	
+	
 	context = RequestContext(request, {
 		'rivali' : rivali,
 		'competitor_form' : cerca_competitor_form,
 		'lista_tag' : lista_tag,
 		'tag_form' : tag_form,
-		'tutti_nomi' : tutti_nomi,
+		#'tutti_nomi' : tutti_nomi,
+		'tutti_nomi' : new_tutti_nomi,
 		'status_obj_attivi' : status_obj_attivi,
 		'numero_like' : numero_like,
 		'numero_follow' : numero_follow,
