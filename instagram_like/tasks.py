@@ -73,7 +73,13 @@ def chiamata_like(api, nome_tag, user_instance):
 					comm = BlacklistFoto(id_foto = id_elemento, link_foto = link_foto, utente = user_instance)
 					comm.save()
 						
-					time.sleep(40)						
+					time.sleep(40)
+				except InstagramAPIError as errore:
+					if errore.error_type == "APINotAllowedError":
+						pass
+					else:
+						logger.error("chiamata_like", exc_info=True)
+						pass						 						
 				except:
 					logger.error("chiamata_like", exc_info=True)
 					pass
