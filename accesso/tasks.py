@@ -28,12 +28,12 @@ def start_task(token, instance):
 		access_token = token,
 		client_ips = MIOIP,
 		client_secret = CLIENT_SECRET
-	)
+	)	
 	
 	update_whitelist(api, instance)
 	
-	res1 = insta_task.delay(token, instance)	
-	res2 = start_follow.delay(instance)
+	res1 = insta_task.delay(token, instance, api)	
+	res2 = start_follow.delay(instance, api)
 	
 	id_task1 = res1.task_id
 	id_task2 = res2.task_id

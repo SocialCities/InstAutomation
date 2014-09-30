@@ -18,23 +18,13 @@ MIOIP = settings.IP_LOCALE
 CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
     
 @shared_task   
-def insta_task(access_token, user_instance):	
+def insta_task(access_token, user_instance, api):	
 	
-	time.sleep(35)
-	
-	api = InstagramAPI(
-        access_token = 'access_token',
-        client_ips = MIOIP,
-        client_secret = CLIENT_SECRET 
-    )
-    
-	check_limite(api)
-	
-	tutti_tag = ListaTag.objects.filter(utente = user_instance)
+	tutti_tag = ListaTag.objects.filter(utente = user_instance).values()
 	
 	while True: 
 		for singolo_tag in tutti_tag:
-			nome_tag = singolo_tag.keyword
+			nome_tag = singolo_tag['keyword']
 		
 			try:
 				chiamata_like(api, nome_tag, user_instance)
@@ -43,8 +33,9 @@ def insta_task(access_token, user_instance):
 				errore_mortale(errore, user_instance)	
 				
 			except:
-				pass
 				logger.error("insta_like", exc_info=True)
+				pass
+				
 	#fine while	
 				
 	return 'Fine Like'
@@ -57,25 +48,26 @@ def chiamata_like(api, nome_tag, user_instance):
 	
 	check_limite(api)
 	
-
 	for foto in tag_search[0]:		
 		id_elemento = foto.id
 		conto_like = foto.like_count		
-		link_foto = foto.link
+		link_foto = foto.link		
 		
-		check_foto_liked = BlacklistFoto.objects.filter(id_foto = id_elemento, utente = user_instance).exists()
+		#Possibile collo di bottiglia
+		check_foto_liked = BlacklistFoto.objects.filter(id_foto = id_elemento, utente = user_instance).exists()	
 			
 		if check_foto_liked is False:				
 			if conto_like < 100:
 				try:	
-					api.like_media(id_elemento)
 					
+					#api.like_media(id_elemento)					
 					check_limite(api)
 					
 					comm = BlacklistFoto(id_foto = id_elemento, link_foto = link_foto, utente = user_instance)
 					comm.save()
 						
 					time.sleep(40)
+					
 				except InstagramAPIError as errore:
 					if errore.error_type == "APINotAllowedError":
 						pass

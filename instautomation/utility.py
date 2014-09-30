@@ -59,7 +59,7 @@ def errore_mortale(errore, instance):
 		pass
 				
 def avviso_email(email_utente):
-    subject, from_email, to = '[Instautomation] Errore nel sistema', email_utente, 'segnalazioni@instautomation.com'
+    subject, from_email, to = '[Instautomation] Errore nel sistema', 'admindjango@instautomation.com', email_utente
 	
     text_content = "Ciao! Scoppia tutto!"
     html_content = "Ciao! <br/>Scoppia tutto!"

@@ -43,6 +43,7 @@ def rimuovi_competitor(request):
 	
 	return HttpResponseRedirect('/')
 
+
 def update_whitelist(api, instance):
 	
 	followed_by_obj = api.user_follows()

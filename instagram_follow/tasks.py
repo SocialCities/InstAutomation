@@ -52,23 +52,18 @@ def avvia_task_pulizia_follower(token, instance, task_diretto):
 		task.save()	
 			
 	return "Fine pulizia"				
+			
 	
 @shared_task  
-def start_follow(instance):
+def start_follow(instance, api):
 	access_token = instance.tokens['access_token']
-	
-	api = InstagramAPI(
-        access_token=access_token,
-        client_ips = MIOIP,
-        client_secret = CLIENT_SECRET 
-	)
     
-	all_rivali = UtentiRivali.objects.filter(utente = instance)
+	all_rivali = UtentiRivali.objects.filter(utente = instance).values()
     
 	contatore = 0
     
 	for rivale in all_rivali:
-		id_rivale = rivale.id_utente
+		id_rivale = rivale['id_utente']
 		
 		contatore = how_i_met_your_follower(api, access_token, instance, id_rivale, contatore)
   
@@ -86,17 +81,19 @@ def how_i_met_your_follower(api, access_token, instance, id_rivale, contatore):
     utenti = followed_by_obj[0]
     for utente in utenti:
 			try:
-				esistenza_nuovo_user = BlacklistUtenti.objects.filter(username = utente.username, id_utente = utente.id, utente = instance).exists()
-				esistenza_in_white = WhitelistUtenti.objects.filter(username = utente.username, id_utente = utente.id, utente = instance).exists()
+				
+				#Collo
+				esistenza_nuovo_user = BlacklistUtenti.objects.filter(id_utente = utente.id, utente = instance).exists()				
+				esistenza_in_white = WhitelistUtenti.objects.filter(id_utente = utente.id, utente = instance).exists()
 			
-				check_limite(api)
 				relationship = api.user_relationship(user_id = utente.id)
-				is_private = relationship.target_user_is_private		
+				is_private = relationship.target_user_is_private
+				check_limite(api)		
 			
 				if (esistenza_nuovo_user is False) and (esistenza_in_white is False) and (is_private is False):
-				
-					check_limite(api)	
-					x = api.follow_user(user_id = utente.id)
+					
+					#x = api.follow_user(user_id = utente.id)
+					check_limite(api)
 				
 					nuovo_user_blackilist = BlacklistUtenti(username = utente.username, id_utente = utente.id, utente = instance, unfollowato = False)
 					nuovo_user_blackilist.save()
@@ -110,8 +107,8 @@ def how_i_met_your_follower(api, access_token, instance, id_rivale, contatore):
 				errore_mortale(errore, instance)	
 					
 			except:
-					logger.error("how_i_met_your_follower", exc_info=True)
-					pass
+				logger.error("how_i_met_your_follower", exc_info=True)
+				pass
 
 		
     cursore = get_cursore(followed_by_obj)
@@ -124,17 +121,19 @@ def how_i_met_your_follower(api, access_token, instance, id_rivale, contatore):
 		utenti_ricorsione = follow_ricorsione[0]
 		for utente_ricorsione in utenti_ricorsione:
 			try:
-				esistenza_nuovo_user_ricorsione = BlacklistUtenti.objects.filter(username = utente_ricorsione.username, id_utente = utente_ricorsione.id, utente = instance).exists()
-				esistenza_in_white_ricorsione = WhitelistUtenti.objects.filter(username = utente_ricorsione.username, id_utente = utente_ricorsione.id, utente = instance).exists()
 				
-				check_limite(api)
+				#Collo di bottiglia
+				esistenza_nuovo_user_ricorsione = BlacklistUtenti.objects.filter(id_utente = utente_ricorsione.id, utente = instance).exists()
+				esistenza_in_white_ricorsione = WhitelistUtenti.objects.filter(id_utente = utente_ricorsione.id, utente = instance).exists()
+				
 				relationship = api.user_relationship(user_id = utente_ricorsione.id)
-				is_private = relationship.target_user_is_private	
+				is_private = relationship.target_user_is_private
+				check_limite(api)	
 				
 				if (esistenza_nuovo_user_ricorsione is False) and (esistenza_in_white_ricorsione is False) and (is_private is False):
 					
+					#y = api.follow_user(user_id = utente_ricorsione.id)
 					check_limite(api)
-					y = api.follow_user(user_id = utente_ricorsione.id)
 					
 					nuovo_user_blackilist2 = BlacklistUtenti(username = utente_ricorsione.username, id_utente = utente_ricorsione.id, utente = instance, unfollowato = False)
 					nuovo_user_blackilist2.save()

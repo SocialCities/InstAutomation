@@ -81,6 +81,7 @@ class beta_home(View):
 			return HttpResponseRedirect('/')
 		else:
 			return HttpResponseRedirect('/beta/')			
+			
 				
 @login_required(login_url='/login')
 @token_error
@@ -88,6 +89,8 @@ def home_page(request):
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
 	access_token = instance.tokens['access_token']	
 	template = loader.get_template('home_page.html')
+	
+	print access_token
 	
 	cerca_competitor_form = CercaCompetitorForm()
 	cerca_competitor_form.fields['username'].label = 'Cerca un competitor'
