@@ -170,3 +170,11 @@ IP_LOCALE = '79.49.55.89'
 
 #Production
 IP_LOCALE = '178.62.48.51'
+
+### Configurazione Email ###
+SERVER_EMAIL = 'admindjango@instautomation.com'
+EMAIL_HOST = 'mail.instautomation.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'admindjango@instautomation.com'
+EMAIL_HOST_PASSWORD = '5autobus'
+DEFAULT_FROM_EMAIL = 'no-reply@instautomation.com'

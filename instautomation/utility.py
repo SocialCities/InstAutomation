@@ -5,6 +5,8 @@ from instagram.client import InstagramAPI
 
 from celery.task.control import revoke
 
+from django.core.mail import send_mail, EmailMultiAlternatives 
+
 import urlparse
 import time
 
@@ -57,4 +59,12 @@ def errore_mortale(errore, instance):
 		pass
 				
 def avviso_email(email_utente):
-	print email_utente				 	
+    subject, from_email, to = '[Instautomation] Errore nel sistema', email_utente, 'segnalazioni@instautomation.com'
+	
+    text_content = "Ciao! Scoppia tutto!"
+    html_content = "Ciao! <br/>Scoppia tutto!"
+	
+    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()
+    			 	

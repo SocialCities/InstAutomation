@@ -53,6 +53,7 @@ urlpatterns = patterns('',
     url(r'^$', 'accesso.views.home_page'),  
     url(r'^logout$', 'accesso.views.uscita'),
         
+    url(r'^add_email$', 'accesso.views.add_email'),   
     url(r'^cerca_competitor$', 'accesso.views.cerca_competitor'),  
     url(r'^stop$', 'accesso.views.ferma_task'),   
     url(r'^start$', 'accesso.views.avvia_task'), 

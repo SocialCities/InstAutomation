@@ -20,8 +20,10 @@ CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
 @shared_task   
 def insta_task(access_token, user_instance):	
 	
+	time.sleep(35)
+	
 	api = InstagramAPI(
-        access_token = access_token,
+        access_token = 'access_token',
         client_ips = MIOIP,
         client_secret = CLIENT_SECRET 
     )

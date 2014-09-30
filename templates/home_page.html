@@ -3,6 +3,15 @@
 {% block content %}
 
 <h2>Sezione operativa</h2>
+La tua email attuale: {{ email_salavata }}
+
+<br/>
+
+Inserisci una nuova email:
+<form action="/add_email" method="post">{% csrf_token %}
+	<input type = "email" name = "email" />
+	<button type = "submit" class="btn btn-default">Salva email</button>
+</form>
 
 Like messi dal sistema: {{ numero_like }}
 <br/>

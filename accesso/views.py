@@ -6,6 +6,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth import logout
 from django.views.generic import View
 from django.conf import settings
+from django import forms
 
 from instagram_like.models import ListaTag, BlacklistFoto
 from instagram_like.forms import TagForm
@@ -100,6 +101,9 @@ def home_page(request):
 	
 	numero_like = BlacklistFoto.objects.filter(utente = instance).count()
 	numero_follow = BlacklistUtenti.objects.filter(utente = instance).count()
+	
+	user_obj = Utente.objects.get(utente = instance)
+	email_salavata = user_obj.email
 
 	api = InstagramAPI(
 			access_token = access_token,
@@ -115,6 +119,7 @@ def home_page(request):
 		'status_obj_attivi' : status_obj_attivi,
 		'numero_like' : numero_like,
 		'numero_follow' : numero_follow,
+		'email_salavata' : email_salavata,
 	})
 		
 	return HttpResponse(template.render(context))	
@@ -142,6 +147,9 @@ def cerca_competitor(request):
 	
 	numero_like = BlacklistFoto.objects.filter(utente = instance).count()
 	numero_follow = BlacklistUtenti.objects.filter(utente = instance).count()
+	
+	user_obj = Utente.objects.get(utente = instance)
+	email_salavata = user_obj.email
 	
 	api = InstagramAPI(
 			access_token = access_token,
@@ -173,6 +181,7 @@ def cerca_competitor(request):
 		'status_obj_attivi' : status_obj_attivi,
 		'numero_like' : numero_like,
 		'numero_follow' : numero_follow,
+		'email_salavata' : email_salavata,
 	})
 		
 	return HttpResponse(template.render(context))	
@@ -213,5 +222,18 @@ def clean(request):
 	return HttpResponseRedirect('/')	
 	
 
-
+@login_required(login_url='/login')
+def add_email(request):
+	email_da_controllare = request.POST['email']
+	f = forms.EmailField()
+	try:
+		email = f.clean(email_da_controllare)
+		instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
 		
+		user_obj = Utente.objects.get(utente = instance)
+		user_obj.email = email
+		user_obj.save()
+	
+		return HttpResponseRedirect('/')
+	except:
+		return HttpResponse("Inserisci una email")		
