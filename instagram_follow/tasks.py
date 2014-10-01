@@ -80,11 +80,9 @@ def how_i_met_your_follower(api, access_token, instance, id_rivale, contatore):
     
     utenti = followed_by_obj[0]
     for utente in utenti:
-			try:
-				
-				#Collo
+			try:				
 				esistenza_nuovo_user = BlacklistUtenti.objects.filter(id_utente = utente.id, utente = instance).exists()				
-				esistenza_in_white = WhitelistUtenti.objects.filter(id_utente = utente.id, utente = instance).exists()
+				esistenza_in_white = WhitelistUtenti.objects.filter(id_utente = utente.id, utente = instance).exists()			
 			
 				relationship = api.user_relationship(user_id = utente.id)
 				is_private = relationship.target_user_is_private

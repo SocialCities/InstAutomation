@@ -12,6 +12,11 @@ class BlacklistUtenti(models.Model):
 		return self.username
 	
 	class Meta:
+		
+		index_together = [
+			["id_utente", "utente"],
+		]
+		
 		verbose_name = "Utente in blacklist"
 		verbose_name_plural = "Utenti in blacklist"	
 		
@@ -24,6 +29,11 @@ class WhitelistUtenti(models.Model):
 		return self.username
 	
 	class Meta:
+		
+		index_together = [
+			["id_utente", "utente"],
+		]
+		
 		verbose_name = "Utente in whitelist"
 		verbose_name_plural = "Utenti in whitelist"			
 		

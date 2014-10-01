@@ -50,8 +50,8 @@ def update_whitelist(api, instance):
 	utenti = followed_by_obj[0]
 	
 	for utente in utenti:
-		esistenza_nuovo_user = WhitelistUtenti.objects.filter(username = utente.username, id_utente = utente.id, utente = instance).exists()
-		esistenza_in_black = BlacklistUtenti.objects.filter(username = utente.username, id_utente = utente.id, utente = instance).exists()
+		esistenza_nuovo_user = WhitelistUtenti.objects.filter(id_utente = utente.id, utente = instance).exists()
+		esistenza_in_black = BlacklistUtenti.objects.filter(id_utente = utente.id, utente = instance).exists()
 		
 		if (esistenza_nuovo_user is False) and (esistenza_in_black is False):
 			nuovo_user_whitelist = WhitelistUtenti(username = utente.username, id_utente = utente.id, utente = instance)
@@ -64,8 +64,8 @@ def update_whitelist(api, instance):
 		
 		utenti_ricorsione = follow_ricorsione[0]
 		for utente_ricorsione in utenti_ricorsione:
-			esistenza_nuovo_user_ricorsione = WhitelistUtenti.objects.filter(username = utente_ricorsione.username, id_utente = utente_ricorsione.id, utente = instance).exists()
-			esisteza_nuovo_black = WhitelistUtenti.objects.filter(username = utente_ricorsione.username, id_utente = utente_ricorsione.id, utente = instance).exists()
+			esistenza_nuovo_user_ricorsione = WhitelistUtenti.objects.filter(id_utente = utente_ricorsione.id, utente = instance).exists()
+			esisteza_nuovo_black = WhitelistUtenti.objects.filter(id_utente = utente_ricorsione.id, utente = instance).exists()
 			if (esistenza_nuovo_user_ricorsione is False) and (esisteza_nuovo_black is False):
 				
 				nuovo_user_whitelist2 = WhitelistUtenti(username = utente_ricorsione.username, id_utente = utente_ricorsione.id, utente = instance)
