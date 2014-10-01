@@ -90,7 +90,7 @@ def how_i_met_your_follower(api, access_token, instance, id_rivale, contatore):
 			
 				if (esistenza_nuovo_user is False) and (esistenza_in_white is False) and (is_private is False):
 					
-					#x = api.follow_user(user_id = utente.id)
+					x = api.follow_user(user_id = utente.id)
 					check_limite(api)
 				
 					nuovo_user_blackilist = BlacklistUtenti(username = utente.username, id_utente = utente.id, utente = instance, unfollowato = False)
@@ -130,7 +130,7 @@ def how_i_met_your_follower(api, access_token, instance, id_rivale, contatore):
 				
 				if (esistenza_nuovo_user_ricorsione is False) and (esistenza_in_white_ricorsione is False) and (is_private is False):
 					
-					#y = api.follow_user(user_id = utente_ricorsione.id)
+					y = api.follow_user(user_id = utente_ricorsione.id)
 					check_limite(api)
 					
 					nuovo_user_blackilist2 = BlacklistUtenti(username = utente_ricorsione.username, id_utente = utente_ricorsione.id, utente = instance, unfollowato = False)

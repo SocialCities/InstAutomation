@@ -69,42 +69,4 @@ def chiamata_like(api, nome_tag, user_instance):
 				pass
 				
 				
-						
-#def chiamata_like_tmp(api, nome_tag, user_instance):
-#	
-#	check_limite(api)
-#	
-#	tag_search = api.tag_recent_media(count = 10, tag_name = nome_tag)
-#	
-#	check_limite(api)
-#	
-#	for foto in tag_search[0]:		
-#		id_elemento = foto.id
-#		conto_like = foto.like_count		
-#		link_foto = foto.link		
-		
-		#Possibile collo di bottiglia
-#		check_foto_liked = BlacklistFoto.objects.filter(id_foto = id_elemento, utente = user_instance).exists()	
-			
-#		if check_foto_liked is False:				
-#			if conto_like < 100:
-#				try:	
-					
-#					#api.like_media(id_elemento)					
-#					check_limite(api)
-#					
-#					comm = BlacklistFoto(id_foto = id_elemento, link_foto = link_foto, utente = user_instance)
-#					comm.save()
-						
-#					time.sleep(40)
-					
-#				except InstagramAPIError as errore:
-#					if errore.error_type == "APINotAllowedError":
-#						pass
-#					else:
-#						logger.error("chiamata_like", exc_info=True)
-#						pass						 						
-#				except:
-#					logger.error("chiamata_like", exc_info=True)
-#					pass
-					
+	
