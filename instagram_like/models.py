@@ -14,15 +14,3 @@ class ListaTag(models.Model):
 		verbose_name = "Tag"
 		verbose_name_plural = "Tag"		
 				
-# Foto da non likeare perche' gia' likeate
-class BlacklistFoto(models.Model):
-	id_foto = models.CharField(max_length=200)	
-	link_foto = models.CharField(max_length=200)
-	utente = models.ForeignKey(UserSocialAuth)
-	
-	def __unicode__(self):
-		return self.link_foto
-	
-	class Meta:
-		verbose_name = "Foto in blacklist"
-		verbose_name_plural = "Foto in blacklist"	

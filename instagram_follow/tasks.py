@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 from celery import shared_task
 from .models import BlacklistUtenti, WhitelistUtenti, UtentiRivali
-from accesso.models import TaskStatus
+from accesso.models import TaskStatus, Utente
 from social_auth.models import UserSocialAuth
 from instagram.client import InstagramAPI
 from instagram import InstagramAPIError
@@ -55,19 +55,19 @@ def avvia_task_pulizia_follower(token, instance, task_diretto):
 			
 	
 @shared_task  
-def start_follow(instance, api):
+def start_follow(instance, api, user_obj):
 	access_token = instance.tokens['access_token']
     
-	all_rivali = UtentiRivali.objects.filter(utente = instance).values()
+	all_rivali = UtentiRivali.objects.filter(utente = instance).order_by('numero_follower').values()
     
 	contatore = 0
     
 	for rivale in all_rivali:
 		id_rivale = rivale['id_utente']
-		
-		contatore = how_i_met_your_follower(api, access_token, instance, id_rivale, contatore)
+		print rivale
+		#contatore = how_i_met_your_follower(api, access_token, instance, id_rivale, contatore, user_obj)
   
-def how_i_met_your_follower(api, access_token, instance, id_rivale, contatore):
+def how_i_met_your_follower(api, access_token, instance, id_rivale, contatore, user_obj):
 
     check_limite(api)
     try:
@@ -80,6 +80,9 @@ def how_i_met_your_follower(api, access_token, instance, id_rivale, contatore):
     
     utenti = followed_by_obj[0]
     for utente in utenti:
+			follow_totali = user_obj.follow_totali
+			follow_sessione = user_obj.follow_sessione
+			
 			try:				
 				esistenza_nuovo_user = BlacklistUtenti.objects.filter(id_utente = utente.id, utente = instance).exists()				
 				esistenza_in_white = WhitelistUtenti.objects.filter(id_utente = utente.id, utente = instance).exists()			
@@ -95,6 +98,10 @@ def how_i_met_your_follower(api, access_token, instance, id_rivale, contatore):
 				
 					nuovo_user_blackilist = BlacklistUtenti(username = utente.username, id_utente = utente.id, utente = instance, unfollowato = False)
 					nuovo_user_blackilist.save()
+					
+					user_obj.follow_totali = follow_totali + 1
+					user_obj.follow_sessione = follow_sessione + 1
+					user_obj.save()
 					
 					contatore = contatore + 1
 					contatore = check_contatore(contatore, access_token, instance)

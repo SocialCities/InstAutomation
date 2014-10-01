@@ -5,7 +5,7 @@ from django.conf import settings
 from social_auth.models import UserSocialAuth
 from instagram.client import InstagramAPI
 
-from .models import ListaTag, BlacklistFoto
+from .models import ListaTag
 from .forms import TagForm
 
 from celery.task.control import revoke

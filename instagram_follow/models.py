@@ -7,6 +7,7 @@ class BlacklistUtenti(models.Model):
 	id_utente = models.CharField(max_length=200)	
 	utente = models.ForeignKey(UserSocialAuth)
 	unfollowato = models.NullBooleanField()
+	time_stamp = models.DateTimeField(null = True, blank = True, auto_now_add=True)	
 	
 	def __unicode__(self):
 		return self.username
@@ -41,7 +42,8 @@ class WhitelistUtenti(models.Model):
 class UtentiRivali(models.Model):
 	username = models.CharField(max_length=200)	
 	id_utente = models.CharField(max_length=200)	
-	utente = models.ForeignKey(UserSocialAuth)	
+	utente = models.ForeignKey(UserSocialAuth)		
+	numero_follower = models.IntegerField()
 	
 	def __unicode__(self):
 		return self.username

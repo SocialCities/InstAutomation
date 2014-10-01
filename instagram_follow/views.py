@@ -22,12 +22,22 @@ CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
 @login_required(login_url='/login')
 def aggiungi_competitor(request):
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
+	access_token = instance.tokens['access_token']	
+	
 	rivale_form = RivaliForm(request.POST)
 		
 	if rivale_form.is_valid():
 		username = rivale_form.cleaned_data['username']
 		id_utente = rivale_form.cleaned_data['id_utente']
-		nuovo_rivale = UtentiRivali(username = username, id_utente = id_utente, utente = instance)
+		
+		api = InstagramAPI(
+			access_token = access_token,
+			client_ips = MIOIP,
+			client_secret = CLIENT_SECRET 
+		)
+		
+		numero_follower = api.user(id_utente).counts['followed_by']
+		nuovo_rivale = UtentiRivali(username = username, id_utente = id_utente, utente = instance, numero_follower = numero_follower)
 		nuovo_rivale.save()
 						
 	return HttpResponseRedirect('/')     

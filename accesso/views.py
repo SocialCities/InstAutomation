@@ -8,7 +8,7 @@ from django.views.generic import View
 from django.conf import settings
 from django import forms
 
-from instagram_like.models import ListaTag, BlacklistFoto
+from instagram_like.models import ListaTag
 from instagram_like.forms import TagForm
 from instagram_follow.models import UtentiRivali, BlacklistUtenti
 from instagram_follow.forms import CercaCompetitorForm
@@ -90,8 +90,6 @@ def home_page(request):
 	access_token = instance.tokens['access_token']	
 	template = loader.get_template('home_page.html')
 	
-	print access_token
-	
 	cerca_competitor_form = CercaCompetitorForm()
 	cerca_competitor_form.fields['username'].label = 'Cerca un competitor'
 	
@@ -102,11 +100,17 @@ def home_page(request):
 	
 	status_obj_attivi = TaskStatus.objects.filter(utente = instance, completato = False).exists()
 	
-	numero_like = BlacklistFoto.objects.filter(utente = instance).count()
-	numero_follow = BlacklistUtenti.objects.filter(utente = instance).count()
-	
 	user_obj = Utente.objects.get(utente = instance)
 	email_salavata = user_obj.email
+	numero_like_totali = user_obj.like_totali
+	numero_follow = user_obj.follow_totali
+	
+	if status_obj_attivi is False:
+		numero_like_sessione = 0
+		numero_follow_sessione = 0
+	else:
+		numero_like_sessione = user_obj.like_sessione
+		numero_follow_sessione = user_obj.follow_sessione
 
 	api = InstagramAPI(
 			access_token = access_token,
@@ -120,8 +124,10 @@ def home_page(request):
 		'lista_tag' : lista_tag,
 		'tag_form' : tag_form,
 		'status_obj_attivi' : status_obj_attivi,
-		'numero_like' : numero_like,
 		'numero_follow' : numero_follow,
+		'numero_like_totali' : numero_like_totali,
+		'numero_like_sessione' : numero_like_sessione,
+		'numero_follow_sessione' : numero_follow_sessione,
 		'email_salavata' : email_salavata,
 	})
 		
@@ -148,42 +154,52 @@ def cerca_competitor(request):
 	
 	status_obj_attivi = TaskStatus.objects.filter(utente = instance, completato = False).exists()
 	
-	numero_like = BlacklistFoto.objects.filter(utente = instance).count()
-	numero_follow = BlacklistUtenti.objects.filter(utente = instance).count()
-	
 	user_obj = Utente.objects.get(utente = instance)
 	email_salavata = user_obj.email
+	numero_like_totali = user_obj.like_totali
+	numero_follow = user_obj.follow_totali
+
+	if status_obj_attivi is False:
+		numero_like_sessione = 0
+		numero_follow_sessione = 0
+	else:
+		numero_like_sessione = user_obj.like_sessione
+		numero_follow_sessione = user_obj.follow_sessione
 	
 	api = InstagramAPI(
 			access_token = access_token,
 			client_ips = MIOIP,
 			client_secret = CLIENT_SECRET 
-	)	
+	)		
 	
 	tutti_nomi = api.user_search(q = nome_da_cercare)	
 	
 	new_tutti_nomi = []
 	
-	for nome in tutti_nomi:
-		relationship = api.user_relationship(user_id = nome.id)
-		is_private = relationship.target_user_is_private
-		if is_private is False:
+	for nome in tutti_nomi[:10]:
+		try:
 			followed_by = api.user(nome.id).counts['followed_by']
 			nome.followed_by = followed_by
 			new_tutti_nomi.append(nome)
+		except:
+			pass
+		
+	new_tutti_nomi = sorted(new_tutti_nomi, key = lambda user_obj: user_obj.followed_by, reverse=True)
 	
-	new_tutti_nomi = sorted(new_tutti_nomi, key = lambda user_obj: user_obj.followed_by, reverse=True)	
+	altri_nomi = tutti_nomi[10:]
 	
 	context = RequestContext(request, {
 		'rivali' : rivali,
 		'competitor_form' : cerca_competitor_form,
 		'lista_tag' : lista_tag,
 		'tag_form' : tag_form,
-		#'tutti_nomi' : tutti_nomi,
 		'tutti_nomi' : new_tutti_nomi,
+		'altri_nomi' : altri_nomi,
 		'status_obj_attivi' : status_obj_attivi,
-		'numero_like' : numero_like,
 		'numero_follow' : numero_follow,
+		'numero_like_totali' : numero_like_totali,
+		'numero_like_sessione' : numero_like_sessione,
+		'numero_follow_sessione' : numero_follow_sessione,
 		'email_salavata' : email_salavata,
 	})
 		
@@ -201,7 +217,12 @@ def avvia_task(request):
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
 	access_token = instance.tokens['access_token']		
 	
-	result = start_task.delay(access_token, instance)
+	user_obj = Utente.objects.get(utente = instance)
+	user_obj.like_sessione = 0
+	user_obj.follow_sessione = 0
+	user_obj.save()
+	
+	result = start_task.delay(access_token, instance, user_obj)
 	
 	id_task = result.task_id
 	

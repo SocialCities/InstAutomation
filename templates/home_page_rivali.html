@@ -16,6 +16,13 @@
 	</li>
 	{% endfor %}		
 </ul>			
+<h3>Altri risultati</h3>
+
+{% for altro_nome in altri_nomi %}
+<a href="http://instagram.com/{{ altro_nome.username }}" target="_blank">{{ altro_nome.username }}</a> 
+		
+{% endfor %}
+
 </p>
 
 {% endblock %}
