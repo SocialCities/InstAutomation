@@ -64,8 +64,8 @@ def start_follow(instance, api, user_obj):
     
 	for rivale in all_rivali:
 		id_rivale = rivale['id_utente']
-		print rivale
-		#contatore = how_i_met_your_follower(api, access_token, instance, id_rivale, contatore, user_obj)
+		
+		contatore = how_i_met_your_follower(api, access_token, instance, id_rivale, contatore, user_obj)
   
 def how_i_met_your_follower(api, access_token, instance, id_rivale, contatore, user_obj):
 
