@@ -21,10 +21,16 @@ def aggiungi_tag(request):
 	tag_form = TagForm(request.POST)
 	if tag_form.is_valid():
 		testo_tag = tag_form.cleaned_data['keyword']
-		nuovo_tag = ListaTag(keyword = testo_tag, utente = instance)
-		nuovo_tag.save()
+		
+		esistenza_tag = ListaTag.objects.filter(keyword = testo_tag, utente = instance).exists()
+		
+		if esistenza_tag is False:
+			nuovo_tag = ListaTag(keyword = testo_tag, utente = instance)
+			nuovo_tag.save()
 			
-		return HttpResponseRedirect('/')
+			return HttpResponseRedirect('/')
+		else:
+			return HttpResponseRedirect('/')
  
 @login_required(login_url='/login') 
 def rimuovi_tag(request):
