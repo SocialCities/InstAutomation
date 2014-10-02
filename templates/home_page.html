@@ -18,6 +18,10 @@ Like messi dal sistema: {{ numero_like_totali }}
 Follow messi dal sistema: {{ numero_follow }}
 <br/>
 
+
+{% if abbonamento_valido %}
+
+
 {% if not status_obj_attivi %}
 	<form action="/start" method="post">{% csrf_token %}
 		<button type="submit" class="btn btn-default">Avvia il sistema</button>
@@ -39,7 +43,9 @@ Follow messi dal sistema: {{ numero_follow }}
 	</form>
 {% endif %}
 
-
+{% else %}
+	<h1>Devi pagare!!!</h1>
+{% endif %}	
 
 
 <h2>Tag</h2>

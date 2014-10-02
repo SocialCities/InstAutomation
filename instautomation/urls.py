@@ -3,6 +3,7 @@ from django.contrib import admin
 
 from instagram_like.models import ListaTag
 from instagram_follow.models import BlacklistUtenti, UtentiRivali, WhitelistUtenti
+from pagamenti.models import Abbonamenti
 from accesso.models import Utente, TaskStatus
 from social_auth.models import UserSocialAuth
 
@@ -32,12 +33,18 @@ class UtenteAdmin(admin.ModelAdmin):
 	fields = ['utente', 'follower_iniziali', 'email', 'token_block', 'like_totali', 'like_sessione', 'follow_totali', 'follow_sessione']
 	list_display = ('utente', 'follower_iniziali', 'email', 'time_stamp', 'token_block', 'like_totali', 'like_sessione', 'follow_totali', 'follow_sessione')	
 
+class AbbonamentiAdmin(admin.ModelAdmin):
+	fields = ['utente', 'data_sottoscrizione', 'data_scadenza', 'pagamento_ricorsivo']
+	list_display = ('utente', 'data_sottoscrizione', 'data_scadenza', 'pagamento_ricorsivo') 
+
+admin.site.register(UserSocialAuth)
 admin.site.register(ListaTag, TagAdmin)
 admin.site.register(BlacklistUtenti, BlacklistUtentiAdmin)
 admin.site.register(UtentiRivali, UtentiRivaliAdmin)
 admin.site.register(WhitelistUtenti, WhitelistUtentiAdmin)
 admin.site.register(TaskStatus, TaskStatusAdmin)
 admin.site.register(Utente, UtenteAdmin)
+admin.site.register(Abbonamenti, AbbonamentiAdmin)
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),

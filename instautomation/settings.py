@@ -25,6 +25,7 @@ INSTALLED_APPS = (
     'debug',
     'statistiche',
     'bootstrap3',
+    'pagamenti',
 )
 
 MIDDLEWARE_CLASSES = (

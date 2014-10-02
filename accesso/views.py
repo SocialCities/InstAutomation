@@ -8,11 +8,15 @@ from django.views.generic import View
 from django.conf import settings
 from django import forms
 
+from datetime import datetime, timedelta, date
+
 from instagram_like.models import ListaTag
 from instagram_like.forms import TagForm
 from instagram_follow.models import UtentiRivali, BlacklistUtenti
 from instagram_follow.forms import CercaCompetitorForm
 from instagram_follow.tasks import avvia_task_pulizia_follower
+from pagamenti.models import Abbonamenti
+from pagamenti.views import crea_abbonamento_n_giorni
 
 from celery.result import AsyncResult
 from celery.task.control import revoke
@@ -62,6 +66,8 @@ def access(request):
 		nuove_stats = Utente(utente = instance, follower_iniziali = followed_by)
 		nuove_stats.save()
 		
+		crea_abbonamento_n_giorni(instance, 3)
+		
 		return HttpResponseRedirect('/')   
 		
 class beta_home(View):
@@ -100,6 +106,19 @@ def home_page(request):
 	
 	status_obj_attivi = TaskStatus.objects.filter(utente = instance, completato = False).exists()
 	
+	abbonamento_obj = Abbonamenti.objects.get(utente = instance)
+	
+	if abbonamento_obj.pagamento_ricorsivo:
+		abbonamento_valido = True
+	else:
+		now = date.today()
+		data_scadenza = abbonamento_obj.data_scadenza
+		
+		if now > data_scadenza:
+			abbonamento_valido = False
+		else:
+			abbonamento_valido = True
+	
 	user_obj = Utente.objects.get(utente = instance)
 	email_salavata = user_obj.email
 	numero_like_totali = user_obj.like_totali
@@ -129,6 +148,7 @@ def home_page(request):
 		'numero_like_sessione' : numero_like_sessione,
 		'numero_follow_sessione' : numero_follow_sessione,
 		'email_salavata' : email_salavata,
+		'abbonamento_valido' : abbonamento_valido,
 	})
 		
 	return HttpResponse(template.render(context))	
@@ -153,6 +173,19 @@ def cerca_competitor(request):
 	tag_form = TagForm()
 	
 	status_obj_attivi = TaskStatus.objects.filter(utente = instance, completato = False).exists()
+
+	abbonamento_obj = Abbonamenti.objects.get(utente = instance)
+	
+	if abbonamento_obj.pagamento_ricorsivo:
+		abbonamento_valido = True
+	else:
+		now = date.today()
+		data_scadenza = abbonamento_obj.data_scadenza
+		
+		if now > data_scadenza:
+			abbonamento_valido = False
+		else:
+			abbonamento_valido = True	
 	
 	user_obj = Utente.objects.get(utente = instance)
 	email_salavata = user_obj.email
@@ -201,6 +234,7 @@ def cerca_competitor(request):
 		'numero_like_sessione' : numero_like_sessione,
 		'numero_follow_sessione' : numero_follow_sessione,
 		'email_salavata' : email_salavata,
+		'abbonamento_valido' : abbonamento_valido,
 	})
 		
 	return HttpResponse(template.render(context))	
