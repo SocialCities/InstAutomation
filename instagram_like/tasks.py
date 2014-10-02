@@ -18,7 +18,7 @@ MIOIP = settings.IP_LOCALE
 CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
     
 @shared_task   
-def insta_task(access_token, user_instance, api, user_obj):	
+def insta_task(access_token, user_instance, api):	
 	
 	tutti_tag = ListaTag.objects.filter(utente = user_instance).values()
 	
@@ -27,7 +27,7 @@ def insta_task(access_token, user_instance, api, user_obj):
 			nome_tag = singolo_tag['keyword']
 		
 			try:				
-				chiamata_like(api, nome_tag, user_instance, user_obj)					
+				chiamata_like(api, nome_tag, user_instance)					
 				
 			except InstagramAPIError as errore:
 				errore_mortale(errore, user_instance)	
@@ -36,12 +36,11 @@ def insta_task(access_token, user_instance, api, user_obj):
 				logger.error("insta_like", exc_info=True)
 				pass
 				
-	#fine while	
 				
 	return 'Fine Like'
 		
 
-def chiamata_like(api, nome_tag, user_instance, user_obj):
+def chiamata_like(api, nome_tag, user_instance):
 	check_limite(api)
 	
 	tag_search = api.tag_recent_media(count = 10, tag_name = nome_tag)
@@ -49,7 +48,7 @@ def chiamata_like(api, nome_tag, user_instance, user_obj):
 	check_limite(api)
 	
 	for foto in tag_search[0]:		
-		
+		user_obj = Utente.objects.get(utente = user_instance)
 		like_messi = user_obj.like_totali
 		like_sessione = user_obj.like_sessione
 		

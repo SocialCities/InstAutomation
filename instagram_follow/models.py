@@ -5,8 +5,8 @@ from social_auth.models import UserSocialAuth
 class BlacklistUtenti(models.Model):
 	username = models.CharField(max_length=200)	
 	id_utente = models.CharField(max_length=200)	
-	utente = models.ForeignKey(UserSocialAuth)
-	unfollowato = models.NullBooleanField()
+	utente = models.ForeignKey(UserSocialAuth, db_index=True)
+	unfollowato = models.NullBooleanField(db_index=True)
 	time_stamp = models.DateTimeField(null = True, blank = True, auto_now_add=True)	
 	
 	def __unicode__(self):
@@ -16,6 +16,7 @@ class BlacklistUtenti(models.Model):
 		
 		index_together = [
 			["id_utente", "utente"],
+			["utente", "unfollowato"],
 		]
 		
 		verbose_name = "Utente in blacklist"

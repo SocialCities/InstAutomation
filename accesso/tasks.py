@@ -27,7 +27,7 @@ from instagram_follow.models import BlacklistUtenti
 
 
 @shared_task   
-def start_task(token, instance, user_obj):
+def start_task(token, instance):
 	
 	api = InstagramAPI(
 		access_token = token,
@@ -37,8 +37,8 @@ def start_task(token, instance, user_obj):
 	
 	update_whitelist(api, instance)
 	
-	res1 = insta_task.delay(token, instance, api, user_obj)	
-	res2 = start_follow.delay(instance, api, user_obj)
+	res1 = insta_task.delay(token, instance, api)	
+	res2 = start_follow.delay(instance, api)
 	
 	id_task1 = res1.task_id
 	id_task2 = res2.task_id

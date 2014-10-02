@@ -50,12 +50,14 @@ def avvia_task_pulizia_follower(token, instance, task_diretto):
 		task = TaskStatus.objects.get(completato = False, utente = instance)	
 		task.completato = True
 		task.save()	
+		
+		return "Fine pulizia"
 			
 	return "Fine pulizia"				
 			
 	
 @shared_task  
-def start_follow(instance, api, user_obj):
+def start_follow(instance, api):
 	access_token = instance.tokens['access_token']
     
 	all_rivali = UtentiRivali.objects.filter(utente = instance).order_by('numero_follower').values()
@@ -65,9 +67,9 @@ def start_follow(instance, api, user_obj):
 	for rivale in all_rivali:
 		id_rivale = rivale['id_utente']
 		
-		contatore = how_i_met_your_follower(api, access_token, instance, id_rivale, contatore, user_obj)
+		contatore = how_i_met_your_follower(api, access_token, instance, id_rivale, contatore)
   
-def how_i_met_your_follower(api, access_token, instance, id_rivale, contatore, user_obj):
+def how_i_met_your_follower(api, access_token, instance, id_rivale, contatore):
 
     check_limite(api)
     try:
@@ -80,6 +82,7 @@ def how_i_met_your_follower(api, access_token, instance, id_rivale, contatore, u
     
     utenti = followed_by_obj[0]
     for utente in utenti:
+			user_obj = Utente.objects.get(utente = instance)
 			follow_totali = user_obj.follow_totali
 			follow_sessione = user_obj.follow_sessione
 			

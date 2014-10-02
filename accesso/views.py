@@ -222,7 +222,7 @@ def avvia_task(request):
 	user_obj.follow_sessione = 0
 	user_obj.save()
 	
-	result = start_task.delay(access_token, instance, user_obj)
+	result = start_task.delay(access_token, instance)
 	
 	id_task = result.task_id
 	
