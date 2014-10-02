@@ -128,6 +128,10 @@ def how_i_met_your_follower(api, access_token, instance, id_rivale, contatore):
 		
 		utenti_ricorsione = follow_ricorsione[0]
 		for utente_ricorsione in utenti_ricorsione:
+			user_obj = Utente.objects.get(utente = instance)
+			follow_totali = user_obj.follow_totali
+			follow_sessione = user_obj.follow_sessione
+			
 			try:
 				
 				#Collo di bottiglia
@@ -145,6 +149,10 @@ def how_i_met_your_follower(api, access_token, instance, id_rivale, contatore):
 					
 					nuovo_user_blackilist2 = BlacklistUtenti(username = utente_ricorsione.username, id_utente = utente_ricorsione.id, utente = instance, unfollowato = False)
 					nuovo_user_blackilist2.save()
+					
+					user_obj.follow_totali = follow_totali + 1
+					user_obj.follow_sessione = follow_sessione + 1
+					user_obj.save()
 					
 					contatore = contatore +1
 					contatore = check_contatore(contatore, access_token, instance)
