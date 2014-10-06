@@ -7,7 +7,6 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = (
@@ -179,3 +178,14 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'admindjango'
 EMAIL_HOST_PASSWORD = '5autobus'
 DEFAULT_FROM_EMAIL = 'admindjango@instautomation.com'
+
+###
+
+
+
+
+
+
+
+
+

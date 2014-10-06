@@ -10,7 +10,7 @@ from .forms import TagForm
 
 from celery.task.control import revoke
 from celery.result import AsyncResult	
-from .tasks import insta_task
+
 
 MIOIP = settings.IP_LOCALE
 CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET

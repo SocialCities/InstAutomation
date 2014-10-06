@@ -26,8 +26,8 @@ class WhitelistUtentiAdmin(admin.ModelAdmin):
 	list_display = ('username', 'id_utente', 'utente')	
 	
 class TaskStatusAdmin(admin.ModelAdmin):
-	fields=['task_id', 'completato', 'utente']
-	list_display = ('task_id', 'completato', 'utente')	
+	fields=['task_id', 'sorgente', 'completato', 'utente']
+	list_display = ('task_id', 'sorgente', 'completato', 'utente')	
 		
 class UtenteAdmin(admin.ModelAdmin):
 	fields = ['utente', 'follower_iniziali', 'email', 'token_block', 'like_totali', 'like_sessione', 'follow_totali', 'follow_sessione']
@@ -75,7 +75,7 @@ urlpatterns = patterns('',
     url(r'^localize$', 'geoinstagram.views.localize'),
     url(r'^mappa$', 'geoinstagram.views.mappa'),    
     url(r'^report$', 'statistiche.views.report_statistico'), 
-
+    
     #url(r'^avvia_like$', 'instagram_like.views.avvia_like'),    
     #url(r'^how_i_met_your_follower$', 'instagram_follow.views.prendi_follower'), 
 )

@@ -22,6 +22,7 @@ class TaskStatus(models.Model):
 	task_id = models.CharField(max_length=300)
 	completato = models.NullBooleanField()
 	utente = models.ForeignKey(UserSocialAuth)
+	sorgente = models.CharField(max_length=300)
 	
 	def __unicode__(self):
 		return str(self.task_id)

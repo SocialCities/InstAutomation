@@ -10,7 +10,6 @@ from instagram_like.models import ListaTag
 
 from .models import UtentiRivali, WhitelistUtenti, BlacklistUtenti
 from .forms import CercaCompetitorForm, RivaliForm
-from .tasks import how_i_met_your_follower
 
 from instautomation.utility import get_cursore
 
@@ -55,34 +54,20 @@ def rimuovi_competitor(request):
 
 
 def update_whitelist(api, instance):
+	cursore = None
+	uscita = False
 	
-	followed_by_obj = api.user_follows()
-	utenti = followed_by_obj[0]
-	
-	for utente in utenti:
-		esistenza_nuovo_user = WhitelistUtenti.objects.filter(id_utente = utente.id, utente = instance).exists()
-		esistenza_in_black = BlacklistUtenti.objects.filter(id_utente = utente.id, utente = instance).exists()
+	while uscita is False:
+		followed_by_obj = api.user_follows(cursor = cursore)
+		utenti = followed_by_obj[0]
 		
-		if (esistenza_nuovo_user is False) and (esistenza_in_black is False):
-			nuovo_user_whitelist = WhitelistUtenti(username = utente.username, id_utente = utente.id, utente = instance)
-			nuovo_user_whitelist.save()		
-
-	cursore = get_cursore(followed_by_obj)	
-	
-	while cursore is not None:		
-		follow_ricorsione = api.user_follows(cursor = cursore)
+		for utente in utenti:
+			esistenza_nuovo_user = WhitelistUtenti.objects.filter(id_utente = utente.id, utente = instance).exists()
+			esistenza_in_black = BlacklistUtenti.objects.filter(id_utente = utente.id, utente = instance).exists()			
+			
+			if (esistenza_nuovo_user is False) and (esistenza_in_black is False):
+				nuovo_user_whitelist = WhitelistUtenti(username = utente.username, id_utente = utente.id, utente = instance)
+				nuovo_user_whitelist.save()	
 		
-		utenti_ricorsione = follow_ricorsione[0]
-		for utente_ricorsione in utenti_ricorsione:
-			esistenza_nuovo_user_ricorsione = WhitelistUtenti.objects.filter(id_utente = utente_ricorsione.id, utente = instance).exists()
-			esisteza_nuovo_black = WhitelistUtenti.objects.filter(id_utente = utente_ricorsione.id, utente = instance).exists()
-			if (esistenza_nuovo_user_ricorsione is False) and (esisteza_nuovo_black is False):
-				
-				nuovo_user_whitelist2 = WhitelistUtenti(username = utente_ricorsione.username, id_utente = utente_ricorsione.id, utente = instance)
-				nuovo_user_whitelist2.save()
-						
-		cursore = get_cursore(follow_ricorsione)  	
-	
-
-
+		cursore, uscita = get_cursore(followed_by_obj)
 

@@ -260,10 +260,11 @@ def avvia_task(request):
 	
 	id_task = result.task_id
 	
-	nuovo_task1 = TaskStatus(task_id = id_task, completato = False, utente = instance)
+	nuovo_task1 = TaskStatus(task_id = id_task, completato = False, utente = instance, sorgente = "accesso")
 	nuovo_task1.save()
 		
 	return HttpResponseRedirect('/')
+
 
 @login_required(login_url='/login')
 def clean(request):
@@ -273,9 +274,9 @@ def clean(request):
 	result = avvia_task_pulizia_follower.delay(access_token, instance, True)
 	
 	id_task = result.task_id
-	
-	nuovo_task1 = TaskStatus(task_id = id_task, completato = False, utente = instance)
-	nuovo_task1.save()
+		
+	nuovo_task = TaskStatus(task_id = id_task, completato = False, utente = instance, sorgente = "unfollow")
+	nuovo_task.save()
 		
 	return HttpResponseRedirect('/')	
 	

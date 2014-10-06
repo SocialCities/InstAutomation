@@ -20,7 +20,7 @@ from instautomation.utility import check_limite
 MIOIP = settings.IP_LOCALE
 CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
 
-from instagram_like.tasks import insta_task
+from instagram_like.tasks import like_task
 from instagram_follow.tasks import start_follow
 from instagram_follow.views import update_whitelist
 from instagram_follow.models import BlacklistUtenti
@@ -37,17 +37,8 @@ def start_task(token, instance):
 	
 	update_whitelist(api, instance)
 	
-	res1 = insta_task.delay(token, instance, api)	
+	res1 = like_task.delay(token, instance, api)	
 	res2 = start_follow.delay(instance, api)
-	
-	id_task1 = res1.task_id
-	id_task2 = res2.task_id
-	
-	nuovo_task1 = TaskStatus(task_id = id_task1, completato = False, utente = instance)
-	nuovo_task1.save()
-	
-	nuovo_task2 = TaskStatus(task_id = id_task2, completato = False, utente = instance)
-	nuovo_task2.save()
 		
 	return 'yo'
 

@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 from celery import shared_task
+from celery.exceptions import Terminated
 from .models import BlacklistUtenti, WhitelistUtenti, UtentiRivali
 from accesso.models import TaskStatus, Utente
 from social_auth.models import UserSocialAuth
@@ -18,7 +19,7 @@ MIOIP = settings.IP_LOCALE
 CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
 	
 @shared_task   
-def avvia_task_pulizia_follower(token, instance, task_diretto):	
+def avvia_task_pulizia_follower(token, instance, task_diretto):		
 	
 	api = InstagramAPI(
 		access_token = token,
@@ -27,7 +28,17 @@ def avvia_task_pulizia_follower(token, instance, task_diretto):
 	)
 	
 	utenti_da_unfolloware = BlacklistUtenti.objects.filter(utente = instance, unfollowato = False)
+	
 	for utente in utenti_da_unfolloware:
+		
+		task_obj = TaskStatus.objects.get(utente = instance, sorgente = "unfollow")
+		task_completato = task_obj.completato
+		
+		if task_completato:
+			task_obj.delete()
+			return "Stop unfollow"
+		
+		
 		user_id = utente.id_utente 
 				
 		check_limite(api)		
@@ -39,143 +50,100 @@ def avvia_task_pulizia_follower(token, instance, task_diretto):
 			time.sleep(65)			
 			
 		except InstagramAPIError as errore:
-			errore_mortale(errore, instance)
-											
+			errore_mortale(errore, instance)				
 		except:
 			logger.error("avvia_task_pulizia_follower", exc_info=True)
 			pass
 			
 	if task_diretto:		
-	
 		task = TaskStatus.objects.get(completato = False, utente = instance)	
-		task.completato = True
-		task.save()	
+		task.delete()
 		
 		return "Fine pulizia"
 			
 	return "Fine pulizia"				
 			
-	
-@shared_task  
+			
+@shared_task
 def start_follow(instance, api):
+	id_task = start_follow.request.id	
+	nuovo_task = TaskStatus(task_id = id_task, completato = False, utente = instance, sorgente = "follow")
+	nuovo_task.save()
+	
 	access_token = instance.tokens['access_token']
-    
-	all_rivali = UtentiRivali.objects.filter(utente = instance).order_by('numero_follower').values()
-    
+	
+	tutti_rivali = UtentiRivali.objects.filter(utente = instance).order_by('numero_follower').values()
+	
 	contatore = 0
-    
-	for rivale in all_rivali:
+	
+	for rivale in tutti_rivali:
+		
 		id_rivale = rivale['id_utente']
 		
-		contatore = how_i_met_your_follower(api, access_token, instance, id_rivale, contatore)
-  
-def how_i_met_your_follower(api, access_token, instance, id_rivale, contatore):
-
-    check_limite(api)
-    try:
-		followed_by_obj = api.user_followed_by(id_rivale)	
+		cursore = None
+		uscita = False
 		
-    except InstagramAPIError as errore:
-		errore_mortale(errore, instance)	
-	
-    check_limite(api)
-    
-    utenti = followed_by_obj[0]
-    for utente in utenti:
-			user_obj = Utente.objects.get(utente = instance)
-			follow_totali = user_obj.follow_totali
-			follow_sessione = user_obj.follow_sessione
+		while uscita is False:
 			
-			try:				
-				esistenza_nuovo_user = BlacklistUtenti.objects.filter(id_utente = utente.id, utente = instance).exists()				
-				esistenza_in_white = WhitelistUtenti.objects.filter(id_utente = utente.id, utente = instance).exists()			
+			check_limite(api)
+			followed_by_obj = api.user_followed_by(id_rivale, cursor = cursore)
+			check_limite(api)
 			
-				relationship = api.user_relationship(user_id = utente.id)
-				is_private = relationship.target_user_is_private
-				check_limite(api)		
+			utenti = followed_by_obj[0]
 			
-				if (esistenza_nuovo_user is False) and (esistenza_in_white is False) and (is_private is False):
-					
-					x = api.follow_user(user_id = utente.id)
-					check_limite(api)
+			for utente in utenti:
+				task_obj = TaskStatus.objects.get(utente = instance, sorgente = "follow")
+				task_completato = task_obj.completato
 				
-					nuovo_user_blackilist = BlacklistUtenti(username = utente.username, id_utente = utente.id, utente = instance, unfollowato = False)
-					nuovo_user_blackilist.save()
+				if task_completato:
+					task_obj.delete()
+					return "Fine follow"
+				else:
+					user_obj = Utente.objects.get(utente = instance)
+					follow_totali = user_obj.follow_totali
+					follow_sessione = user_obj.follow_sessione	
 					
-					user_obj.follow_totali = follow_totali + 1
-					user_obj.follow_sessione = follow_sessione + 1
-					user_obj.save()
-					
-					contatore = contatore + 1
-					contatore = check_contatore(contatore, access_token, instance)
-				
-					time.sleep(65)
-					
-			except InstagramAPIError as errore:
-				errore_mortale(errore, instance)	
-					
-			except:
-				logger.error("how_i_met_your_follower", exc_info=True)
-				pass
-
-		
-    cursore = get_cursore(followed_by_obj)
-	
-    while cursore is not None:		
-		follow_ricorsione = api.user_followed_by(id_rivale, cursor = cursore)
-		
-		check_limite(api)
-		
-		utenti_ricorsione = follow_ricorsione[0]
-		for utente_ricorsione in utenti_ricorsione:
-			user_obj = Utente.objects.get(utente = instance)
-			follow_totali = user_obj.follow_totali
-			follow_sessione = user_obj.follow_sessione
+					try:
+						esistenza_nuovo_user = BlacklistUtenti.objects.filter(id_utente = utente.id, utente = instance).exists()				
+						esistenza_in_white = WhitelistUtenti.objects.filter(id_utente = utente.id, utente = instance).exists()			
 			
-			try:
-				
-				#Collo di bottiglia
-				esistenza_nuovo_user_ricorsione = BlacklistUtenti.objects.filter(id_utente = utente_ricorsione.id, utente = instance).exists()
-				esistenza_in_white_ricorsione = WhitelistUtenti.objects.filter(id_utente = utente_ricorsione.id, utente = instance).exists()
-				
-				relationship = api.user_relationship(user_id = utente_ricorsione.id)
-				is_private = relationship.target_user_is_private
-				check_limite(api)	
-				
-				if (esistenza_nuovo_user_ricorsione is False) and (esistenza_in_white_ricorsione is False) and (is_private is False):
-					
-					y = api.follow_user(user_id = utente_ricorsione.id)
-					check_limite(api)
-					
-					nuovo_user_blackilist2 = BlacklistUtenti(username = utente_ricorsione.username, id_utente = utente_ricorsione.id, utente = instance, unfollowato = False)
-					nuovo_user_blackilist2.save()
-					
-					user_obj.follow_totali = follow_totali + 1
-					user_obj.follow_sessione = follow_sessione + 1
-					user_obj.save()
-					
-					contatore = contatore +1
-					contatore = check_contatore(contatore, access_token, instance)
-					
-					time.sleep(65)
-					
-			except InstagramAPIError as errore:
-				errore_mortale(errore, instance)
+						relationship = api.user_relationship(user_id = utente.id)
+						is_private = relationship.target_user_is_private
+						check_limite(api)
 						
-			except:
-				logger.error("how_i_met_your_follower", exc_info=True)
-				pass
-										
-		cursore = get_cursore(follow_ricorsione)     
-						
-    return contatore 
-
-
+						if (esistenza_nuovo_user is False) and (esistenza_in_white is False) and (is_private is False):
+					
+							x = api.follow_user(user_id = utente.id)
+							check_limite(api)
+				
+							nuovo_user_blackilist = BlacklistUtenti(username = utente.username, id_utente = utente.id, utente = instance, unfollowato = False)
+							nuovo_user_blackilist.save()
+					
+							user_obj.follow_totali = follow_totali + 1
+							user_obj.follow_sessione = follow_sessione + 1
+							user_obj.save()
+					
+							contatore = contatore + 1
+							contatore = check_contatore(contatore, access_token, instance)
+							
+							time.sleep(65)	
+							
+					except InstagramAPIError as errore:
+						errore_mortale(errore, instance)						
+					except:
+						logger.error("how_i_met_your_follower", exc_info=True)
+						pass
+					
+			cursore, uscita = get_cursore(followed_by_obj)
+								
+								
 def check_contatore(contatore, token, instance):
 	limite = 180
 	
 	if contatore > limite:
 		avvia_task_pulizia_follower(token, instance, False)
 		contatore = 0
-	
+		
 	return contatore
+
+

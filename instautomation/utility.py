@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from accesso.models import TaskStatus, Utente
 from instagram.client import InstagramAPI
 
-from celery.task.control import revoke
+from celery.task.control import revoke, broadcast
 
 from django.core.mail import send_mail, EmailMultiAlternatives 
 
@@ -11,8 +11,13 @@ import urlparse
 import time
 
 def get_cursore(object_to_check):
-	return prendi_valore_indice('cursor', object_to_check)	
-
+	cursore = prendi_valore_indice('cursor', object_to_check)
+	
+	if cursore is None:
+		return cursore, True
+	else:
+		return cursore, False
+			
 def get_max_id(object_to_check):
 	return prendi_valore_indice('max_id', object_to_check)	
 
@@ -34,15 +39,39 @@ def check_limite(api):
 		time.sleep(3600)	
 		
 def kill_all_tasks(instance):
-	task_attivi_esistenza = TaskStatus.objects.filter(completato = False, utente = instance).exists()
 	
-	if task_attivi_esistenza:
-		task_attivi = TaskStatus.objects.filter(completato = False, utente = instance)
-		for task_attivo in task_attivi:
-			task_id = task_attivo.task_id
-			task_attivo.completato = True
-			task_attivo.save()
-			revoke(task_id, terminate=True, signal="KILL")		
+	#Follow
+	task_attivi_esistenza_follow = TaskStatus.objects.filter(completato = False, utente = instance, sorgente = "follow").exists()	
+	
+	if task_attivi_esistenza_follow:
+		task_obj = TaskStatus.objects.get(completato = False, utente = instance, sorgente = "follow")
+		task_obj.completato	= True
+		task_obj.save()	
+	
+	#Unfollow
+	task_attivi_esistenza_unfollow = TaskStatus.objects.filter(completato = False, utente = instance, sorgente = "unfollow").exists()
+	
+	if task_attivi_esistenza_unfollow:
+		task_obj = TaskStatus.objects.get(completato = False, utente = instance, sorgente = "unfollow")
+		task_obj.completato	= True
+		task_obj.save()
+		
+	#Like			
+	task_attivi_esistenza_like = TaskStatus.objects.filter(completato = False, utente = instance, sorgente = "like").exists()
+	
+	if task_attivi_esistenza_like:
+		task_obj = TaskStatus.objects.get(completato = False, utente = instance, sorgente = "like")
+		task_obj.completato	= True
+		task_obj.save()		
+		
+	#Accesso	
+	task_attivi_esistenza_accesso = TaskStatus.objects.filter(completato = False, utente = instance, sorgente = "accesso").exists()
+	
+	if task_attivi_esistenza_accesso:
+		task_obj = TaskStatus.objects.get(completato = False, utente = instance, sorgente = "accesso")
+		task_obj.completato	= True
+		task_obj.save()		
+
 						
 def errore_mortale(errore, instance):
 	if errore.error_type == "OAuthAccessTokenException":
