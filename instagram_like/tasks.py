@@ -28,8 +28,18 @@ def like_task(access_token, user_instance, api):
 	
 	tutti_tag = ListaTag.objects.filter(utente = user_instance).values()
 	
-	while True: 
+	non_finito = True
+	
+	while non_finito: 
 		for singolo_tag in tutti_tag:
+			task_obj = TaskStatus.objects.get(utente = user_instance, sorgente = "like")
+			task_completato = task_obj.completato	
+		
+			if task_completato:
+				task_obj.delete()
+				non_finito = False
+				break
+				
 			nome_tag = singolo_tag['keyword']
 		
 			try:				
