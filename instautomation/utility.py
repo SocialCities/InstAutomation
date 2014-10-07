@@ -9,6 +9,8 @@ from django.core.mail import send_mail, EmailMultiAlternatives
 
 import urlparse
 import time
+import logging
+logger = logging.getLogger('django')
 
 def get_cursore(object_to_check):
 	cursore = prendi_valore_indice('cursor', object_to_check)
@@ -85,6 +87,7 @@ def errore_mortale(errore, instance):
 		
 		kill_all_tasks(instance)	
 	else:
+		logger.error("errore mortale", exc_info=True)
 		pass
 				
 def avviso_email(email_utente):

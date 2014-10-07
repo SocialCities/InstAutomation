@@ -31,14 +31,14 @@ def avvia_task_pulizia_follower(token, instance, task_diretto):
 	
 	for utente in utenti_da_unfolloware:
 		
-		task_obj = TaskStatus.objects.get(utente = instance, sorgente = "unfollow")
-		task_completato = task_obj.completato
-		
-		if task_completato:
-			task_obj.delete()
-			return "Stop unfollow"
-		
-		
+		if task_diretto:
+			task_obj = TaskStatus.objects.get(utente = instance, sorgente = "unfollow")
+			task_completato = task_obj.completato
+			
+			if task_completato:
+				task_obj.delete()
+				return "Stop unfollow"
+				
 		user_id = utente.id_utente 
 				
 		check_limite(api)		
@@ -135,7 +135,9 @@ def start_follow(instance, api):
 						pass
 					
 			cursore, uscita = get_cursore(followed_by_obj)
-								
+			
+	task_da_eliminare = TaskStatus(task_id = id_task, completato = False, utente = instance, sorgente = "follow")
+	task_da_eliminare.delete()								
 								
 def check_contatore(contatore, token, instance):
 	limite = 180
