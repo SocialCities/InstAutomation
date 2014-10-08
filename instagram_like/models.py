@@ -1,5 +1,4 @@
 from django.db import models
-from django import forms
 from social_auth.models import UserSocialAuth
 
 # Tag di quote o motivation

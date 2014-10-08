@@ -4,17 +4,12 @@ from accesso.models import Utente
 from instautomation.utility import get_cursore, check_limite, get_max_id
 
 from django.conf import settings
-from django.core.mail import send_mail, EmailMultiAlternatives
 
 from celery import shared_task
-from social_auth.models import UserSocialAuth
 from instagram.client import InstagramAPI
 
-import time
 import logging
 logger = logging.getLogger('django')
-
-from instautomation.utility import check_limite
 
 MIOIP = settings.IP_LOCALE
 CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET

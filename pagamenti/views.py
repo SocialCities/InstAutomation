@@ -1,6 +1,5 @@
-from django.shortcuts import render
 from .models import Abbonamenti
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta
 
 def crea_abbonamento_n_giorni(instance, giorni):
 	now = datetime.now()

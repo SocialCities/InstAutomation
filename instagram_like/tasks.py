@@ -4,8 +4,6 @@ from django.conf import settings
 from celery import shared_task
 from .models import ListaTag
 from accesso.models import TaskStatus, Utente
-from social_auth.models import UserSocialAuth
-from instagram.client import InstagramAPI
 from instagram import InstagramAPIError
 from celery.exceptions import Terminated
 
@@ -76,7 +74,7 @@ def chiamata_like(api, nome_tag, user_instance):
 			
 			id_elemento = foto.id
 			conto_like = foto.like_count		
-			link_foto = foto.link		
+			#link_foto = foto.link		
 			
 			if conto_like < 100:
 				try:
@@ -97,5 +95,3 @@ def chiamata_like(api, nome_tag, user_instance):
 				except:
 					logger.error("chiamata_like", exc_info=True)
 					pass				
-				
-	

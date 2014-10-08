@@ -5,4 +5,5 @@ error.log
 admin/
 static/admin/
 error.log.save
-
+.idea/
+celerybeat-schedule

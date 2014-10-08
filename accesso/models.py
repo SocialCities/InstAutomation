@@ -1,8 +1,7 @@
 from django.db import models
 from social_auth.models import UserSocialAuth
 
-# Create your models here.
-	
+
 class Utente(models.Model):
 	utente = models.ForeignKey(UserSocialAuth)
 	follower_iniziali = models.IntegerField()
@@ -30,4 +29,3 @@ class TaskStatus(models.Model):
 	class Meta:
 		verbose_name = "Task status"
 		verbose_name_plural = "Task status"
-	

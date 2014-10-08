@@ -1,16 +1,11 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
 from social_auth.models import UserSocialAuth
-from instagram.client import InstagramAPI
 
 from .models import ListaTag
 from .forms import TagForm
-
-from celery.task.control import revoke
-from celery.result import AsyncResult	
-
 
 MIOIP = settings.IP_LOCALE
 CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET

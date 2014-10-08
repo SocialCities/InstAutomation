@@ -2,24 +2,20 @@ from django.shortcuts import render, render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
 from django.contrib.auth import logout
 from django.views.generic import View
 from django.conf import settings
 from django import forms
 
-from datetime import datetime, timedelta, date
+from datetime import date
 
 from instagram_like.models import ListaTag
 from instagram_like.forms import TagForm
-from instagram_follow.models import UtentiRivali, BlacklistUtenti
+from instagram_follow.models import UtentiRivali
 from instagram_follow.forms import CercaCompetitorForm
 from instagram_follow.tasks import avvia_task_pulizia_follower
 from pagamenti.models import Abbonamenti
 from pagamenti.views import crea_abbonamento_n_giorni
-
-from celery.result import AsyncResult
-from celery.task.control import revoke
 
 from .models import Utente, TaskStatus
 from .tasks import start_task
@@ -93,7 +89,6 @@ class beta_home(View):
 @token_error
 def home_page(request):	
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
-	access_token = instance.tokens['access_token']	
 	template = loader.get_template('home_page.html')
 	
 	cerca_competitor_form = CercaCompetitorForm()
@@ -130,12 +125,6 @@ def home_page(request):
 	else:
 		numero_like_sessione = user_obj.like_sessione
 		numero_follow_sessione = user_obj.follow_sessione
-
-	api = InstagramAPI(
-			access_token = access_token,
-			client_ips = MIOIP,
-			client_secret = CLIENT_SECRET 
-	)	
 	
 	context = RequestContext(request, {
 		'rivali' : rivali,

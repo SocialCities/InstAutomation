@@ -1,10 +1,8 @@
 from __future__ import absolute_import
 
 from celery import shared_task
-from celery.exceptions import Terminated
 from .models import BlacklistUtenti, WhitelistUtenti, UtentiRivali
 from accesso.models import TaskStatus, Utente
-from social_auth.models import UserSocialAuth
 from instagram.client import InstagramAPI
 from instagram import InstagramAPIError
 
@@ -113,7 +111,7 @@ def start_follow(instance, api):
 						
 						if (esistenza_nuovo_user is False) and (esistenza_in_white is False) and (is_private is False):
 					
-							x = api.follow_user(user_id = utente.id)
+							api.follow_user(user_id = utente.id)
 							check_limite(api)
 				
 							nuovo_user_blackilist = BlacklistUtenti(username = utente.username, id_utente = utente.id, utente = instance, unfollowato = False)
@@ -147,5 +145,4 @@ def check_contatore(contatore, token, instance):
 		contatore = 0
 		
 	return contatore
-
 

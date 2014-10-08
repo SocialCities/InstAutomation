@@ -1,19 +1,14 @@
 from django.contrib.auth.decorators import login_required
-from django.template import RequestContext, loader
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
+from django.http import HttpResponseRedirect
 from django.conf import settings
 
 from social_auth.models import UserSocialAuth
 from instagram.client import InstagramAPI
 
-from instagram_like.models import ListaTag
-
 from .models import UtentiRivali, WhitelistUtenti, BlacklistUtenti
-from .forms import CercaCompetitorForm, RivaliForm
+from .forms import RivaliForm
 
 from instautomation.utility import get_cursore
-
-import urlparse
 
 MIOIP = settings.IP_LOCALE
 CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET

@@ -75,9 +75,6 @@ urlpatterns = patterns('',
     url(r'^localize$', 'geoinstagram.views.localize'),
     url(r'^mappa$', 'geoinstagram.views.mappa'),    
     url(r'^report$', 'statistiche.views.report_statistico'), 
-    
-    #url(r'^avvia_like$', 'instagram_like.views.avvia_like'),    
-    #url(r'^how_i_met_your_follower$', 'instagram_follow.views.prendi_follower'), 
 )
 
 # Instagram only allows one callback url so you'll have to change your urls.py to accomodate

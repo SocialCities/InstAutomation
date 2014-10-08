@@ -1,17 +1,11 @@
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from django.template import RequestContext, loader
 from django.conf import settings
 
 from social_auth.models import UserSocialAuth
-from instagram.client import InstagramAPI
 
-from instautomation.utility import get_cursore, check_limite, get_max_id
 from .tasks import report_task
 from instagram_follow.models import BlacklistUtenti
-
-import urlparse
 
 MIOIP = settings.IP_LOCALE
 CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET

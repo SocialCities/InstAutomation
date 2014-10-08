@@ -1,11 +1,8 @@
 from __future__ import absolute_import
 
 from accesso.models import TaskStatus, Utente
-from instagram.client import InstagramAPI
 
-from celery.task.control import revoke, broadcast
-
-from django.core.mail import send_mail, EmailMultiAlternatives 
+from django.core.mail import EmailMultiAlternatives 
 
 import urlparse
 import time

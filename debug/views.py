@@ -1,6 +1,5 @@
-from django.shortcuts import render
-from instagram_like.models import ListaTag
-from django.http import HttpResponse, HttpResponseNotAllowed, HttpResponseBadRequest, HttpResponseRedirect
+from instagram_like.models import Tag
+from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 
 
