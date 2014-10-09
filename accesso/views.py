@@ -14,8 +14,8 @@ from instagram_like.forms import TagForm
 from instagram_follow.models import UtentiRivali
 from instagram_follow.forms import CercaCompetitorForm
 from instagram_follow.tasks import avvia_task_pulizia_follower
-from pagamenti.models import Abbonamenti
-from pagamenti.views import crea_abbonamento_n_giorni
+from pagamenti.models import Pacchetti
+from pagamenti.views import nuovo_pacchetto, attiva_pacchetto, abbonamento_valido
 
 from .models import Utente, TaskStatus
 from .tasks import start_task
@@ -62,7 +62,7 @@ def access(request):
 		nuove_stats = Utente(utente = instance, follower_iniziali = followed_by)
 		nuove_stats.save()
 		
-		crea_abbonamento_n_giorni(instance, 3)
+		nuovo_pacchetto(instance, 2)
 		
 		return HttpResponseRedirect('/')   
 		
@@ -100,19 +100,24 @@ def home_page(request):
 	tag_form = TagForm()
 	
 	status_obj_attivi = TaskStatus.objects.filter(utente = instance, completato = False).exists()
-	
-	abbonamento_obj = Abbonamenti.objects.get(utente = instance)
-	
-	if abbonamento_obj.pagamento_ricorsivo:
-		abbonamento_valido = True
-	else:
-		now = date.today()
-		data_scadenza = abbonamento_obj.data_scadenza
-		
-		if now > data_scadenza:
-			abbonamento_valido = False
+
+
+	esistenza_pacchetto = Pacchetti.objects.filter(utente = instance).exists()
+
+	if esistenza_pacchetto:
+		pacchetto_attivato = Pacchetti.objects.filter(utente = instance, attivato = True).exists()
+		if pacchetto_attivato:
+
+			if abbonamento_valido(instance):
+				stato_pacchetto = 2 #Abbonamento valido
+			else:
+				stato_pacchetto = 1 #Abbonamento scaduto
+
 		else:
-			abbonamento_valido = True
+			stato_pacchetto = 3 #Pacchetto non usato ma valido
+	else:
+		stato_pacchetto = 0
+
 	
 	user_obj = Utente.objects.get(utente = instance)
 	email_salavata = user_obj.email
@@ -137,7 +142,7 @@ def home_page(request):
 		'numero_like_sessione' : numero_like_sessione,
 		'numero_follow_sessione' : numero_follow_sessione,
 		'email_salavata' : email_salavata,
-		'abbonamento_valido' : abbonamento_valido,
+		'stato_pacchetto' : stato_pacchetto,
 	})
 		
 	return HttpResponse(template.render(context))	
@@ -163,18 +168,21 @@ def cerca_competitor(request):
 	
 	status_obj_attivi = TaskStatus.objects.filter(utente = instance, completato = False).exists()
 
-	abbonamento_obj = Abbonamenti.objects.get(utente = instance)
-	
-	if abbonamento_obj.pagamento_ricorsivo:
-		abbonamento_valido = True
-	else:
-		now = date.today()
-		data_scadenza = abbonamento_obj.data_scadenza
-		
-		if now > data_scadenza:
-			abbonamento_valido = False
+	esistenza_pacchetto = Pacchetti.objects.filter(utente = instance).exists()
+
+	if esistenza_pacchetto:
+		pacchetto_attivato = Pacchetti.objects.filter(utente = instance, attivato = True).exists()
+		if pacchetto_attivato:
+
+			if abbonamento_valido(instance):
+				stato_pacchetto = 2 #Abbonamento valido
+			else:
+				stato_pacchetto = 1 #Abbonamento scaduto
+				
 		else:
-			abbonamento_valido = True	
+			stato_pacchetto = 3 #Pacchetto non usato ma valido
+	else:
+		stato_pacchetto = 0
 	
 	user_obj = Utente.objects.get(utente = instance)
 	email_salavata = user_obj.email
@@ -223,7 +231,7 @@ def cerca_competitor(request):
 		'numero_like_sessione' : numero_like_sessione,
 		'numero_follow_sessione' : numero_follow_sessione,
 		'email_salavata' : email_salavata,
-		'abbonamento_valido' : abbonamento_valido,
+		'stato_pacchetto' : stato_pacchetto,
 	})
 		
 	return HttpResponse(template.render(context))	
@@ -251,7 +259,11 @@ def avvia_task(request):
 	
 	nuovo_task1 = TaskStatus(task_id = id_task, completato = False, utente = instance, sorgente = "accesso")
 	nuovo_task1.save()
-		
+
+	esistenza_pacchetto_da_attivare = Pacchetti.objects.filter(utente = instance, attivato = False)
+	if esistenza_pacchetto_da_attivare:
+		attiva_pacchetto(instance)
+
 	return HttpResponseRedirect('/')
 
 

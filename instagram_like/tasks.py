@@ -4,6 +4,7 @@ from django.conf import settings
 from celery import shared_task
 from .models import ListaTag
 from accesso.models import TaskStatus, Utente
+from pagamenti.views import abbonamento_valido
 from instagram import InstagramAPIError
 from celery.exceptions import Terminated
 
@@ -29,9 +30,22 @@ def like_task(access_token, user_instance, api):
 	non_finito = True
 	
 	while non_finito: 
+		if len(tutti_tag) == 0:
+			non_finito = False
+			
 		for singolo_tag in tutti_tag:
-			task_obj = TaskStatus.objects.get(utente = user_instance, sorgente = "like")
+			task_obj = TaskStatus.objects.get(utente = user_instance, sorgente = "like")			
 			task_completato = task_obj.completato	
+
+			abbonamento_is_valido = abbonamento_valido(user_instance)
+
+			if abbonamento_is_valido is False:
+				task_obj.delete()
+
+				task_obj_accesso = TaskStatus.objects.get(utente = user_instance, sorgente = "accesso", completato = False)
+				task_obj_accesso.delete()
+				non_finito = False
+				break
 		
 			if task_completato:
 				task_obj.delete()
@@ -41,7 +55,7 @@ def like_task(access_token, user_instance, api):
 			nome_tag = singolo_tag['keyword']
 		
 			try:				
-				chiamata_like(api, nome_tag, user_instance)					
+				non_finito = chiamata_like(api, nome_tag, user_instance)					
 				
 			except InstagramAPIError as errore:
 				errore_mortale(errore, user_instance)	
@@ -49,8 +63,7 @@ def like_task(access_token, user_instance, api):
 			except:
 				logger.error("insta_like", exc_info=True)
 				pass
-				
-				
+													
 	return 'Fine Like'
 		
 
@@ -64,9 +77,19 @@ def chiamata_like(api, nome_tag, user_instance):
 		
 		task_obj = TaskStatus.objects.get(utente = user_instance, sorgente = "like")
 		task_completato = task_obj.completato	
+
+		abbonamento_is_valido = abbonamento_valido(user_instance)
+
+		if abbonamento_is_valido is False:
+			task_obj.delete()	
+
+			task_obj_accesso = TaskStatus.objects.get(utente = user_instance, sorgente = "accesso", completato = False)
+			task_obj_accesso.delete()		
+			return False	
 		
 		if task_completato:
-			return "Like stoppato"						
+			task_obj.delete()
+			return False					
 		else:			
 			user_obj = Utente.objects.get(utente = user_instance)
 			like_messi = user_obj.like_totali
@@ -94,4 +117,5 @@ def chiamata_like(api, nome_tag, user_instance):
 						pass										 						
 				except:
 					logger.error("chiamata_like", exc_info=True)
-					pass				
+					pass	
+	return True	

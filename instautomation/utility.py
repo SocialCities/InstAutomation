@@ -43,33 +43,37 @@ def kill_all_tasks(instance):
 	task_attivi_esistenza_follow = TaskStatus.objects.filter(completato = False, utente = instance, sorgente = "follow").exists()	
 	
 	if task_attivi_esistenza_follow:
-		task_obj = TaskStatus.objects.get(completato = False, utente = instance, sorgente = "follow")
-		task_obj.completato	= True
-		task_obj.save()	
+		all_task_obj = TaskStatus.objects.filter(completato = False, utente = instance, sorgente = "follow")
+		for task_obj in all_task_obj:
+			task_obj.completato	= True
+			task_obj.save()	
 	
 	#Unfollow
 	task_attivi_esistenza_unfollow = TaskStatus.objects.filter(completato = False, utente = instance, sorgente = "unfollow").exists()
 	
 	if task_attivi_esistenza_unfollow:
-		task_obj = TaskStatus.objects.get(completato = False, utente = instance, sorgente = "unfollow")
-		task_obj.completato	= True
-		task_obj.save()
+		all_task_obj = TaskStatus.objects.filter(completato = False, utente = instance, sorgente = "unfollow")
+		for task_obj in all_task_obj:
+			task_obj.completato	= True
+			task_obj.save()
 		
 	#Like			
 	task_attivi_esistenza_like = TaskStatus.objects.filter(completato = False, utente = instance, sorgente = "like").exists()
 	
 	if task_attivi_esistenza_like:
-		task_obj = TaskStatus.objects.get(completato = False, utente = instance, sorgente = "like")
-		task_obj.completato	= True
-		task_obj.save()		
+		all_task_obj = TaskStatus.objects.filter(completato = False, utente = instance, sorgente = "like")
+		for task_obj in all_task_obj:
+			task_obj.completato	= True
+			task_obj.save()		
 		
 	#Accesso	
 	task_attivi_esistenza_accesso = TaskStatus.objects.filter(completato = False, utente = instance, sorgente = "accesso").exists()
 	
 	if task_attivi_esistenza_accesso:
-		task_obj = TaskStatus.objects.get(completato = False, utente = instance, sorgente = "accesso")
-		task_obj.completato	= True
-		task_obj.save()		
+		all_task_obj = TaskStatus.objects.filter(completato = False, utente = instance, sorgente = "accesso")
+		for task_obj in all_task_obj:
+			task_obj.completato	= True
+			task_obj.save()		
 
 						
 def errore_mortale(errore, instance):

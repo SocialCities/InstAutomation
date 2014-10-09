@@ -23,9 +23,6 @@ class TaskStatus(models.Model):
 	utente = models.ForeignKey(UserSocialAuth)
 	sorgente = models.CharField(max_length=300)
 	
-	def __unicode__(self):
-		return str(self.task_id)
-	
 	class Meta:
 		verbose_name = "Task status"
 		verbose_name_plural = "Task status"

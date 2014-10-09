@@ -7,3 +7,5 @@ static/admin/
 error.log.save
 .idea/
 celerybeat-schedule
+celerybeat.pid
+

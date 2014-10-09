@@ -2,8 +2,6 @@ from __future__ import absolute_import
 
 from django.conf import settings
 from celery import shared_task
-from celery.task.schedules import crontab
-from celery.decorators import periodic_task
 
 from instagram.client import InstagramAPI
 
@@ -35,7 +33,7 @@ def start_task(token, instance):
 		
 	return 'yo'
 
-@periodic_task(run_every=(crontab(minute=0, hour=0)))
+@shared_task 
 def elimina_vecchi_utenti():
     now = datetime.now()
     

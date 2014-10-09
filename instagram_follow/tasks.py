@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 from celery import shared_task
 from .models import BlacklistUtenti, WhitelistUtenti, UtentiRivali
+from pagamenti.views import abbonamento_valido
 from accesso.models import TaskStatus, Utente
 from instagram.client import InstagramAPI
 from instagram import InstagramAPIError
@@ -32,6 +33,13 @@ def avvia_task_pulizia_follower(token, instance, task_diretto):
 		if task_diretto:
 			task_obj = TaskStatus.objects.get(utente = instance, sorgente = "unfollow")
 			task_completato = task_obj.completato
+
+			abbonamento_is_valido = abbonamento_valido(instance)
+
+			if abbonamento_is_valido is False:
+				task_obj.delete()
+				
+				return "Stop unfollow per scadenza abbonamento"
 			
 			if task_completato:
 				task_obj.delete()
@@ -90,8 +98,18 @@ def start_follow(instance, api):
 			utenti = followed_by_obj[0]
 			
 			for utente in utenti:
+
+				abbonamento_is_valido = abbonamento_valido(instance)
+
 				task_obj = TaskStatus.objects.get(utente = instance, sorgente = "follow")
 				task_completato = task_obj.completato
+
+				if abbonamento_is_valido is False:
+					task_obj.delete()
+
+					task_obj_accesso = TaskStatus.objects.get(utente = instance, sorgente = "accesso", completato = False)
+					task_obj_accesso.delete()
+					return "Stop follow per abbonamento scaduto"
 				
 				if task_completato:
 					task_obj.delete()
@@ -134,7 +152,7 @@ def start_follow(instance, api):
 					
 			cursore, uscita = get_cursore(followed_by_obj)
 			
-	task_da_eliminare = TaskStatus(task_id = id_task, completato = False, utente = instance, sorgente = "follow")
+	task_da_eliminare = TaskStatus.objects.get(task_id = id_task, completato = False, utente = instance, sorgente = "follow")
 	task_da_eliminare.delete()								
 								
 def check_contatore(contatore, token, instance):
