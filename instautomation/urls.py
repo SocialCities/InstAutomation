@@ -8,6 +8,7 @@ from accesso.models import Utente, TaskStatus
 from social_auth.models import UserSocialAuth
 
 from accesso.views import beta_home
+from accesso.admin import pulsantone_view
 	
 class TagAdmin(admin.ModelAdmin):
 	fields=['keyword', 'utente']
@@ -30,8 +31,8 @@ class TaskStatusAdmin(admin.ModelAdmin):
 	list_display = ('task_id', 'sorgente', 'completato', 'utente')	
 		
 class UtenteAdmin(admin.ModelAdmin):
-	fields = ['utente', 'follower_iniziali', 'email', 'token_block', 'like_totali', 'like_sessione', 'follow_totali', 'follow_sessione']
-	list_display = ('utente', 'follower_iniziali', 'email', 'time_stamp', 'token_block', 'like_totali', 'like_sessione', 'follow_totali', 'follow_sessione')	
+	fields = ['utente', 'follower_iniziali', 'email', 'token_block', 'like_totali', 'like_sessione', 'follow_totali', 'follow_sessione', 'data_blocco_forzato']
+	list_display = ('utente', 'follower_iniziali', 'email', 'time_stamp', 'token_block', 'like_totali', 'like_sessione', 'follow_totali', 'follow_sessione', 'data_blocco_forzato')	
 
 class PacchettiAdmin(admin.ModelAdmin):
     fields = ['utente', 'data_acquisto', 'giorni', 'attivato', 'data_sottoscrizione', 'data_scadenza']
@@ -75,6 +76,8 @@ urlpatterns = patterns('',
     url(r'^localize$', 'geoinstagram.views.localize'),
     url(r'^mappa$', 'geoinstagram.views.mappa'),    
     url(r'^report$', 'statistiche.views.report_statistico'), 
+
+    url(r'^pulsantone$', pulsantone_view.as_view()), 
 )
 
 # Instagram only allows one callback url so you'll have to change your urls.py to accomodate

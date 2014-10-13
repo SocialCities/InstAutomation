@@ -15,7 +15,7 @@ from instagram_follow.models import UtentiRivali
 from instagram_follow.forms import CercaCompetitorForm
 from instagram_follow.tasks import avvia_task_pulizia_follower
 from pagamenti.models import Pacchetti
-from pagamenti.views import nuovo_pacchetto, attiva_pacchetto, abbonamento_valido
+from pagamenti.views import nuovo_pacchetto, attiva_pacchetto, abbonamento_valido, estendi_scadenza
 
 from .models import Utente, TaskStatus
 from .tasks import start_task
@@ -84,7 +84,8 @@ class beta_home(View):
 		else:
 			return HttpResponseRedirect('/beta/')			
 			
-				
+	
+
 @login_required(login_url='/login')
 @token_error
 def home_page(request):	
@@ -101,7 +102,6 @@ def home_page(request):
 	
 	status_obj_attivi = TaskStatus.objects.filter(utente = instance, completato = False).exists()
 
-
 	esistenza_pacchetto = Pacchetti.objects.filter(utente = instance).exists()
 
 	if esistenza_pacchetto:
@@ -117,20 +117,65 @@ def home_page(request):
 			stato_pacchetto = 3 #Pacchetto non usato ma valido
 	else:
 		stato_pacchetto = 0
-
 	
 	user_obj = Utente.objects.get(utente = instance)
 	email_salavata = user_obj.email
 	numero_like_totali = user_obj.like_totali
 	numero_follow = user_obj.follow_totali
+	data_blocco = user_obj.data_blocco_forzato
 	
+	#Di base non ho avvisi impostati
+	avviso = None
+
+	if (stato_pacchetto == 2) and (data_blocco is not None):
+		
+		now = date.today()
+
+		delta_data_blocco = now - data_blocco
+		giorni = delta_data_blocco.days
+
+		if giorni == 0:
+			giorni = 1
+			testo_regalo = "un giorno"
+		else:
+			giorni = giorni + 1
+			testo_regalo = str(giorni) +" giorni"		
+
+		avviso = "Ciao! Il sistema e stato bloccato forzatamete, per farci perdonare ti abbiamo regalato " + testo_regalo +" in piu!"
+		estendi_scadenza(instance, giorni)
+		user_obj.data_blocco_forzato = None
+		user_obj.save()
+
+	if (stato_pacchetto == 1) and (data_blocco is not None):
+		pacchetto_obj = Pacchetti.objects.get(utente = instance, attivato = True)
+		data_scadenza = pacchetto_obj.data_scadenza
+
+		if data_blocco > data_scadenza:
+			user_obj.data_blocco_forzato = None
+			user_obj.save()
+		else:
+			delta_data_blocco = data_scadenza - data_blocco
+			giorni = delta_data_blocco.days
+			if giorni == 1:
+				testo_regalo = "un giorno"
+			else:
+				giorni = giorni + 1
+				testo_regalo = str(giorni) + " giorni"
+			avviso = "Ciao! Prima che ti scadesse il sistema abbiamo bloccato forzatamente la baracca. Per farci perdonare ti abbiamo regalato un pacchetto da " + testo_regalo
+			user_obj.data_blocco_forzato = None
+			user_obj.save()
+			pacchetto_obj.delete()
+			nuovo_pacchetto(instance, giorni)
+			stato_pacchetto = 3
+
+
 	if status_obj_attivi is False:
 		numero_like_sessione = 0
 		numero_follow_sessione = 0
 	else:
 		numero_like_sessione = user_obj.like_sessione
-		numero_follow_sessione = user_obj.follow_sessione
-	
+		numero_follow_sessione = user_obj.follow_sessione		
+
 	context = RequestContext(request, {
 		'rivali' : rivali,
 		'competitor_form' : cerca_competitor_form,
@@ -143,6 +188,7 @@ def home_page(request):
 		'numero_follow_sessione' : numero_follow_sessione,
 		'email_salavata' : email_salavata,
 		'stato_pacchetto' : stato_pacchetto,
+		'avviso' : avviso,
 	})
 		
 	return HttpResponse(template.render(context))	
@@ -188,6 +234,51 @@ def cerca_competitor(request):
 	email_salavata = user_obj.email
 	numero_like_totali = user_obj.like_totali
 	numero_follow = user_obj.follow_totali
+	data_blocco = user_obj.data_blocco_forzato
+	
+	#Di base non ho avvisi impostati
+	avviso = None
+
+	if (stato_pacchetto == 2) and (data_blocco is not None):
+		
+		now = date.today()
+
+		delta_data_blocco = now - data_blocco
+		giorni = delta_data_blocco.days
+
+		if giorni == 0:
+			giorni = 1
+			testo_regalo = "un giorno"
+		else:
+			giorni = giorni + 1
+			testo_regalo = str(giorni) +" giorni"		
+
+		avviso = "Ciao! Il sistema e stato bloccato forzatamete, per farci perdonare ti abbiamo regalato " + testo_regalo +" in piu!"
+		estendi_scadenza(instance, giorni)
+		user_obj.data_blocco_forzato = None
+		user_obj.save()
+
+	if (stato_pacchetto == 1) and (data_blocco is not None):
+		pacchetto_obj = Pacchetti.objects.get(utente = instance, attivato = True)
+		data_scadenza = pacchetto_obj.data_scadenza
+
+		if data_blocco > data_scadenza:
+			user_obj.data_blocco_forzato = None
+			user_obj.save()
+		else:
+			delta_data_blocco = data_scadenza - data_blocco
+			giorni = delta_data_blocco.days
+			if giorni == 1:
+				testo_regalo = "un giorno"
+			else:
+				giorni = giorni + 1
+				testo_regalo = str(giorni) + " giorni"
+			avviso = "Ciao! Prima che ti scadesse il sistema abbiamo bloccato forzatamente la baracca. Per farci perdonare ti abbiamo regalato un pacchetto da " + testo_regalo
+			user_obj.data_blocco_forzato = None
+			user_obj.save()
+			pacchetto_obj.delete()
+			nuovo_pacchetto(instance, giorni)
+			stato_pacchetto = 3
 
 	if status_obj_attivi is False:
 		numero_like_sessione = 0
@@ -232,6 +323,7 @@ def cerca_competitor(request):
 		'numero_follow_sessione' : numero_follow_sessione,
 		'email_salavata' : email_salavata,
 		'stato_pacchetto' : stato_pacchetto,
+		'avviso' : avviso,
 	})
 		
 	return HttpResponse(template.render(context))	

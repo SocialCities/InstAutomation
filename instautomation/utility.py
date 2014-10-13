@@ -94,8 +94,8 @@ def errore_mortale(errore, instance):
 def avviso_email(email_utente):
     subject, from_email, to = '[Instautomation] Errore nel sistema', 'admindjango@instautomation.com', email_utente
 	
-    text_content = "Ciao! Scoppia tutto!"
-    html_content = "Ciao! <br/>Scoppia tutto!"
+    text_content = "Ciao! Faccio la cacca di sera di mattina di notte! bumbumbumb"
+    html_content = "Ciao! <br/>Faccio la cacca di sera di mattina di notte! bum bum"
 	
     msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
     msg.attach_alternative(html_content, "text/html")

@@ -33,3 +33,11 @@ def abbonamento_valido(instance):
 		return False #Abbonamento scaduto
 	else:
 		return True #Abbonamento valido
+
+
+def estendi_scadenza(instance, giorni):
+	pacchetto_obj = Pacchetti.objects.get(utente = instance, attivato = True)
+	data_scadenza = pacchetto_obj.data_scadenza
+
+	pacchetto_obj.data_scadenza = data_scadenza + timedelta(giorni)
+	pacchetto_obj.save()

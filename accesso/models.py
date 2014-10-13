@@ -6,12 +6,13 @@ class Utente(models.Model):
 	utente = models.ForeignKey(UserSocialAuth)
 	follower_iniziali = models.IntegerField()
 	email = models.EmailField(null = True, blank=True)
-	time_stamp = models.DateTimeField(null = True, blank = True, auto_now_add=True)	
+	time_stamp = models.DateTimeField(null = True, blank = True, auto_now_add = True)	
 	token_block = models.NullBooleanField(null = True, blank=True, default = False)
 	like_totali = models.IntegerField(default = 0)
 	like_sessione = models.IntegerField(default = 0)
 	follow_totali = models.IntegerField(default = 0)
 	follow_sessione = models.IntegerField(default = 0)
+	data_blocco_forzato = models.DateField(null = True, blank = True)	
 	
 	class Meta:
 		verbose_name = "Dati dell'utente"

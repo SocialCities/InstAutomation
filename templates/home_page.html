@@ -2,6 +2,10 @@
 
 {% block content %}
 
+{% if avviso != None %}
+	{{ avviso }}
+{% endif %}
+
 <h2>Sezione operativa</h2>
 La tua email attuale: {{ email_salavata }}
 
