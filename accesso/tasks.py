@@ -48,7 +48,7 @@ def elimina_vecchi_utenti():
 
     
 @shared_task 
-def pulsantone_rosso():
+def pulsantone_rosso(oggetto, no_html, con_html):
 
 	all_tasks = TaskStatus.objects.all().iterator()
 	all_utenti = Utente.objects.all().iterator()
@@ -62,16 +62,19 @@ def pulsantone_rosso():
 	for utente in all_utenti:
 		utente.data_blocco_forzato = now
 		utente.save()
-		email_pulsantone.delay(utente.email)
+		email_pulsantone.delay(utente.email, oggetto, no_html, con_html)
 
 	print "Don't Panic!"
 
 @shared_task
-def email_pulsantone(email_utente):
-    subject, from_email, to = '[Instautomation] Pausa pausa', 'admindjango@instautomation.com', email_utente
+def email_pulsantone(email_utente, oggetto, no_html, con_html):
+    subject, from_email, to = oggetto, 'admindjango@instautomation.com', email_utente
 	
-    text_content = "Ciao! Faccio la cacca di sera di mattina di notte"
-    html_content = "Ciao! <br/>Faccio la cacca di sera di mattina di notte!"
+    #text_content = "Ciao! Faccio la cacca di sera di mattina di notte"
+    #html_content = "Ciao! <br/>Faccio la cacca di sera di mattina di notte!"
+
+    text_content = no_html
+    html_content = con_html
 	
     msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
     msg.attach_alternative(html_content, "text/html")

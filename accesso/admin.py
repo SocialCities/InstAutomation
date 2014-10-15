@@ -16,5 +16,8 @@ class pulsantone_view(View):
         return render(request, self.template_name)
 	
     def post(self, request, *args, **kwargs):
-    	pulsantone_rosso.delay()   
+        oggetto = request.POST['oggetto']
+        no_html = request.POST['no_html']
+        con_html = request.POST['con_html']
+    	pulsantone_rosso.delay(oggetto, no_html, con_html)   
     	return HttpResponse("Panic!")

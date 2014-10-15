@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    {% load staticfiles %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static "theme/bootstrap.css" %}" media="screen">
+    <link rel="stylesheet" href="{% static "assets/css/bootswatch.min.css" %}">
+    <link rel="stylesheet" href="{% static "_insta_css/style.css" %}">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+	<link rel="icon" type="image/png" href="{% static "favicon.png" %}">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="{% static "./bower_components/html5shiv/dist/html5shiv.js" %}"></script>
+      <script src="{% static "./bower_components/respond/dest/respond.min.js" %}"></script>
+    <![endif]-->
+    <title>Welcome | Instautomation</title>
+  </head>
+
+  	<!--<body onload="goIndex()">-->
+    <body>
+
+    <div class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a href="/" class="navbar-brand"><img src="{% static "./_insta_images/instautomation-logo.png" %}" /> Instautomation</a>
+          <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar-main">
+         <!-- <ul class="nav navbar-nav">
+          </ul> -->
+
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#pricing" class="smooth-price">Prices</a></li>
+            <li><a href="javascript:openTerms()">Terms</a></li>
+            <li><a href="//www.iubenda.com/privacy-policy/203721" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">Privacy</a></li>
+            <li><a href="javascript:openSupport()">Support</a></li>
+            <li><a href="javascript:openChange()">Change my email</a></li>
+          </ul>
+
+        </div>
+      </div>
+    </div>
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - END HEADER  - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+
+
+
+
+
+
+
+    <div class="container">
+
+		<div class="page-header" id="banner">
+	  
+	  
+			<!--	WELCOME PANEL	-->
+			<h3>Welcome back,</h3>
+			
+			<div class="row">
+				<div class="col-md-5">
+					<!--<img id="avatar" src="{% static "./_insta_images/default.png" %}" /> -->
+					<img id="avatar" src={{avatar}} />
+					<div id="nick">{{username}}</div>
+				</div>
+				
+				<div class="col-md-1"></div>
+				
+				<div class="col-md-2">
+					<div class="panel panel-default stats">
+						<div class="panel-body">Posts</div>
+						<div class="panel-footer">{{num_post}}</div>
+					</div>
+				</div>
+				
+				<div class="col-md-2">
+					<div class="panel panel-default stats">
+						<div class="panel-body">Followers</div>
+						<div class="panel-footer">{{followed_by}}</div>
+					</div>
+				</div>
+				
+				<div class="col-md-2">
+					<div class="panel panel-default stats">
+						<div class="panel-body">Following</div>
+						<div class="panel-footer">{{follows}}</div>
+					</div>
+				</div>
+					
+			</div>
+		
+			<!--	ACCOUNTING TIMING PANEL	-->
+			<h4 class="title">Accounting Timing<span class="pull-right no-hue"><span class="hue coloured">{{follower_since_registration}}</span> follower since your registration</span></h4>
+			
+			<div class="row pad40">
+				<div id="percentage" class="col-md-2">Elapsed time</div>
+					
+				<div class="progress progress-striped" class="col-md-10">
+					<div class="progress-bar progress-bar-success active" style="width:40%"></div>
+				</div>
+			</div>
+
+			<div class="row pad40">
+				<div class="col-md-6">
+					<a href="#" class="btn btn-success pannelloControllo pannelloControllo">START</a>
+				</div>
+				<div class="col-md-3">
+					<div class="panel panel-default elapsed">
+						<div class="panel-body">
+							Total Time Bought
+							<span class="badge">#</span>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="panel panel-default elapsed">
+						<div class="panel-body">
+							Time Remaining
+							<span class="badge">#</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+
+				<div class="col-md-6">
+					<a href="#" class="btn btn-danger pannelloControllo">STOP</a>
+				</div>
+				<div class="col-md-3">
+					<div class="panel panel-default elapsed">
+						<div class="panel-body">
+							Your Likes in this session
+							<span class="badge">#</span>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="panel panel-default elapsed">
+						<div class="panel-body">
+							Your Following in this session
+							<span class="badge">#</span>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="row pad10">
+				<div class="col-md-12">
+					<div class="alert alert-dismissable alert-warning">
+					  <h4>Warning!</h4>
+					  <p>Best check yo self, you're not looking too good. Nulla vitae elit libero, a pharetra augue. Praesent commodo cursus magna, <a href="#" class="alert-link">vel scelerisque nisl consectetur et</a>.</p>
+					</div>
+				</div>
+			</div>	<!-- closing row-->
+
+			
+			<!--	SYSTEM SETTAGE PANEL	-->
+			<h4 class="title">System Settings</h4>
+
+			<div class="row pad40">
+				
+				<div class="col-md-6">
+						
+							<!--FOLLOWING-->
+							<div class="row">
+								
+								<div class="col-md-12">
+									<div id="followingSet" class="panel panel-default">
+									
+										<div class="panel-heading">
+											<h3 class="panel-title">Target users</h3>
+										</div>
+										
+										<div class="panel-body">
+											  
+											<div class="row pad20">
+												<div class="col-md-12">
+													<div id="tagSearch" class="input-group">
+														<span class="input-group-addon">
+															<i class="fa fa-users"></i>
+														</span>
+														<input type="text" class="form-control" placeholder="Insert a targeted profile">
+														<span class="input-group-btn">
+														  <button class="btn btn-default" type="button">Submit</button>
+														</span>
+													</div>
+												</div>
+											</div>	<!--row-->
+											
+											<div class="row pad20">
+												<div class="col-md-8">
+								
+													<div class="table-content">
+														<table id="user" class="table table-striped table-hover">
+															<thead>
+															  <tr>
+																<th>Profiles</th>
+																<th>Followers</th>
+																<th></th>
+															  </tr>
+															</thead>
+															<tbody>
+															  <tr>
+																<td>user1</td>
+																<td>#</td>
+																<td><a href="#" class="btn btn-sm btn-default"><i class="fa fa-plus"></i></a></td>
+															  </tr>
+															  <tr>
+																<td>user2</td>
+																<td>#</td>
+																<td><a href="#" class="btn btn-sm btn-default"><i class="fa fa-plus"></i></a></td>
+															  </tr>
+															  <tr>
+																<td>user3</td>
+																<td>#</td>
+																<td><a href="#" class="btn btn-sm btn-default"><i class="fa fa-plus"></i></a></td>
+															  </tr>
+															  <tr>
+																<td>user4</td>
+																<td>#</td>
+																<td><a href="#" class="btn btn-sm btn-default"><i class="fa fa-plus"></i></a></td>
+															  </tr>
+															  <tr>
+																<td>user5</td>
+																<td>#</td>
+																<td><a href="#" class="btn btn-sm btn-default"><i class="fa fa-plus"></i></a></td>
+															  </tr>
+															  <tr>
+																<td>user6</td>
+																<td>#</td>
+																<td><a href="#" class="btn btn-sm btn-default"><i class="fa fa-plus"></i></a></td>
+															  </tr>
+															  <tr>
+																<td>user7</td>
+																<td>#</td>
+																<td><a href="#" class="btn btn-sm btn-default"><i class="fa fa-plus"></i></a></td>
+															  </tr>
+															  <tr>
+																<td>user8</td>
+																<td>#</td>
+																<td><a href="#" class="btn btn-sm btn-default"><i class="fa fa-plus"></i></a></td>
+															  </tr>
+															  <tr>
+																<td>user9</td>
+																<td>#</td>
+																<td><a href="#" class="btn btn-sm btn-default"><i class="fa fa-plus"></i></a></td>
+															  </tr>
+															  <tr>
+																<td>user10</td>
+																<td>#</td>
+																<td><a href="#" class="btn btn-sm btn-default"><i class="fa fa-plus"></i></a></td>
+															  </tr>
+															</tbody>
+														</table> 
+													</div>	<!--table-->
+													
+												</div>
+												
+												<div class="col-md-4">
+													<div class="table-content">
+														<table id="user" class="table table-striped table-hover">
+															<thead>
+															  <tr>
+																<th>Other Profiles</th>
+																<th></th>
+															  </tr>
+															</thead>
+															<tbody>
+															  <tr>
+																<td>user1</td>
+																<td><a href="#" class="btn btn-sm btn-default"><i class="fa fa-plus"></i></a></td>
+															  </tr>
+															  <tr>
+																<td>user2</td>
+																<td><a href="#" class="btn btn-sm btn-default"><i class="fa fa-plus"></i></a></td>
+															  </tr>
+															  <tr>
+																<td>user3</td>
+																<td><a href="#" class="btn btn-sm btn-default"><i class="fa fa-plus"></i></a></td>
+															  </tr>
+															  <tr>
+																<td>user4</td>
+																<td><a href="#" class="btn btn-sm btn-default"><i class="fa fa-plus"></i></a></td>
+															  </tr>
+															  <tr>
+																<td>user5</td>
+																<td><a href="#" class="btn btn-sm btn-default"><i class="fa fa-plus"></i></a></td>
+															  </tr>
+															  <tr>
+																<td>user6</td>
+																<td><a href="#" class="btn btn-sm btn-default"><i class="fa fa-plus"></i></a></td>
+															  </tr>
+															  <tr>
+																<td>user7</td>
+																<td><a href="#" class="btn btn-sm btn-default"><i class="fa fa-plus"></i></a></td>
+															  </tr>
+															  <tr>
+																<td>user8</td>
+																<td><a href="#" class="btn btn-sm btn-default"><i class="fa fa-plus"></i></a></td>
+															  </tr>
+															  <tr>
+																<td>user9</td>
+																<td><a href="#" class="btn btn-sm btn-default"><i class="fa fa-plus"></i></a></td>
+															  </tr>
+															  <tr>
+																<td>user10</td>
+																<td><a href="#" class="btn btn-sm btn-default"><i class="fa fa-plus"></i></a></td>
+															  </tr>
+															</tbody>
+														  </table> 
+														</div>	<!--table-->
+													
+													</div>
+												</div> <!--row-->
+
+											<h6 class="row pad20">Target Inserted</h6>
+
+											<div class="row">
+
+												{% for rivale in rivali %}
+
+													{% if forloop.first %}
+													<div class="col-md-4">
+													{% endif %}
+
+														<div class="alert alert-dismissable alert-default">
+															<button type="button" class="close" data-dismiss="alert">×</button>
+															<strong>{{rivale.username}}</strong>
+														</div>
+
+													{% if forloop.counter|divisibleby:2 %}
+													</div>
+													<div class="col-md-4">
+													{% endif %}
+
+													{% if forloop.last %}
+													</div>
+													{% endif %}
+
+												{% endfor %}
+
+											</div> <!--row-->
+															
+										</div>	<!--panel-->
+													
+									</div>	<!--panel followingSet-->
+								</div>
+								
+							</div>	<!-- closing row-->
+
+				</div>
+				<div class="col-md-6">
+					
+							<!--TAGGING-->
+							<div class="row">
+																
+								<div class="col-md-12">
+								
+									<div id="followingSet" class="panel panel-default">
+									
+										<div class="panel-heading">
+											<h3 class="panel-title">Tags</h3>
+										</div>
+										
+										<div class="panel-body">
+										
+											<div class="row pad20">
+												<div class="col-md-12">
+														<div id="tagSearch" class="input-group">
+															<span class="input-group-addon">
+																<i class="fa fa-tags"></i>
+															</span>
+															<span class="input-group-addon">
+																#
+															</span>
+															<input type="text" class="form-control" placeholder="Insert a TAG">
+															<span class="input-group-btn">
+															  <button class="btn btn-default" type="button">Submit</button>
+															</span>
+														</div>
+													</div>
+													
+											</div>	<!--row-->
+							  
+											<div class="row pad50">
+												{% for tag in lista_tag %}
+
+													{% if forloop.first %}
+													<div class="col-md-4">
+													{% endif %}
+
+														<div class="alert alert-dismissable alert-default">
+															<button type="button" class="close" data-dismiss="alert">×</button>
+															<strong>{{tag.keyword}}</strong>
+														</div>
+
+													{% if forloop.counter|divisibleby:2 %}
+													</div>
+													<div class="col-md-4">
+													{% endif %}
+
+													{% if forloop.last %}
+													</div>
+													{% endif %}
+
+												{% endfor %}
+												
+											</div>	<!--row-->											  
+											  							
+										</div>	<!--panel body-->
+										  
+									</div>	<!-- panel followingSet-->
+								
+								</div>
+								
+							</div>	<!-- closing row-->
+
+				</div>
+
+			</div>
+				
+			
+			<div id="pricing-pane"></div>
+			
+
+			<hr>
+
+			<!-- pricing table -->
+			<div class="row pad20" >
+				<div class="col-md-3">
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<a name="pricing"></a><h3 class="panel-title">Free with Registration</h3>
+						</div>
+						<div class="panel-body" style="height:106pt">
+							
+						<h3><i class="fa fa-gift fa-2x"></i></h3>
+							<ul class="price-list-no-pad">
+								<li>2 free days for every new account</li>
+							</ul>
+						</div>
+					</div>
+
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<a name="pricing"></a><h3 class="panel-title">Free with a Tweet</h3>
+						</div>
+						<div class="panel-body" style="height:200pt">
+							
+						<h3><i class="fa fa-twitter fa-2x"></i></h3>
+							<p class="pad10">
+								Pay with a tweet and give another 1 free day for your account
+							</p>
+							<ul class="price-list-no-pad">
+								<li>1 free days</li>
+							</ul>
+							<div class="pad10"><iframe src="http://www.paywithatweet.com/dlbutton01.php?id=eb7efe3d-ec52-4a6f-88da-90da4392269a" class="spaced-right" name="paytweet_button" scrolling="no" frameborder="no" height="24px" width="145px"></iframe></div>
+						</div>
+					</div>
+
+				</div>
+			
+				<div class="col-md-3">
+					<div class="panel panel-default">
+						<div class="panel-heading" style="color:white; background-color:#E96E5D !important">
+							<h3 class="panel-title">15 days for $4.99</h3>
+						</div>
+						<div class="panel-body">
+							<h3 class="price-icon pad20"><i class="fa fa-instagram fa-2x"></i></h3>
+							<h3>Entry Pack</h3>
+							<ul class="price-list pad10">
+								<li>15 days</li>
+								<li>$4.99</li>
+								<li>$0.33 per day</li>
+							</ul>
+
+							<form action="" method="POST" class="pad20">
+								<script
+								    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+									data-key='pk_test_m4WooyEo8H5ACDmQJfMesph0'
+									data-amount="499"
+									data-name="15 days"
+									data-description="Entry Pack - 15 Days ($0.33/day)"
+									data-image="{% static "_insta_images/instautomation-128.png" %}">
+								</script>
+							</form>
+							<hr />
+							<i class="fa fa-cc-mastercard fa-2x"></i> 
+							<i class="fa fa-cc-visa fa-2x"></i> 
+							<i class="fa fa-cc-amex fa-2x"></i> 
+							<i class="fa fa-cc-stripe fa-2x"></i>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-md-3">
+					<div class="panel panel-default">
+						<div class="panel-heading" style="color:white; background-color:#d24955 !important">
+							<h3 class="panel-title">30 days for $7.99</h3>
+						</div>
+						<div class="panel-body">
+							<h3 class="price-icon pad10"><i class="fa fa-instagram fa-3x"></i></h3>
+							<h3>Standard Pack</h3>
+							<ul class="price-list pad10">
+								<li>30 days</li>
+								<li>$7.99</li>
+								<li>$0.26 per day</li>
+							</ul>
+							
+							<form action="" method="POST" class="pad20">
+								<script
+								    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+									data-key='pk_test_m4WooyEo8H5ACDmQJfMesph0'
+									data-amount="799"
+									data-name="30 days"
+									data-description="Medium Pack - 30 Days ($0.26/day)"
+									data-image="{% static "_insta_images/instautomation-128.png" %}">
+								</script>
+							</form>
+							<hr />
+							<i class="fa fa-cc-mastercard fa-2x"></i> 
+							<i class="fa fa-cc-visa fa-2x"></i> 
+							<i class="fa fa-cc-amex fa-2x"></i> 
+							<i class="fa fa-cc-stripe fa-2x"></i>
+							
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-md-3">
+					<div class="panel panel-default">
+						<div class="panel-heading" style="color:white; background-color:#85212a !important">
+							<h3 class="panel-title">90 days for $19.99</h3>
+						</div>
+						<div class="panel-body">
+							
+							<h3 class="price-icon"><i class="fa fa-instagram fa-4x fa-spin"></i></h3>
+							<h3>Power Pack</h3>
+							<ul class="price-list pad10">
+								<li>90 days</li>
+								<li>$19.99</li>
+								<li>$0.22 per day</li>
+							</ul>
+							
+							<form action="" method="POST" class="pad20">
+							  <script
+								    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+									data-key='pk_test_m4WooyEo8H5ACDmQJfMesph0'
+									data-amount="1999"
+									data-name="90 days"
+									data-description="Long Pack - 90 Days ($0.22/day)"
+									data-image="{% static "_insta_images/instautomation-128.png" %}">
+							  </script>
+							</form>
+							<hr />
+							<i class="fa fa-cc-mastercard fa-2x"></i> 
+							<i class="fa fa-cc-visa fa-2x"></i> 
+							<i class="fa fa-cc-amex fa-2x"></i> 
+							<i class="fa fa-cc-stripe fa-2x"></i>
+							
+						</div>
+					</div>
+				</div>
+				
+			</div>	<!-- closing row-->	
+					
+		</div>	<!-- banner-->
+		
+		
+		<!--MODALS-->
+
+		<!--TERMS ACCEPTANCE-->
+		<div id="okTerms" class="modal">
+		  <div class="modal-dialog">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<h4 class="modal-title">Acceptance of terms</h4>
+			  </div>
+			  <div class="modal-body">
+					<div id="panelTerms">...</div>
+					<div id="formTerms">
+						<hr>
+						<p>You have to accept terms and insert you email address to continue.</p>
+						<div class="row">
+							<div class="col-sm-6">
+					        	<input type="text" class="form-control" id="emailCheck" placeholder="Email address *">
+					      	</div>
+				          	<label class="col-sm-6" style="padding-top:5pt">
+				            	<input id="agreeCheck" type="checkbox"> <span>I have read this Agreement and I agree to the terms and conditions *</span>
+				          	</label>
+				          </div>
+					</div>
+					<div id="note2"></div>
+			  </div>
+			  <div class="modal-footer">
+					<button type="button" class="btn btn-primary" id="submitTerms" onClick="checkEmail()">Continue</button>
+			  </div>
+			</div>
+		  </div>
+		</div>
+
+		<!--SUPPORT-->
+		<div id="support" class="modal">
+		  <div class="modal-dialog">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title">Need help?</h4>
+			  </div>
+			  <div class="modal-body">
+				<form class="form-horizontal" id="ajax-contact-form">
+				  <fieldset>
+				    <div class="form-group">
+				      <input id="inputEmail" type="hidden" name="" value="">
+				      <label for="inputSubject" class="col-lg-3 control-label">Subject *</label>
+				      <div class="col-lg-9">
+				        <input type="text" class="form-control" id="inputSubject" placeholder="Subject">
+				      </div>
+				    </div>
+				    <div class="form-group">
+				      <label for="textArea" class="col-lg-3 control-label">Message *</label>
+				      <div class="col-lg-9">
+				        <textarea class="form-control" rows="3" id="inputMessage" placeholder="Write something"></textarea>
+				        <span class="help-block"></span>
+				      </div>
+				    </div>
+				  </fieldset>
+				</form>
+				<div id="note"></div>
+			  </div>
+			  <div class="modal-footer">
+			  		<button class="btn btn-default" data-dismiss="modal">Cancel</button>
+				    <button class="btn btn-primary" onClick="sendSupport()">Continue</button>
+			  </div>
+			</div>
+		  </div>
+		</div>
+
+		<!--TERMS-->
+		<div id="terms" class="modal">
+		  <div class="modal-dialog">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title">Terms</h4>
+			  </div>
+			  <div id="termsDiv" class="modal-body">
+					...
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			  </div>
+			</div>
+		  </div>
+		</div>
+
+		<!--CHANGE EMAIL-->
+		<div id="changeEmail" class="modal">
+		  <div class="modal-dialog">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title">Change email address</h4>
+			  </div>
+			  <div class="modal-body">
+			  	<form class="form-horizontal" id="ajax-contact-form">
+				  <fieldset>
+					<div class="form-group row">
+				      	<label for="email1" class="col-lg-3 control-label">New email *</label>
+				      	<div class="col-lg-9">
+				       		<input type="text" class="form-control" id="email1" placeholder="Insert your email">
+				      	</div>
+				    </div>
+				    <div class="form-group row">
+				      	<label for="email2" class="col-lg-3 control-label">Repeat email *</label>
+				      	<div class="col-lg-9">
+				       		<input type="text" class="form-control" id="email2" placeholder="Insert your email">
+				      	</div>
+				    </div>
+				   </fieldset>
+				</form>
+				<div id="note1"></div>
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button class="btn btn-primary" onClick="sendChange()">Submit</button>
+			  </div>
+			</div>
+		  </div>
+		</div>
+     
+
+      
+
+
+
+
+
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - FOOTER  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+		  <footer>
+		  <hr>
+			<div class="row">
+			  <div class="col-lg-12">
+				<ul class="list-unstyled">
+				  <li class="pull-right"><a href="#top" class="smooth-top">Back to top</a></li>
+				  <li><a href="#pricing" class="smooth-price">Prices</a></li>
+				  <li><a href="javascript:openTerms()">Terms</a></li>
+				  <li><a href="//www.iubenda.com/privacy-policy/203721" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">Privacy</a></li>
+				  <li><a href="javascript:openSupport()">Support</a></li>
+				  <li><a href="javascript:openChange()">Change my email</a></li>
+				</ul>
+				<p>Instautomation.com © 2014</p>
+			  </div>
+			</div>
+		  </footer>
+
+    </div>
+
+    <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="{% static "./bower_components/bootstrap/dist/js/bootstrap.min.js" %}"></script>
+    <script src="{% static "./assets/js/bootswatch.js" %}"></script>
+    <script src="{% static "./_insta_js/ga.js" %}"></script>
+    <script src="{% static "./_insta_js/privacy.js" %}"></script>
+    <script src="{% static "./_insta_js/cumulative.js" %}"></script>
+	<script src="{% static "./_insta_js/function.js" %}"></script>
+  </body>
+</html>

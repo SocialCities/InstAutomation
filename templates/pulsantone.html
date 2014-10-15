@@ -2,8 +2,15 @@
 
 {% block content %}
 
-		<form action="/pulsantone" method="post">{% csrf_token %}
+		<form action="/pulsantone" method="post" id = "pulsantone">{% csrf_token %}
+			Oggetto: <input type="text" name="oggetto">
+			<br/>
+			<textarea rows="4" cols="50" name="no_html" form="pulsantone" >Testo no HTML</textarea>
+			<br/>
+			<textarea rows="4" cols="50" name="con_html" form="pulsantone" >Testo con HTML</textarea>
+			<br/>
 			<button type="submit" class="btn btn-default">Don't panic!</button>
 		</form>
+
 
 {% endblock %}	

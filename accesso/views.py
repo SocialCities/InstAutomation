@@ -90,8 +90,75 @@ class beta_home(View):
 @token_error
 def home_page(request):	
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
-	template = loader.get_template('home_page.html')
-	
+	access_token = instance.tokens['access_token']	
+
+	template = loader.get_template('index.html')
+
+	api = InstagramAPI(
+				access_token = access_token,
+				client_ips = MIOIP,
+				client_secret = CLIENT_SECRET
+	)
+
+	me_object = api.user()
+
+	username = me_object.username
+	avatar = me_object.profile_picture
+	me_counts = me_object.counts
+	num_post = me_counts['media']
+	followed_by = me_counts['followed_by']
+	follows = me_counts['follows']
+
+	user_obj = Utente.objects.get(utente = instance)
+	followers_at_registration = user_obj.follower_iniziali
+	follower_since_registration = followed_by - followers_at_registration 
+
+	lista_tag = ListaTag.objects.filter(utente = instance) 
+	rivali = UtentiRivali.objects.filter(utente = instance)
+
+	context = RequestContext(request, {
+		'username' : username,
+		'avatar' : avatar,
+		'num_post' : num_post,
+		'followed_by' : followed_by,
+		'follows' : follows,
+		'follower_since_registration' : follower_since_registration,
+		'lista_tag' : lista_tag,
+		'rivali' : rivali,
+	})
+
+	return HttpResponse(template.render(context)) 	
+
+@login_required(login_url='/login')
+@token_error
+def home_page_old(request):	
+	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
+	access_token = instance.tokens['access_token']	
+
+	#template = loader.get_template('home_page.html')
+	template = loader.get_template('index.html')
+
+	api = InstagramAPI(
+				access_token = access_token,
+				client_ips = MIOIP,
+				client_secret = CLIENT_SECRET
+	)
+
+	me_object = api.user()
+
+	username = me_object.username
+	avatar = me_object.profile_picture
+	me_counts = me_object.counts
+	num_post = me_counts['media']
+	followed_by = me_counts['followed_by']
+	follows = me_counts['follows']
+
+	user_obj = Utente.objects.get(utente = instance)
+	followers_at_registration = user_obj.follower_iniziali
+	follower_since_registration = followed_by - followers_at_registration 
+
+	#Fatto fino a qui
+
 	cerca_competitor_form = CercaCompetitorForm()
 	cerca_competitor_form.fields['username'].label = 'Cerca un competitor'
 	
@@ -118,7 +185,7 @@ def home_page(request):
 	else:
 		stato_pacchetto = 0
 	
-	user_obj = Utente.objects.get(utente = instance)
+	
 	email_salavata = user_obj.email
 	numero_like_totali = user_obj.like_totali
 	numero_follow = user_obj.follow_totali
@@ -177,6 +244,13 @@ def home_page(request):
 		numero_follow_sessione = user_obj.follow_sessione		
 
 	context = RequestContext(request, {
+		'username' : username,
+		'avatar' : avatar,
+		'num_post' : num_post,
+		'followed_by' : followed_by,
+		'follows' : follows,
+		'follower_since_registration' : follower_since_registration,
+
 		'rivali' : rivali,
 		'competitor_form' : cerca_competitor_form,
 		'lista_tag' : lista_tag,
@@ -293,8 +367,8 @@ def cerca_competitor(request):
 			client_secret = CLIENT_SECRET 
 	)		
 	
-	tutti_nomi = api.user_search(q = nome_da_cercare)	
-	
+	tutti_nomi = api.user_search(q = nome_da_cercare, count = 20)	
+
 	new_tutti_nomi = []
 	
 	for nome in tutti_nomi[:10]:

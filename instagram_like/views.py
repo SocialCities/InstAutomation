@@ -16,6 +16,7 @@ def aggiungi_tag(request):
 	tag_form = TagForm(request.POST)
 	if tag_form.is_valid():
 		testo_tag = tag_form.cleaned_data['keyword']
+		testo_tag = testo_tag.replace("#","")
 		
 		esistenza_tag = ListaTag.objects.filter(keyword = testo_tag, utente = instance).exists()
 		
