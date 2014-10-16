@@ -21,7 +21,6 @@ INSTALLED_APPS = (
     'instagram_like',
     'instagram_follow',
     'djcelery',
-    'debug',
     'statistiche',
     'bootstrap3',
     'pagamenti',

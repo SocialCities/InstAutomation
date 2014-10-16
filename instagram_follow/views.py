@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.conf import settings
 
 from social_auth.models import UserSocialAuth
@@ -7,6 +7,8 @@ from instagram.client import InstagramAPI
 
 from .models import UtentiRivali, WhitelistUtenti, BlacklistUtenti
 from .forms import RivaliForm
+
+import json
 
 from instautomation.utility import get_cursore
 
@@ -34,7 +36,7 @@ def aggiungi_competitor(request):
 		nuovo_rivale = UtentiRivali(username = username, id_utente = id_utente, utente = instance, numero_follower = numero_follower)
 		nuovo_rivale.save()
 						
-	return HttpResponseRedirect('/')     
+	return HttpResponse()    
 	
 @login_required(login_url='/login')
 def rimuovi_competitor(request):	 	
@@ -45,7 +47,7 @@ def rimuovi_competitor(request):
 	utente_da_eliminare = UtentiRivali.objects.get(username = nome_rivale, utente = instance)
 	utente_da_eliminare.delete()
 	
-	return HttpResponseRedirect('/')
+	return HttpResponse()
 
 
 def update_whitelist(api, instance):
@@ -66,3 +68,55 @@ def update_whitelist(api, instance):
 		
 		cursore, uscita = get_cursore(followed_by_obj)
 
+
+@login_required(login_url='/login')
+def cerca_competitor(request):
+	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
+	access_token = instance.tokens['access_token']	
+	nome_da_cercare =  request.POST['keyword']
+
+	api = InstagramAPI(
+			access_token = access_token,
+			client_ips = MIOIP,
+			client_secret = CLIENT_SECRET 
+	)	
+
+	tutti_nomi = api.user_search(q = nome_da_cercare, count = 20)
+
+	new_tutti_nomi = []
+	
+	for nome in tutti_nomi[:10]:
+		try:
+			followed_by = api.user(nome.id).counts['followed_by']
+			nome.followed_by = followed_by
+			new_tutti_nomi.append(nome)
+		except:
+			pass
+		
+	new_tutti_nomi = sorted(new_tutti_nomi, key = lambda user_obj: user_obj.followed_by, reverse=True)
+	altri_nomi = tutti_nomi[10:]
+
+	output = {}
+	output_full_user = []
+	output_other_user = []
+
+	for name in new_tutti_nomi:
+		user = {}
+		user["username"] = name.username
+		user["id"] = name.id
+		user["followed_by"] = name.followed_by
+		output_full_user.append(user)
+
+	for other_name in altri_nomi:
+		user = {}
+		user["username"] = other_name.username
+		user["id"] = other_name.id
+		output_other_user.append(user)
+
+	output["users"] = output_full_user
+	output["other_users"] = output_other_user
+
+	return HttpResponse(
+    	json.dumps(output),
+        content_type="application/json"
+    )

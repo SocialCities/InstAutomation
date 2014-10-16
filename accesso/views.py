@@ -129,6 +129,9 @@ def home_page(request):
 
 	return HttpResponse(template.render(context)) 	
 
+
+
+
 @login_required(login_url='/login')
 @token_error
 def home_page_old(request):	
@@ -268,7 +271,7 @@ def home_page_old(request):
 	return HttpResponse(template.render(context))	
 	
 @login_required(login_url='/login')
-def cerca_competitor(request):	
+def cerca_competitor_old(request):	
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
 	access_token = instance.tokens['access_token']	
 	

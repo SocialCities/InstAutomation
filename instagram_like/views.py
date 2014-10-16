@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
@@ -24,7 +24,7 @@ def aggiungi_tag(request):
 			nuovo_tag = ListaTag(keyword = testo_tag, utente = instance)
 			nuovo_tag.save()
 			
-			return HttpResponseRedirect('/')
+			return HttpResponse()
 		else:
 			return HttpResponseRedirect('/')
  
@@ -36,8 +36,8 @@ def rimuovi_tag(request):
 	
 	tag_da_eliminare = ListaTag.objects.get(keyword = nome_tag, utente = instance)
 	tag_da_eliminare.delete()
-	
-	return HttpResponseRedirect('/')
+
+	return HttpResponse()
 	
 
  

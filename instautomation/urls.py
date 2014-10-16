@@ -57,7 +57,7 @@ urlpatterns = patterns('',
     url(r'^logout$', 'accesso.views.uscita'),
         
     url(r'^add_email$', 'accesso.views.add_email'),   
-    url(r'^cerca_competitor$', 'accesso.views.cerca_competitor'),  
+    #url(r'^cerca_competitor$', 'accesso.views.cerca_competitor'),  
     url(r'^stop$', 'accesso.views.ferma_task'),   
     url(r'^start$', 'accesso.views.avvia_task'), 
     url(r'^clean$', 'accesso.views.clean'), 
@@ -66,6 +66,7 @@ urlpatterns = patterns('',
           
     url(r'^aggiungi_competitor$', 'instagram_follow.views.aggiungi_competitor'),   
     url(r'^rimuovi_competitor$', 'instagram_follow.views.rimuovi_competitor'), 
+    url(r'^cerca_competitor$', 'instagram_follow.views.cerca_competitor'), 
       
     url(r'^aggiungi_tag$', 'instagram_like.views.aggiungi_tag'), 
     url(r'^rimuovi_tag$', 'instagram_like.views.rimuovi_tag'),     
