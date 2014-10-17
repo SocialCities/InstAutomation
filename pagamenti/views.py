@@ -41,3 +41,30 @@ def estendi_scadenza(instance, giorni):
 
 	pacchetto_obj.data_scadenza = data_scadenza + timedelta(giorni)
 	pacchetto_obj.save()
+
+
+def percentuale_tempo_rimanente(instance):
+	pacchetto_obj = Pacchetti.objects.get(utente = instance)
+
+	now = date.today()
+	data_scadenza = pacchetto_obj.data_scadenza
+
+	delta_scadenza = data_scadenza - now  
+	delta_scadenza = float(delta_scadenza.days)
+	giorni_totali = float(pacchetto_obj.giorni)
+
+	return 100-((delta_scadenza/giorni_totali)*100)
+
+
+def get_dati_pacchetto(instance):
+	pacchetto_obj = Pacchetti.objects.get(utente = instance)
+
+	now = date.today()
+	data_scadenza = pacchetto_obj.data_scadenza
+	delta_scadenza = data_scadenza - now  
+	delta_scadenza = delta_scadenza.days
+
+	giorni_totali = pacchetto_obj.giorni
+
+	return delta_scadenza, giorni_totali
+

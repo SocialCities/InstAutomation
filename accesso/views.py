@@ -8,6 +8,7 @@ from django.conf import settings
 from django import forms
 
 from datetime import date
+from django.core.mail import EmailMultiAlternatives 
 
 from instagram_like.models import ListaTag
 from instagram_like.forms import TagForm
@@ -15,10 +16,10 @@ from instagram_follow.models import UtentiRivali
 from instagram_follow.forms import CercaCompetitorForm
 from instagram_follow.tasks import avvia_task_pulizia_follower
 from pagamenti.models import Pacchetti
-from pagamenti.views import nuovo_pacchetto, attiva_pacchetto, abbonamento_valido, estendi_scadenza
+from pagamenti.views import nuovo_pacchetto, attiva_pacchetto, abbonamento_valido, estendi_scadenza, percentuale_tempo_rimanente, get_dati_pacchetto
 
 from .models import Utente, TaskStatus
-from .tasks import start_task
+from .tasks import start_task, invio_email_primo_avvio
 from .decorators import token_error
 
 from social_auth.models import UserSocialAuth
@@ -34,7 +35,7 @@ def index(request):
 	
 def uscita(request):
     logout(request)
-    return HttpResponseRedirect('/access') 	
+    return HttpResponseRedirect('/login') 	
 
 def access(request):
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
@@ -110,11 +111,43 @@ def home_page(request):
 	follows = me_counts['follows']
 
 	user_obj = Utente.objects.get(utente = instance)
+	email = user_obj.email
 	followers_at_registration = user_obj.follower_iniziali
 	follower_since_registration = followed_by - followers_at_registration 
 
 	lista_tag = ListaTag.objects.filter(utente = instance) 
 	rivali = UtentiRivali.objects.filter(utente = instance)
+	percentuale_tempo = 0
+
+	#Status pacchetti
+	esistenza_pacchetto = Pacchetti.objects.filter(utente = instance).exists()
+	if esistenza_pacchetto:
+		pacchetto_attivato = Pacchetti.objects.filter(utente = instance, attivato = True).exists()
+		if pacchetto_attivato:
+
+			if abbonamento_valido(instance):
+				stato_pacchetto = 2 #Abbonamento valido
+				percentuale_tempo = percentuale_tempo_rimanente(instance)
+				time_remaining, giorni_totali = get_dati_pacchetto(instance)
+			else:
+				stato_pacchetto = 1 #Abbonamento scaduto
+				time_remaining, giorni_totali = get_dati_pacchetto(instance)
+
+		else:
+			stato_pacchetto = 3 #Pacchetto non usato ma valido
+			time_remaining, giorni_totali = get_dati_pacchetto(instance)
+	else:
+		stato_pacchetto = 0	
+
+
+	status_obj_attivi = TaskStatus.objects.filter(utente = instance, completato = False).exists()
+
+	if status_obj_attivi is False:
+		numero_like_sessione = 0
+		numero_follow_sessione = 0
+	else:
+		numero_like_sessione = user_obj.like_sessione
+		numero_follow_sessione = user_obj.follow_sessione
 
 	context = RequestContext(request, {
 		'username' : username,
@@ -125,6 +158,14 @@ def home_page(request):
 		'follower_since_registration' : follower_since_registration,
 		'lista_tag' : lista_tag,
 		'rivali' : rivali,
+		'email' : email,
+		'stato_pacchetto' : stato_pacchetto,
+		'percentuale_tempo' : percentuale_tempo,
+		'time_remaining' : time_remaining,
+		'giorni_totali' : giorni_totali,
+		'status_obj_attivi' : status_obj_attivi,
+		'numero_like_sessione' : numero_like_sessione,
+		'numero_follow_sessione' : numero_follow_sessione,
 	})
 
 	return HttpResponse(template.render(context)) 	
@@ -450,19 +491,64 @@ def clean(request):
 		
 	return HttpResponseRedirect('/')	
 	
-
 @login_required(login_url='/login')
 def add_email(request):
 	email_da_controllare = request.POST['email']
 	f = forms.EmailField()
-	try:
-		email = f.clean(email_da_controllare)
-		instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
-		
-		user_obj = Utente.objects.get(utente = instance)
-		user_obj.email = email
-		user_obj.save()
 	
-		return HttpResponseRedirect('/')
-	except:
-		return HttpResponse("Inserisci una email")		
+	email = f.clean(email_da_controllare)
+	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
+		
+	user_obj = Utente.objects.get(utente = instance)
+	user_obj.email = email
+	user_obj.save()
+
+	username = user_obj.utente.extra_data['username']
+
+	primo_avvio = request.POST['primo_avvio']
+
+	if(primo_avvio == 'true'):
+		invio_email_primo_avvio.delay(email, username)
+	
+	return HttpResponse('')	
+
+@login_required(login_url='/login')
+def contact_process(request):
+	errore = ''
+	
+	richiesta = request.POST	
+
+	if richiesta.__contains__('email') is False:
+		errore = 'Per favore inserisci la tua email.<br />'
+	else:
+		email_da_controllare = request.POST['email']	
+		f = forms.EmailField()
+		try:
+			f.clean(email_da_controllare)
+		except:
+			errore = 'Per favore inserisci un indirizzo email valido.<br />'
+	
+	if (richiesta.__contains__('message') is False):
+		errore = 'Per favore inserisci un messaggio.<br />'		
+	else:
+		if len(request.POST['message']) < 10:
+			errore = 'Il tuo messaggio dovrebbe avere almeno dieci caratteri.<br />'		
+	
+	if errore == '':		
+		if richiesta.__contains__('subject'):
+			subject = request.POST['subject']
+		else:
+			subject = "Info Instautomation"
+				
+		from_email = request.POST['email']
+		to = 'info@instautomation.com'
+		text_content = request.POST['message']
+		html_content = request.POST['message']
+		
+		msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+		msg.attach_alternative(html_content, "text/html")
+		msg.send()
+		
+		return HttpResponse('OK')
+	else:
+		return HttpResponse('<div class="notification_error">'+errore+'</div>')	

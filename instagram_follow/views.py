@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponse
 from django.conf import settings
 
 from social_auth.models import UserSocialAuth
@@ -33,8 +33,10 @@ def aggiungi_competitor(request):
 		)
 		
 		numero_follower = api.user(id_utente).counts['followed_by']
-		nuovo_rivale = UtentiRivali(username = username, id_utente = id_utente, utente = instance, numero_follower = numero_follower)
-		nuovo_rivale.save()
+		esistenza = UtentiRivali.objects.filter(username = username, id_utente = id_utente, utente = instance, numero_follower = numero_follower).exists()
+		if esistenza is False:
+			nuovo_rivale = UtentiRivali(username = username, id_utente = id_utente, utente = instance, numero_follower = numero_follower)
+			nuovo_rivale.save()
 						
 	return HttpResponse()    
 	

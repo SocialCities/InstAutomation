@@ -79,3 +79,23 @@ def email_pulsantone(email_utente, oggetto, no_html, con_html):
     msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
     msg.attach_alternative(html_content, "text/html")
     msg.send()	
+
+@shared_task
+def invio_email_primo_avvio(email, username):
+    subject, from_email, to = '[Instautomation] Welcome!', 'admindjango@instautomation.com', email
+	
+    html_content = "Dear "+username+",<br/> \
+					welcome to Instautomation!<br/>\
+					Actually, we're on Beta-version mode and the system is opened to few users;<br/>\
+					congrats for being one of the chosen.<br/>\
+					You can start to optimize your Insta profile by trying the '2days4free' package.<br/>\
+					Anyway, we strongly recommend you to read our Term of Service before starting to use Instautomation.<br/>\
+					Feel free to share any suggestion or problem at info@instautomation.com.<br/>\
+					Kind regards,<br/>\
+					Instautomation Team"
+
+    text_content = html_content			
+	
+    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+    msg.attach_alternative(html_content, "text/html")
+    msg.send()		

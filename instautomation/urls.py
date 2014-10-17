@@ -55,6 +55,7 @@ urlpatterns = patterns('',
     url(r'^access$', 'accesso.views.access'),
     url(r'^$', 'accesso.views.home_page'),  
     url(r'^logout$', 'accesso.views.uscita'),
+    url(r'^contact_process$', 'accesso.views.contact_process'),
         
     url(r'^add_email$', 'accesso.views.add_email'),   
     #url(r'^cerca_competitor$', 'accesso.views.cerca_competitor'),  

@@ -38,9 +38,9 @@
             <li><a href="#pricing" class="smooth-price">Prices</a></li>
             <li><a href="javascript:openTerms()">Terms</a></li>
             <li><a href="//www.iubenda.com/privacy-policy/203721" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">Privacy</a></li>
-            <li><a href="javascript:openSupport()">Support</a></li>
+            <li><a href="javascript:openSupport('{{email}}')">Support</a></li>
             <li><a href="javascript:openChange()">Change my email</a></li>
-            <li><a href="">Logout</a></li>
+            <li><a href="/logout">Logout</a></li>
           </ul>
 
         </div>
@@ -104,12 +104,56 @@
 			<h4 class="title">Accounting Timing<span class="pull-right no-hue"><span class="hue coloured">{{follower_since_registration}}</span> follower since your registration</span></h4>
 			
 			<div class="row pad40">
-				<div id="percentage" class="col-md-2">Elapsed time</div>
+				
 					
-				<div class="progress progress-striped" class="col-md-10">
-					<div class="progress-bar progress-bar-success active" style="width:40%"></div>
+				{% if stato_pacchetto = 3 %}	
+				<div id="percentage" class="col-md-2">Elapsed time</div>
+
+				<div class="col-md-10">
+					<div class="progress progress-striped">
+						<div class="progress-bar progress-bar-primary" style="width:10%"></div>
+					</div>
+				</div>	
+
+				{% elif stato_pacchetto = 2 and status_obj_attivi %}
+
+				<div id="percentage" class="col-md-2 barra-avviata">Elapsed time</div>
+
+				<div class="col-md-7">
+					<div class="progress progress-striped barra-avviata">
+						<div class="progress-bar progress-bar-success" style="width:{{percentuale_tempo}}%"></div>
+					</div>	
 				</div>
+
+				<div class="col-md-3">
+					<a href="#" class="btn btn-danger pannelloControllo">PAUSE</a>
+				</div>
+
+				{% elif stato_pacchetto = 2 %}
+
+				<div id="percentage" class="col-md-2">Elapsed time</div>
+
+				<div class="col-md-10">
+					<div class="progress progress-striped">
+						<div class="progress-bar progress-bar-success active" style="width:{{percentuale_tempo}}%"></div>
+					</div>			
+				</div>		
+
+				{% elif stato_pacchetto = 1%} 
+
+				<div id="percentage" class="col-md-2">Elapsed time</div>
+
+				<div class="col-md-10">
+					<div class="progress progress-striped">
+						<div class="progress-bar progress-bar-warning" style="width:100%"></div>
+					</div>
+				</div>
+
+				{% endif %}
+
 			</div>
+
+			{% if not status_obj_attivi %}
 
 			<div class="row pad40">
 				<div class="col-md-6">
@@ -119,7 +163,7 @@
 					<div class="panel panel-default elapsed">
 						<div class="panel-body">
 							Total Time Bought
-							<span class="badge">#</span>
+							<span class="badge">{{giorni_totali}} days</span>
 						</div>
 					</div>
 				</div>
@@ -127,35 +171,56 @@
 					<div class="panel panel-default elapsed">
 						<div class="panel-body">
 							Time Remaining
-							<span class="badge">#</span>
+							<span class="badge">{{time_remaining}} days</span>
 						</div>
 					</div>
 				</div>
 			</div>
+
+			{% else %}
 
 			<div class="row">
 
-				<div class="col-md-6">
-					<a href="#" class="btn btn-danger pannelloControllo">STOP</a>
-				</div>
+				<!--<div class="col-md-3">
+					<a href="#" class="btn btn-danger pannelloControllo">PAUSE</a>
+				</div>-->
+
 				<div class="col-md-3">
 					<div class="panel panel-default elapsed">
 						<div class="panel-body">
-							Your Likes in this session
-							<span class="badge">#</span>
+							Comprati
+							<span class="badge">{{giorni_totali}} days</span>
 						</div>
 					</div>
 				</div>
 				<div class="col-md-3">
 					<div class="panel panel-default elapsed">
 						<div class="panel-body">
-							Your Following in this session
-							<span class="badge">#</span>
+							Rimanenti 
+							<span class="badge">{{time_remaining}} days</span>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="panel panel-default elapsed">
+						<div class="panel-body">
+							Likes in this session
+							<span class="badge">{{numero_like_sessione}}</span>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="panel panel-default elapsed">
+						<div class="panel-body">
+							Following in this session
+							<span class="badge">{{numero_follow_sessione}}</span>
 						</div>
 					</div>
 				</div>
 
 			</div>
+
+			{% endif %}
 
 			<div class="row pad10">
 				<div class="col-md-12">
@@ -189,11 +254,11 @@
 											<div class="row pad20">
 												<div class="col-md-12">
 													<form id ="cerca_competitor">
-													<div id="tagSearch" class="input-group">
+													<div id="tagSearch_competitor" class="input-group">
 														<span class="input-group-addon">
 															<i class="fa fa-users"></i>
 														</span>
-														<input type="text" id ="cerca_competitor_keyword" class="form-control" placeholder="Insert a targeted profile" name="keyword">
+														<input type="text" id ="cerca_competitor_keyword" class="form-control" placeholder="Insert a targeted profile" name="keyword" />
 														<span class="input-group-btn">
 														  <button class="btn btn-default" type="submit">Submit</button>
 														</span>
@@ -242,7 +307,12 @@
 													</div>
 												</div> <!--row-->
 
-											<h6 class="row pad20">Target Inserted</h6>
+											{% if rivali|length == 0 %}
+											<h6 class="row pad20" style="display:none" id = "header_target_competitor" >Target Inserted</h6>
+
+											{% else %}
+											<h6 class="row pad20" id = "header_target_competitor" >Target Inserted</h6>
+											{% endif %}
 
 											<div class="row" id="competitor_container">
 
@@ -287,7 +357,7 @@
 																
 								<div class="col-md-12">
 								
-									<div id="followingSet" class="panel panel-default">
+									<div id="followingSet_tag" class="panel panel-default">
 									
 										<div class="panel-heading">
 											<h3 class="panel-title">Tags</h3>
@@ -344,7 +414,7 @@
 											  							
 										</div>	<!--panel body-->
 										  
-									</div>	<!-- panel followingSet-->
+									</div>	<!-- panel followingSet_tag-->
 								
 								</div>
 								
@@ -565,8 +635,8 @@
 				<div id="note"></div>
 			  </div>
 			  <div class="modal-footer">
-			  		<button class="btn btn-default" data-dismiss="modal">Cancel</button>
-				    <button class="btn btn-primary" onClick="sendSupport()">Continue</button>
+			  		<!--<button class="btn btn-default" data-dismiss="modal">Cancel</button>
+				    <button class="btn btn-primary" onClick="sendSupport()">Continue</button>-->
 			  </div>
 			</div>
 		  </div>
@@ -599,7 +669,7 @@
 				<h4 class="modal-title">Change email address</h4>
 			  </div>
 			  <div class="modal-body">
-			  	<form class="form-horizontal" id="ajax-contact-form">
+			  	<form class="form-horizontal" id="ajax-contact-form_email">
 				  <fieldset>
 					<div class="form-group row">
 				      	<label for="email1" class="col-lg-3 control-label">New email *</label>
@@ -658,9 +728,9 @@
 				  <li><a href="#pricing" class="smooth-price">Prices</a></li>
 				  <li><a href="javascript:openTerms()">Terms</a></li>
 				  <li><a href="//www.iubenda.com/privacy-policy/203721" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">Privacy</a></li>
-				  <li><a href="javascript:openSupport()">Support</a></li>
+				  <li><a href="javascript:openSupport('{{email}}')">Support</a></li>
 				  <li><a href="javascript:openChange()">Change my email</a></li>
-				  <li><a href="">Logout</a></li>
+				  <li><a href="/logout">Logout</a></li>
 				</ul>
 				<p>Instautomation.com © 2014</p>
 			  </div>
@@ -672,12 +742,20 @@
     <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="{% static "./bower_components/bootstrap/dist/js/bootstrap.min.js" %}"></script>
+    <script src="{% static "WearProtection.js" %}"></script>
     <script src="{% static "./assets/js/bootswatch.js" %}"></script>
     <script src="{% static "./_insta_js/ga.js" %}"></script>
     <script src="{% static "./_insta_js/privacy.js" %}"></script>
     <script src="{% static "./_insta_js/cumulative.js" %}"></script>
 	<script src="{% static "./_insta_js/function.js" %}"></script>
-	<script src="{% static "WearProtection.js" %}"></script>
 	<script src="{% static "main.js" %}"></script>
+
+
+	{% if email == "" or email == None %}
+    	<script>
+    		goIndex();
+    	</script>
+    {% endif %}	
+
   </body>
 </html>
