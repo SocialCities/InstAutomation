@@ -86,7 +86,6 @@ class beta_home(View):
 			return HttpResponseRedirect('/beta/')			
 			
 	
-
 @login_required(login_url='/login')
 @token_error
 def home_page(request):	
@@ -127,8 +126,8 @@ def home_page(request):
 
 			if abbonamento_valido(instance):
 				stato_pacchetto = 2 #Abbonamento valido
-				percentuale_tempo = percentuale_tempo_rimanente(instance)
-				time_remaining, giorni_totali = get_dati_pacchetto(instance)
+				percentuale_tempo = percentuale_tempo_rimanente(instance)  
+				time_remaining, giorni_totali = get_dati_pacchetto(instance)           
 			else:
 				stato_pacchetto = 1 #Abbonamento scaduto
 				time_remaining, giorni_totali = get_dati_pacchetto(instance)
@@ -137,9 +136,11 @@ def home_page(request):
 			stato_pacchetto = 3 #Pacchetto non usato ma valido
 			time_remaining, giorni_totali = get_dati_pacchetto(instance)
 	else:
+		giorni_totali = 0
 		stato_pacchetto = 0	
+		time_remaining = 0
 
-
+	
 	status_obj_attivi = TaskStatus.objects.filter(utente = instance, completato = False).exists()
 
 	if status_obj_attivi is False:
@@ -172,6 +173,7 @@ def home_page(request):
 
 
 
+#Deprecato
 
 @login_required(login_url='/login')
 @token_error
@@ -200,8 +202,6 @@ def home_page_old(request):
 	user_obj = Utente.objects.get(utente = instance)
 	followers_at_registration = user_obj.follower_iniziali
 	follower_since_registration = followed_by - followers_at_registration 
-
-	#Fatto fino a qui
 
 	cerca_competitor_form = CercaCompetitorForm()
 	cerca_competitor_form.fields['username'].label = 'Cerca un competitor'
@@ -311,147 +311,14 @@ def home_page_old(request):
 		
 	return HttpResponse(template.render(context))	
 	
-@login_required(login_url='/login')
-def cerca_competitor_old(request):	
-	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
-	access_token = instance.tokens['access_token']	
-	
-	cerca_competitor_form = CercaCompetitorForm(request.GET)
-	if cerca_competitor_form.is_valid():
-		nome_da_cercare = cerca_competitor_form.cleaned_data['username']
-	
-	template = loader.get_template('home_page_rivali.html')
-	
-	cerca_competitor_form = CercaCompetitorForm()
-	cerca_competitor_form.fields['username'].label = 'Cerca un competitor'
-	
-	rivali = UtentiRivali.objects.filter(utente = instance) 	
-	
-	lista_tag = ListaTag.objects.filter(utente = instance) 	
-	tag_form = TagForm()
-	
-	status_obj_attivi = TaskStatus.objects.filter(utente = instance, completato = False).exists()
-
-	esistenza_pacchetto = Pacchetti.objects.filter(utente = instance).exists()
-
-	if esistenza_pacchetto:
-		pacchetto_attivato = Pacchetti.objects.filter(utente = instance, attivato = True).exists()
-		if pacchetto_attivato:
-
-			if abbonamento_valido(instance):
-				stato_pacchetto = 2 #Abbonamento valido
-			else:
-				stato_pacchetto = 1 #Abbonamento scaduto
-				
-		else:
-			stato_pacchetto = 3 #Pacchetto non usato ma valido
-	else:
-		stato_pacchetto = 0
-	
-	user_obj = Utente.objects.get(utente = instance)
-	email_salavata = user_obj.email
-	numero_like_totali = user_obj.like_totali
-	numero_follow = user_obj.follow_totali
-	data_blocco = user_obj.data_blocco_forzato
-	
-	#Di base non ho avvisi impostati
-	avviso = None
-
-	if (stato_pacchetto == 2) and (data_blocco is not None):
-		
-		now = date.today()
-
-		delta_data_blocco = now - data_blocco
-		giorni = delta_data_blocco.days
-
-		if giorni == 0:
-			giorni = 1
-			testo_regalo = "un giorno"
-		else:
-			giorni = giorni + 1
-			testo_regalo = str(giorni) +" giorni"		
-
-		avviso = "Ciao! Il sistema e stato bloccato forzatamete, per farci perdonare ti abbiamo regalato " + testo_regalo +" in piu!"
-		estendi_scadenza(instance, giorni)
-		user_obj.data_blocco_forzato = None
-		user_obj.save()
-
-	if (stato_pacchetto == 1) and (data_blocco is not None):
-		pacchetto_obj = Pacchetti.objects.get(utente = instance, attivato = True)
-		data_scadenza = pacchetto_obj.data_scadenza
-
-		if data_blocco > data_scadenza:
-			user_obj.data_blocco_forzato = None
-			user_obj.save()
-		else:
-			delta_data_blocco = data_scadenza - data_blocco
-			giorni = delta_data_blocco.days
-			if giorni == 1:
-				testo_regalo = "un giorno"
-			else:
-				giorni = giorni + 1
-				testo_regalo = str(giorni) + " giorni"
-			avviso = "Ciao! Prima che ti scadesse il sistema abbiamo bloccato forzatamente la baracca. Per farci perdonare ti abbiamo regalato un pacchetto da " + testo_regalo
-			user_obj.data_blocco_forzato = None
-			user_obj.save()
-			pacchetto_obj.delete()
-			nuovo_pacchetto(instance, giorni)
-			stato_pacchetto = 3
-
-	if status_obj_attivi is False:
-		numero_like_sessione = 0
-		numero_follow_sessione = 0
-	else:
-		numero_like_sessione = user_obj.like_sessione
-		numero_follow_sessione = user_obj.follow_sessione
-	
-	api = InstagramAPI(
-			access_token = access_token,
-			client_ips = MIOIP,
-			client_secret = CLIENT_SECRET 
-	)		
-	
-	tutti_nomi = api.user_search(q = nome_da_cercare, count = 20)	
-
-	new_tutti_nomi = []
-	
-	for nome in tutti_nomi[:10]:
-		try:
-			followed_by = api.user(nome.id).counts['followed_by']
-			nome.followed_by = followed_by
-			new_tutti_nomi.append(nome)
-		except:
-			pass
-		
-	new_tutti_nomi = sorted(new_tutti_nomi, key = lambda user_obj: user_obj.followed_by, reverse=True)
-	
-	altri_nomi = tutti_nomi[10:]
-	
-	context = RequestContext(request, {
-		'rivali' : rivali,
-		'competitor_form' : cerca_competitor_form,
-		'lista_tag' : lista_tag,
-		'tag_form' : tag_form,
-		'tutti_nomi' : new_tutti_nomi,
-		'altri_nomi' : altri_nomi,
-		'status_obj_attivi' : status_obj_attivi,
-		'numero_follow' : numero_follow,
-		'numero_like_totali' : numero_like_totali,
-		'numero_like_sessione' : numero_like_sessione,
-		'numero_follow_sessione' : numero_follow_sessione,
-		'email_salavata' : email_salavata,
-		'stato_pacchetto' : stato_pacchetto,
-		'avviso' : avviso,
-	})
-		
-	return HttpResponse(template.render(context))	
+#Fine deprecazione
 
 @login_required(login_url='/login')
 def ferma_task(request):
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
 	kill_all_tasks(instance)
-			
-	return HttpResponseRedirect('/')
+	
+	return HttpResponse()		
 
 @login_required(login_url='/login')
 def avvia_task(request):	
@@ -474,7 +341,8 @@ def avvia_task(request):
 	if esistenza_pacchetto_da_attivare:
 		attiva_pacchetto(instance)
 
-	return HttpResponseRedirect('/')
+	#return HttpResponseRedirect('/')
+	return HttpResponse()
 
 
 @login_required(login_url='/login')

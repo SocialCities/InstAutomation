@@ -70,7 +70,9 @@ urlpatterns = patterns('',
     url(r'^cerca_competitor$', 'instagram_follow.views.cerca_competitor'), 
       
     url(r'^aggiungi_tag$', 'instagram_like.views.aggiungi_tag'), 
-    url(r'^rimuovi_tag$', 'instagram_like.views.rimuovi_tag'),     
+    url(r'^rimuovi_tag$', 'instagram_like.views.rimuovi_tag'),    
+
+    url(r'^charge$', 'pagamenti.views.charge'),  
    
     url(r'^num_follower$', 'statistiche.views.get_follower_messi'), 
 

@@ -126,7 +126,11 @@
 				</div>
 
 				<div class="col-md-3">
-					<a href="#" class="btn btn-danger pannelloControllo">PAUSE</a>
+					<!--<a href="#" class="btn btn-danger pannelloControllo">PAUSE</a> -->
+					<form id = "pause">
+						{% csrf_token %}
+						<button type="submit" class="btn btn-danger pannelloControllo">PAUSE</button>
+					</form>	
 				</div>
 
 				{% elif stato_pacchetto = 2 %}
@@ -157,7 +161,10 @@
 
 			<div class="row pad40">
 				<div class="col-md-6">
-					<a href="#" class="btn btn-success pannelloControllo pannelloControllo">START</a>
+					<form id = "start">
+						{% csrf_token %}
+						<button type="submit" class="btn btn-success pannelloControllo">START</button>
+					</form>														
 				</div>
 				<div class="col-md-3">
 					<div class="panel panel-default elapsed">
@@ -180,11 +187,6 @@
 			{% else %}
 
 			<div class="row">
-
-				<!--<div class="col-md-3">
-					<a href="#" class="btn btn-danger pannelloControllo">PAUSE</a>
-				</div>-->
-
 				<div class="col-md-3">
 					<div class="panel panel-default elapsed">
 						<div class="panel-body">
@@ -460,7 +462,15 @@
 							<ul class="price-list-no-pad">
 								<li>1 free days</li>
 							</ul>
+							
+							{% if stato_pacchetto = 0 or stato_pacchetto = 1 %}
+
 							<div class="pad10"><iframe src="http://www.paywithatweet.com/dlbutton01.php?id=eb7efe3d-ec52-4a6f-88da-90da4392269a" class="spaced-right" name="paytweet_button" scrolling="no" frameborder="no" height="24px" width="145px"></iframe></div>
+
+							{% else %}
+							<a href="#" class="btn btn-default btn-xs disabled">You have already<br /> purchased a package</a>
+							{% endif %}
+
 						</div>
 					</div>
 
@@ -480,16 +490,16 @@
 								<li>$0.33 per day</li>
 							</ul>
 
-							<form action="" method="POST" class="pad20">
-								<script
-								    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-									data-key='pk_test_m4WooyEo8H5ACDmQJfMesph0'
-									data-amount="499"
-									data-name="15 days"
-									data-description="Entry Pack - 15 Days ($0.33/day)"
-									data-image="{% static "_insta_images/instautomation-128.png" %}">
-								</script>
-							</form>
+							{% if stato_pacchetto = 0 or stato_pacchetto = 1 %}
+
+							<a id="pagamento_15" class="btn btn-primary" href="sottoscrizione-urgenza">Pay With Card</a>
+
+							{% else %}
+
+							<a href="#" class="btn btn-default disabled">You have already<br /> purchased a package</a>
+
+							{% endif %}
+
 							<hr />
 							<i class="fa fa-cc-mastercard fa-2x"></i> 
 							<i class="fa fa-cc-visa fa-2x"></i> 
@@ -510,19 +520,21 @@
 							<ul class="price-list pad10">
 								<li>30 days</li>
 								<li>$7.99</li>
-								<li>$0.26 per day</li>
+								<li>$0.26 
+									per day</li>
 							</ul>
-							
-							<form action="" method="POST" class="pad20">
-								<script
-								    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-									data-key='pk_test_m4WooyEo8H5ACDmQJfMesph0'
-									data-amount="799"
-									data-name="30 days"
-									data-description="Medium Pack - 30 Days ($0.26/day)"
-									data-image="{% static "_insta_images/instautomation-128.png" %}">
-								</script>
-							</form>
+
+							{% if stato_pacchetto = 0 or stato_pacchetto = 1 %}
+
+							<a id="pagamento_30" class="btn btn-primary" href="sottoscrizione-urgenza">Pay With Card</a>
+
+
+							{% else %}
+
+							<a href="#" class="btn btn-default disabled">You have already<br /> purchased a package</a>
+
+							{% endif %}
+
 							<hr />
 							<i class="fa fa-cc-mastercard fa-2x"></i> 
 							<i class="fa fa-cc-visa fa-2x"></i> 
@@ -548,16 +560,17 @@
 								<li>$0.22 per day</li>
 							</ul>
 							
-							<form action="" method="POST" class="pad20">
-							  <script
-								    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-									data-key='pk_test_m4WooyEo8H5ACDmQJfMesph0'
-									data-amount="1999"
-									data-name="90 days"
-									data-description="Long Pack - 90 Days ($0.22/day)"
-									data-image="{% static "_insta_images/instautomation-128.png" %}">
-							  </script>
-							</form>
+							{% if stato_pacchetto = 0 or stato_pacchetto = 1 %}
+
+							<a id="pagamento_90" class="btn btn-primary" href="sottoscrizione-urgenza">Pay With Card</a>
+
+
+							{% else %}
+
+							<a href="#" class="btn btn-default disabled">You have already<br /> purchased a package</a>
+
+							{% endif %}
+
 							<hr />
 							<i class="fa fa-cc-mastercard fa-2x"></i> 
 							<i class="fa fa-cc-visa fa-2x"></i> 
@@ -740,6 +753,7 @@
     </div>
 
     <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+    <script type="text/javascript" src="https://checkout.stripe.com/checkout.js"></script>
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="{% static "./bower_components/bootstrap/dist/js/bootstrap.min.js" %}"></script>
     <script src="{% static "WearProtection.js" %}"></script>
