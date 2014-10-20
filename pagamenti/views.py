@@ -1,8 +1,12 @@
 from .models import Pacchetti
+from accesso.models import  Utente
 from datetime import datetime, timedelta, date
 
+from django.utils.decorators import method_decorator
+from django.views.generic import View
+from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 
 from social_auth.models import UserSocialAuth
 
@@ -114,3 +118,27 @@ def charge(request):
 	nuovo_pacchetto(instance, giorni)
 
 	return HttpResponse()
+
+class pay_tweet(View):
+    template_name = 'riscatta.html'
+
+    @method_decorator(login_required(login_url='/login'))
+    def dispatch(self, *args, **kwargs):
+        return super(pay_tweet, self).dispatch(*args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+	
+    def post(self, request, *args, **kwargs):
+    	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
+
+    	user_obj = Utente.objects.get(utente = instance)
+
+    	if user_obj.tweet_boolean:
+    		return HttpResponse()
+    	else:
+    		user_obj.tweet_boolean = True
+    		user_obj.save()
+
+    		nuovo_pacchetto(instance, 1)
+    		return HttpResponse()

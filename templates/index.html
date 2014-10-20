@@ -55,11 +55,6 @@
 
 
 
-
-
-
-
-
     <div class="container">
 
 		<div class="page-header" id="banner">
@@ -223,16 +218,6 @@
 			</div>
 
 			{% endif %}
-
-			<div class="row pad10">
-				<div class="col-md-12">
-					<div class="alert alert-dismissable alert-warning">
-					  <h4>Warning!</h4>
-					  <p>Best check yo self, you're not looking too good. Nulla vitae elit libero, a pharetra augue. Praesent commodo cursus magna, <a href="#" class="alert-link">vel scelerisque nisl consectetur et</a>.</p>
-					</div>
-				</div>
-			</div>	<!-- closing row-->
-
 			
 			<!--	SYSTEM SETTAGE PANEL	-->
 			<h4 class="title">System Settings</h4>
@@ -427,15 +412,13 @@
 			</div>
 				
 			
-			<div id="pricing-pane"></div>
-			
+			<div id="pricing-pane"></div>			
 
 			<hr>
 
 			<!-- pricing table -->
 			<div class="row pad20" >
 				<div class="col-md-3">
-
 					<div class="panel panel-default">
 						<div class="panel-heading">
 							<a name="pricing"></a><h3 class="panel-title">Free with Registration</h3>
@@ -465,7 +448,10 @@
 							
 							{% if stato_pacchetto = 0 or stato_pacchetto = 1 %}
 
-							<div class="pad10"><iframe src="http://www.paywithatweet.com/dlbutton01.php?id=eb7efe3d-ec52-4a6f-88da-90da4392269a" class="spaced-right" name="paytweet_button" scrolling="no" frameborder="no" height="24px" width="145px"></iframe></div>
+							<div class="pad10"><iframe src="https://www.paywithatweet.com/dlbutton01.php?id=eb7efe3d-ec52-4a6f-88da-90da4392269a" class="spaced-right" name="paytweet_button" scrolling="no" frameborder="no" height="24px" width="145px"></iframe></div>
+
+							{% elif tweet_boolean %}
+							<a href="#" class="btn btn-default btn-xs disabled">Already redeemed!</a>
 
 							{% else %}
 							<a href="#" class="btn btn-default btn-xs disabled">You have already<br /> purchased a package</a>
@@ -707,7 +693,24 @@
 			</div>
 		  </div>
 		</div>
-     
+
+		<!-- ERRORE -->
+     	<div class="modal" id="errore">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+		        <h4 class="modal-title">Error!</h4>
+		      </div>
+		      <div class="modal-body">
+		        <p>One fine body…</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
 
       
 		<!--SPINNER-->

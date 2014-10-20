@@ -13,6 +13,7 @@ class Utente(models.Model):
 	follow_totali = models.IntegerField(default = 0)
 	follow_sessione = models.IntegerField(default = 0)
 	data_blocco_forzato = models.DateField(null = True, blank = True)	
+	tweet_boolean = models.NullBooleanField(default = False)
 	
 	class Meta:
 		verbose_name = "Dati dell'utente"

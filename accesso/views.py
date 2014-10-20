@@ -110,6 +110,7 @@ def home_page(request):
 	follows = me_counts['follows']
 
 	user_obj = Utente.objects.get(utente = instance)
+	tweet_boolean = user_obj.tweet_boolean
 	email = user_obj.email
 	followers_at_registration = user_obj.follower_iniziali
 	follower_since_registration = followed_by - followers_at_registration 
@@ -167,6 +168,7 @@ def home_page(request):
 		'status_obj_attivi' : status_obj_attivi,
 		'numero_like_sessione' : numero_like_sessione,
 		'numero_follow_sessione' : numero_follow_sessione,
+		'tweet_boolean' : tweet_boolean,
 	})
 
 	return HttpResponse(template.render(context)) 	

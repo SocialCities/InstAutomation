@@ -9,6 +9,7 @@ from social_auth.models import UserSocialAuth
 
 from accesso.views import beta_home
 from accesso.admin import pulsantone_view
+from pagamenti.views import pay_tweet
 	
 class TagAdmin(admin.ModelAdmin):
 	fields=['keyword', 'utente']
@@ -31,8 +32,8 @@ class TaskStatusAdmin(admin.ModelAdmin):
 	list_display = ('task_id', 'sorgente', 'completato', 'utente')	
 		
 class UtenteAdmin(admin.ModelAdmin):
-	fields = ['utente', 'follower_iniziali', 'email', 'token_block', 'like_totali', 'like_sessione', 'follow_totali', 'follow_sessione', 'data_blocco_forzato']
-	list_display = ('utente', 'follower_iniziali', 'email', 'time_stamp', 'token_block', 'like_totali', 'like_sessione', 'follow_totali', 'follow_sessione', 'data_blocco_forzato')	
+	fields = ['utente', 'follower_iniziali', 'email', 'token_block', 'like_totali', 'like_sessione', 'follow_totali', 'follow_sessione', 'data_blocco_forzato', 'tweet_boolean']
+	list_display = ('utente', 'follower_iniziali', 'email', 'time_stamp', 'token_block', 'like_totali', 'like_sessione', 'follow_totali', 'follow_sessione', 'data_blocco_forzato', 'tweet_boolean')	
 
 class PacchettiAdmin(admin.ModelAdmin):
     fields = ['utente', 'data_acquisto', 'giorni', 'attivato', 'data_sottoscrizione', 'data_scadenza']
@@ -73,15 +74,15 @@ urlpatterns = patterns('',
     url(r'^rimuovi_tag$', 'instagram_like.views.rimuovi_tag'),    
 
     url(r'^charge$', 'pagamenti.views.charge'),  
-   
-    url(r'^num_follower$', 'statistiche.views.get_follower_messi'), 
+    url(r'^pay-with-a-tweet$', pay_tweet.as_view()), 
 
+   
+    url(r'^pulsantone$', pulsantone_view.as_view()), 
     #Cose a caso esterne
+    url(r'^num_follower$', 'statistiche.views.get_follower_messi'),     
     url(r'^localize$', 'geoinstagram.views.localize'),
     url(r'^mappa$', 'geoinstagram.views.mappa'),    
     url(r'^report$', 'statistiche.views.report_statistico'), 
-
-    url(r'^pulsantone$', pulsantone_view.as_view()), 
 )
 
 # Instagram only allows one callback url so you'll have to change your urls.py to accomodate
