@@ -154,12 +154,15 @@ def home_page(request):
 
 		if giorni == 0:
 			giorni = 1
-			testo_regalo = "un giorno"
+			#testo_regalo = "un giorno"
+			testo_regalo = "one more free day"
 		else:
 			giorni = giorni + 1
-			testo_regalo = str(giorni) +" giorni"		
+			#testo_regalo = str(giorni) +" giorni"		
+			testo_regalo = str(giorni) + ' more free days'
 
-		avviso = "Ciao! Il sistema e stato bloccato forzatamete, per farci perdonare ti abbiamo regalato " + testo_regalo +" in piu!"
+		avviso = 'Dear user, unfortunately the system was blocked for unknown reasons. Your account has been enlarged with '+testo_regalo+'. Sorry for the inconvenience'
+		#avviso = "Ciao! Il sistema e stato bloccato forzatamete, per farci perdonare ti abbiamo regalato " + testo_regalo +" in piu!"
 		estendi_scadenza(instance, giorni)
 		user_obj.data_blocco_forzato = None
 		user_obj.save()
@@ -174,12 +177,17 @@ def home_page(request):
 		else:
 			delta_data_blocco = data_scadenza - data_blocco
 			giorni = delta_data_blocco.days
+
 			if giorni == 1:
-				testo_regalo = "un giorno"
+				#testo_regalo = "un giorno"
+				testo_regalo = "one more free day"
 			else:
 				giorni = giorni + 1
-				testo_regalo = str(giorni) + " giorni"
-			avviso = "Ciao! Prima che ti scadesse il sistema abbiamo bloccato forzatamente la baracca. Per farci perdonare ti abbiamo regalato un pacchetto da " + testo_regalo
+				#testo_regalo = str(giorni) + " giorni"
+				testo_regalo = str(giorni) + ' more free days'
+			
+			avviso = 'Dear user, unfortunately the system was blocked for unknown reasons. Your account has been enlarged with '+testo_regalo+'. Sorry for the inconvenience'
+			#avviso = "Ciao! Prima che ti scadesse il sistema abbiamo bloccato forzatamente la baracca. Per farci perdonare ti abbiamo regalato un pacchetto da " + testo_regalo
 			user_obj.data_blocco_forzato = None
 			user_obj.save()
 			pacchetto_obj.delete()
