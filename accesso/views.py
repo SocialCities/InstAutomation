@@ -110,6 +110,7 @@ def home_page(request):
 	follows = me_counts['follows']
 
 	user_obj = Utente.objects.get(utente = instance)
+	data_blocco = user_obj.data_blocco_forzato
 	tweet_boolean = user_obj.tweet_boolean
 	email = user_obj.email
 	followers_at_registration = user_obj.follower_iniziali
@@ -141,6 +142,51 @@ def home_page(request):
 		stato_pacchetto = 0	
 		time_remaining = 0
 
+	#Sezione che gestisce gli avvisi. Di base non ho avvisi impostati
+	avviso = None
+
+	if (stato_pacchetto == 2) and (data_blocco is not None):
+		
+		now = date.today()
+
+		delta_data_blocco = now - data_blocco
+		giorni = delta_data_blocco.days
+
+		if giorni == 0:
+			giorni = 1
+			testo_regalo = "un giorno"
+		else:
+			giorni = giorni + 1
+			testo_regalo = str(giorni) +" giorni"		
+
+		avviso = "Ciao! Il sistema e stato bloccato forzatamete, per farci perdonare ti abbiamo regalato " + testo_regalo +" in piu!"
+		estendi_scadenza(instance, giorni)
+		user_obj.data_blocco_forzato = None
+		user_obj.save()
+
+	if (stato_pacchetto == 1) and (data_blocco is not None):
+		pacchetto_obj = Pacchetti.objects.get(utente = instance, attivato = True)
+		data_scadenza = pacchetto_obj.data_scadenza
+
+		if data_blocco > data_scadenza:
+			user_obj.data_blocco_forzato = None
+			user_obj.save()
+		else:
+			delta_data_blocco = data_scadenza - data_blocco
+			giorni = delta_data_blocco.days
+			if giorni == 1:
+				testo_regalo = "un giorno"
+			else:
+				giorni = giorni + 1
+				testo_regalo = str(giorni) + " giorni"
+			avviso = "Ciao! Prima che ti scadesse il sistema abbiamo bloccato forzatamente la baracca. Per farci perdonare ti abbiamo regalato un pacchetto da " + testo_regalo
+			user_obj.data_blocco_forzato = None
+			user_obj.save()
+			pacchetto_obj.delete()
+			nuovo_pacchetto(instance, giorni)
+			stato_pacchetto = 3
+
+	######################################################################		
 	
 	status_obj_attivi = TaskStatus.objects.filter(utente = instance, completato = False).exists()
 
@@ -169,6 +215,7 @@ def home_page(request):
 		'numero_like_sessione' : numero_like_sessione,
 		'numero_follow_sessione' : numero_follow_sessione,
 		'tweet_boolean' : tweet_boolean,
+		'avviso' : avviso,
 	})
 
 	return HttpResponse(template.render(context)) 	
@@ -237,6 +284,9 @@ def home_page_old(request):
 	numero_follow = user_obj.follow_totali
 	data_blocco = user_obj.data_blocco_forzato
 	
+
+	######################################################################
+	#Zona avvisi blocchi importanti
 	#Di base non ho avvisi impostati
 	avviso = None
 
@@ -281,6 +331,7 @@ def home_page_old(request):
 			nuovo_pacchetto(instance, giorni)
 			stato_pacchetto = 3
 
+	######################################################################		
 
 	if status_obj_attivi is False:
 		numero_like_sessione = 0

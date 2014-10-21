@@ -94,6 +94,18 @@
 				</div>
 					
 			</div>
+
+			<!-- Avviso -->
+			{% if avviso != None %}
+				<div class="row pad10">
+					<div class="col-md-12">
+						<div class="alert alert-dismissable alert-warning">
+						  <h4>Warning!</h4>
+						  <p>{{ avviso }}</a>.</p>
+						</div>
+					</div>
+				</div>					
+			{% endif %}
 		
 			<!--	ACCOUNTING TIMING PANEL	-->
 			<h4 class="title">Accounting Timing<span class="pull-right no-hue"><span class="hue coloured">{{follower_since_registration}}</span> follower since your registration</span></h4>
@@ -700,10 +712,10 @@
 		    <div class="modal-content">
 		      <div class="modal-header">
 		        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		        <h4 class="modal-title">Error!</h4>
+		        <h4 class="modal-title">Ooops!</h4>
 		      </div>
 		      <div class="modal-body">
-		        <p>One fine body…</p>
+		        <p>Something went wrong! Please, try in a while. For support contact us at info@instautomation.com</p>
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

@@ -1,11 +1,55 @@
-{% extends "instalogin.html" %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    {% load staticfiles %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static "theme/bootstrap.css" %}" media="screen">
+    <link rel="stylesheet" href="{% static "assets/css/bootswatch.min.css" %}">
+    <link rel="stylesheet" href="{% static "_insta_css/style.css" %}">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+	<link rel="icon" type="image/png" href="{% static "favicon.png" %}">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="{% static "./bower_components/html5shiv/dist/html5shiv.js" %}"></script>
+      <script src="{% static "./bower_components/respond/dest/respond.min.js" %}"></script>
+    <![endif]-->
+    <title>Welcome | Instautomation</title>
+  </head>
 
-{% block content %}
-<h2>Attenzione!</h2>
+  <body>
 
-<ul>
-<li>Vai su instagram ed effettua il login</li>
-<li>Clicca <a href="/login">qui</a> DOPO aver fatto il login su instagram</li>
-</ul>
+  	<div id="container" style="text-align:center;">
+		<h5><i class="fa fa-gear fa-5x fa-spin"></i></h5>
+  			<p style="margin:50pt 100pt 50pt 100pt;">Ciao, Instagram ha resettato il tuo token di accesso. Per continuare ad utilizzare Instautomation ti chiediamo di effettuare un nuovo login su Instagram e di seguito potrai loggarti su Instautomation</p>
+  			<div class="row" style="margin-top:20pt;">
+				  	<div class="col-md-offset-4 col-md-4">
+					  <div class="btn-group btn-group-justified">
+						  <a href="http://instagram.com" target="_blank" class="btn btn-primary accesso_token" style="width:25%;"><i class="fa fa-instagram fa-2x"></i></a>
+						  <a href="http://instagram.com" target="_blank" class="btn btn-primary accesso_token" style="width:75%;">Sign in Instagram</a>
+					  </div>
+				 	</div>
+			</div>
+			<div class="row" style="margin-top:20pt;">
+				  	<div class="col-md-offset-4 col-md-4">
+					  <div class="btn-group btn-group-justified">
+						  <a href="/login" class="btn btn-primary disabled accesso_instautomation" style="width:25%;"><i class="fa fa-heart fa-2x"></i></a>
+						  <a href="/login" class="btn btn-primary disabled accesso_instautomation" style="width:75%;">Sign in Instautomation</a>
+					  </div>
+				 	</div>
+			</div>
+  	</div>
 
-{% endblock %}	
+  	<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+   	<script src="{% static "./bower_components/bootstrap/dist/js/bootstrap.min.js" %}"></script>
+   	<script src="{% static "./assets/js/bootswatch.js" %}"></script>
+
+   	<script>
+   	$(document).on('click','.accesso_token', function(event) { 
+			$('.accesso_instautomation').attr('class', 'btn btn-primary accesso_instautomation');
+		});
+   	</script>
+
+  </body>
+
+</html>
