@@ -165,12 +165,11 @@ IP_LOCALE = '178.62.48.51'
 
 ### Configurazione Email ###
 EMAIL_USE_TLS = True 
-EMAIL_HOST = 'mail.instautomation.com'
+EMAIL_HOST = 'instautomation.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'admindjango'
+EMAIL_HOST_USER = 'info'
 EMAIL_HOST_PASSWORD = '5autobus'
-DEFAULT_FROM_EMAIL = 'admindjango@instautomation.com'
-
+DEFAULT_FROM_EMAIL = 'info@instautomation.com'
 ###
 
 

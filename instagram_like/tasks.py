@@ -34,7 +34,10 @@ def like_task(access_token, user_instance, api):
 			non_finito = False
 			
 		for singolo_tag in tutti_tag:
-			task_obj = TaskStatus.objects.get(utente = user_instance, sorgente = "like")			
+			controllo_esistenza_task_obj = TaskStatus.objects.filter(utente = user_instance, sorgente = "like", task_id = id_task1).exists()
+			if controllo_esistenza_task_obj is False:
+				continue
+			task_obj = TaskStatus.objects.get(utente = user_instance, sorgente = "like", task_id = id_task1)			
 			task_completato = task_obj.completato	
 
 			abbonamento_is_valido = abbonamento_valido(user_instance)
@@ -55,7 +58,7 @@ def like_task(access_token, user_instance, api):
 			nome_tag = singolo_tag['keyword']
 		
 			try:				
-				non_finito = chiamata_like(api, nome_tag, user_instance)					
+				non_finito = chiamata_like(api, nome_tag, user_instance, id_task1)					
 				
 			except InstagramAPIError as errore:
 				errore_mortale(errore, user_instance)	
@@ -67,7 +70,7 @@ def like_task(access_token, user_instance, api):
 	return 'Fine Like'
 		
 
-def chiamata_like(api, nome_tag, user_instance):
+def chiamata_like(api, nome_tag, user_instance, id_task):
 	check_limite(api)
 	
 	tag_search = api.tag_recent_media(count = 10, tag_name = nome_tag)
@@ -75,7 +78,7 @@ def chiamata_like(api, nome_tag, user_instance):
 	
 	for foto in tag_search[0]:	
 		
-		task_obj = TaskStatus.objects.get(utente = user_instance, sorgente = "like")
+		task_obj = TaskStatus.objects.get(utente = user_instance, sorgente = "like", task_id = id_task)
 		task_completato = task_obj.completato	
 
 		abbonamento_is_valido = abbonamento_valido(user_instance)

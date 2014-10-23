@@ -68,10 +68,7 @@ def pulsantone_rosso(oggetto, no_html, con_html):
 
 @shared_task
 def email_pulsantone(email_utente, oggetto, no_html, con_html):
-    subject, from_email, to = oggetto, 'admindjango@instautomation.com', email_utente
-	
-    #text_content = "Ciao! Faccio la cacca di sera di mattina di notte"
-    #html_content = "Ciao! <br/>Faccio la cacca di sera di mattina di notte!"
+    subject, from_email, to = oggetto, 'info@instautomation.com', email_utente
 
     text_content = no_html
     html_content = con_html
@@ -82,7 +79,7 @@ def email_pulsantone(email_utente, oggetto, no_html, con_html):
 
 @shared_task
 def invio_email_primo_avvio(email, username):
-    subject, from_email, to = '[Instautomation] Welcome!', 'admindjango@instautomation.com', email
+    subject, from_email, to = '[Instautomation] Welcome!', 'info@instautomation.com', email
 	
     html_content = "Dear "+username+",<br/> \
 					welcome to Instautomation!<br/>\

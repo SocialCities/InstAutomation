@@ -101,7 +101,7 @@ def start_follow(instance, api):
 
 				abbonamento_is_valido = abbonamento_valido(instance)
 
-				task_obj = TaskStatus.objects.get(utente = instance, sorgente = "follow")
+				task_obj = TaskStatus.objects.get(utente = instance, sorgente = "follow", task_id = id_task)
 				task_completato = task_obj.completato
 
 				if abbonamento_is_valido is False:
