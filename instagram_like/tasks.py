@@ -33,7 +33,7 @@ def like_task(access_token, user_instance, api):
 		if len(tutti_tag) == 0:
 			non_finito = False
 			
-		for singolo_tag in tutti_tag:
+		for singolo_tag in iter(tutti_tag):
 			controllo_esistenza_task_obj = TaskStatus.objects.filter(utente = user_instance, sorgente = "like", task_id = id_task1).exists()
 			if controllo_esistenza_task_obj is False:
 				continue
@@ -76,7 +76,7 @@ def chiamata_like(api, nome_tag, user_instance, id_task):
 	tag_search = api.tag_recent_media(count = 10, tag_name = nome_tag)
 	check_limite(api)
 	
-	for foto in tag_search[0]:	
+	for foto in iter(tag_search[0]):	
 		
 		task_obj = TaskStatus.objects.get(utente = user_instance, sorgente = "like", task_id = id_task)
 		task_completato = task_obj.completato	

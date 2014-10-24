@@ -28,7 +28,7 @@ def avvia_task_pulizia_follower(token, instance, task_diretto):
 	
 	utenti_da_unfolloware = BlacklistUtenti.objects.filter(utente = instance, unfollowato = False)
 	
-	for utente in utenti_da_unfolloware:
+	for utente in utenti_da_unfolloware.iterator():
 		
 		if task_diretto:
 			task_obj = TaskStatus.objects.get(utente = instance, sorgente = "unfollow")
@@ -97,7 +97,7 @@ def start_follow(instance, api):
 			
 			utenti = followed_by_obj[0]
 			
-			for utente in utenti:
+			for utente in iter(utenti):
 
 				abbonamento_is_valido = abbonamento_valido(instance)
 
