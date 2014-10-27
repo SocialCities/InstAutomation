@@ -207,6 +207,11 @@ def home_page(request):
 		numero_like_sessione = user_obj.like_sessione
 		numero_follow_sessione = user_obj.follow_sessione
 
+	if percentuale_tempo == 100:
+		percentuale_tempo = 90	
+	elif percentuale_tempo == 0:
+		percentuale_tempo = 10
+
 	context = RequestContext(request, {
 		'username' : username,
 		'avatar' : avatar,
@@ -240,26 +245,32 @@ def ferma_task(request):
 @login_required(login_url='/login')
 def avvia_task(request):	
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
-	access_token = instance.tokens['access_token']		
-	
-	user_obj = Utente.objects.get(utente = instance)
-	user_obj.like_sessione = 0
-	user_obj.follow_sessione = 0
-	user_obj.save()
-	
-	result = start_task.delay(access_token, instance)
-	
-	id_task = result.task_id
-	
-	nuovo_task1 = TaskStatus(task_id = id_task, completato = False, utente = instance, sorgente = "accesso")
-	nuovo_task1.save()
+	access_token = instance.tokens['access_token']	
 
-	esistenza_pacchetto_da_attivare = Pacchetti.objects.filter(utente = instance, attivato = False)
-	if esistenza_pacchetto_da_attivare:
-		attiva_pacchetto(instance)
+	esistenza_rivali = UtentiRivali.objects.filter(utente = instance).exists()
+	esisteza_tag = ListaTag.objects.filter(utente = instance).exists()
 
-	#return HttpResponseRedirect('/')
-	return HttpResponse()
+	if esistenza_rivali and esisteza_tag:
+	
+		user_obj = Utente.objects.get(utente = instance)
+		user_obj.like_sessione = 0
+		user_obj.follow_sessione = 0
+		user_obj.save()
+		
+		result = start_task.delay(access_token, instance)
+		
+		id_task = result.task_id
+		
+		nuovo_task1 = TaskStatus(task_id = id_task, completato = False, utente = instance, sorgente = "accesso")
+		nuovo_task1.save()
+
+		esistenza_pacchetto_da_attivare = Pacchetti.objects.filter(utente = instance, attivato = False)
+		if esistenza_pacchetto_da_attivare:
+			attiva_pacchetto(instance)
+
+		return HttpResponse()
+	else:
+		return HttpResponse('no_resources')
 
 
 @login_required(login_url='/login')

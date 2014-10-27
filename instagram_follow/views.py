@@ -34,11 +34,15 @@ def aggiungi_competitor(request):
 		
 		numero_follower = api.user(id_utente).counts['followed_by']
 		esistenza = UtentiRivali.objects.filter(username = username, id_utente = id_utente, utente = instance, numero_follower = numero_follower).exists()
-		if esistenza is False:
+		
+		if esistenza:
+			return HttpResponse("user_exists")
+
+		else:
 			nuovo_rivale = UtentiRivali(username = username, id_utente = id_utente, utente = instance, numero_follower = numero_follower)
 			nuovo_rivale.save()
-						
-	return HttpResponse()    
+
+			return HttpResponse()    
 	
 @login_required(login_url='/login')
 def rimuovi_competitor(request):	 	

@@ -19,14 +19,16 @@ def aggiungi_tag(request):
 		testo_tag = testo_tag.replace("#","")
 		
 		esistenza_tag = ListaTag.objects.filter(keyword = testo_tag, utente = instance).exists()
+
+		if esistenza_tag:
+			return HttpResponse("tag_exists")
 		
-		if esistenza_tag is False:
+		else:
 			nuovo_tag = ListaTag(keyword = testo_tag, utente = instance)
 			nuovo_tag.save()
-			
+						
 			return HttpResponse()
-		else:
-			return HttpResponseRedirect('/')
+
  
 @login_required(login_url='/login') 
 def rimuovi_tag(request):
