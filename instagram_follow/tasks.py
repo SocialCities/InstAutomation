@@ -5,7 +5,7 @@ from .models import BlacklistUtenti, WhitelistUtenti, UtentiRivali
 from pagamenti.views import abbonamento_valido
 from accesso.models import TaskStatus, Utente
 from instagram.client import InstagramAPI
-from instagram import InstagramAPIError
+from instagram.bind import InstagramAPIError
 
 from instautomation.utility import get_cursore, check_limite, errore_mortale
 
@@ -18,7 +18,7 @@ MIOIP = settings.IP_LOCALE
 CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
 	
 @shared_task   
-def avvia_task_pulizia_follower(token, instance, task_diretto):		
+def avvia_task_pulizia_follower(token, instance, task_diretto, id_task_padre):		
 	
 	api = InstagramAPI(
 		access_token = token,
@@ -31,19 +31,22 @@ def avvia_task_pulizia_follower(token, instance, task_diretto):
 	for utente in utenti_da_unfolloware.iterator():
 		
 		if task_diretto:
-			task_obj = TaskStatus.objects.get(utente = instance, sorgente = "unfollow")
-			task_completato = task_obj.completato
+			id_task = avvia_task_pulizia_follower.request.id	
+			task_obj = TaskStatus.objects.get(utente = instance, task_id = id_task)
 
-			abbonamento_is_valido = abbonamento_valido(instance)
-
-			if abbonamento_is_valido is False:
-				task_obj.delete()
+		else:
+			task_obj = TaskStatus.objects.get(utente = instance, task_id = id_task_padre)
+		
+		abbonamento_is_valido = abbonamento_valido(instance)
+		if abbonamento_is_valido is False:
+			task_obj.delete()
 				
-				return "Stop unfollow per scadenza abbonamento"
-			
-			if task_completato:
-				task_obj.delete()
-				return "Stop unfollow"
+			return "Stop per scadenza abbonamento"
+		
+		task_completato = task_obj.completato	
+		if task_completato:
+			task_obj.delete()
+			return "Stop unfollow"
 				
 		user_id = utente.id_utente 
 				
@@ -140,7 +143,7 @@ def start_follow(instance, api):
 							user_obj.save()
 					
 							contatore = contatore + 1
-							contatore = check_contatore(contatore, access_token, instance)
+							contatore = check_contatore(contatore, access_token, instance, id_task)
 							
 							time.sleep(65)	
 							
@@ -151,15 +154,16 @@ def start_follow(instance, api):
 						pass
 					
 			cursore, uscita = get_cursore(followed_by_obj)
-			
+	
+	avvia_task_pulizia_follower(access_token, instance, False, id_task)		
 	task_da_eliminare = TaskStatus.objects.get(task_id = id_task, completato = False, utente = instance, sorgente = "follow")
 	task_da_eliminare.delete()								
 								
-def check_contatore(contatore, token, instance):
+def check_contatore(contatore, token, instance, id_task_padre):
 	limite = 180
 	
 	if contatore > limite:
-		avvia_task_pulizia_follower(token, instance, False)
+		avvia_task_pulizia_follower(token, instance, False, id_task_padre)
 		contatore = 0
 		
 	return contatore

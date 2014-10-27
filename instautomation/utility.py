@@ -75,27 +75,58 @@ def kill_all_tasks(instance):
 			task_obj.completato	= True
 			task_obj.save()		
 
-						
-def errore_mortale(errore, instance):
-	if errore.error_type == "OAuthAccessTokenException":
+def errore_mortale(e, instance):
+	username = instance.extra_data['username']
+	if (e.status_code == 400):
+		if (e.error_type == 'OAuthParameterException'):
+			print username + " - " + e.error_message #Token errore
+			utente_obj = Utente.objects.get(utente = instance)
+			email_utente = utente_obj.email
+			utente_obj.token_block = True
+			utente_obj.save()
+			
+			avviso_email(email_utente)	
+			
+			kill_all_tasks(instance)	
+					
+		elif (e.error_type == 'APINotAllowedError'):
+			print username + " - " +  e.error_message
+			time.sleep(60)
+
+		elif (e.error_type == 'APINotFoundError'):
+			print username + " - " +  e.error_message
+			time.sleep(60)	
+			
+	elif (e.status_code == 429):
+		print username + " - " +  e.error_message #Rate limited
+		time.sleep(120)
 		
-		utente_obj = Utente.objects.get(utente = instance)
-		email_utente = utente_obj.email
-		utente_obj.token_block = True
-		utente_obj.save()
+	elif (e.status_code == 503):
+		print username + " - " +  e.error_message #Rate limited	
+		time.sleep(120)	
 		
-		avviso_email(email_utente)	
+	elif (e.status_code == 500):
+		print username + " - " +  e.error_message #errore JSON
+		time.sleep(60)
+							
+	elif (e.status_code == 502):
+		print username + " - " +  e.error_message #errore JSON
+		time.sleep(60)
 		
-		kill_all_tasks(instance)	
+	elif (e.status_code == 504):
+		print username + " - " +  e.error_message #errore JSON
+		time.sleep(60)	
 	else:
-		logger.error("errore mortale", exc_info=True)
-		pass
+		print username + " - " + 'errore mortale'
+		logger.error("errore mortale", exc_info=True)	
+
 				
 def avviso_email(email_utente):
-    subject, from_email, to = '[Instautomation] Errore nel sistema', 'admindjango@instautomation.com', email_utente
+    subject, from_email, to = '[Instautomation] Access token issue', 'info@instautomation.com', email_utente
 	
-    text_content = "Ciao! Faccio la cacca di sera di mattina di notte! bumbumbumb"
-    html_content = "Ciao! <br/>Faccio la cacca di sera di mattina di notte! bum bum"
+    text_content = "Dear user, your access token has been reset by Instagram. Log in Instagram and insert the chapta, then log in Instautomation and you'll be able to continue to use out system."
+    html_content = "Dear user, your access token has been reset by Instagram.<br/>\
+          Log in Instagram and insert the chapta, then log in Instautomation and you'll be able to continue to use out system."
 	
     msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
     msg.attach_alternative(html_content, "text/html")

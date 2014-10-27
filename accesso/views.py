@@ -11,9 +11,7 @@ from datetime import date
 from django.core.mail import EmailMultiAlternatives 
 
 from instagram_like.models import ListaTag
-from instagram_like.forms import TagForm
 from instagram_follow.models import UtentiRivali
-from instagram_follow.forms import CercaCompetitorForm
 from instagram_follow.tasks import avvia_task_pulizia_follower
 from pagamenti.models import Pacchetti
 from pagamenti.views import nuovo_pacchetto, attiva_pacchetto, abbonamento_valido, estendi_scadenza, percentuale_tempo_rimanente, get_dati_pacchetto
@@ -21,9 +19,11 @@ from pagamenti.views import nuovo_pacchetto, attiva_pacchetto, abbonamento_valid
 from .models import Utente, TaskStatus
 from .tasks import start_task, invio_email_primo_avvio
 from .decorators import token_error
+from instautomation.utility import errore_mortale
 
 from social_auth.models import UserSocialAuth
 from instagram.client import InstagramAPI
+from instagram.bind import InstagramAPIError
 
 from instautomation.utility  import kill_all_tasks
 
@@ -58,7 +58,12 @@ def access(request):
 				client_secret = CLIENT_SECRET
 		)
 		
-		informazioni = api.user()			
+		try:
+			informazioni = api.user()
+
+		except InstagramAPIError as errore:
+			errore_mortale(errore, instance)
+
 		followed_by = informazioni.counts['followed_by']
 		nuove_stats = Utente(utente = instance, follower_iniziali = followed_by)
 		nuove_stats.save()
@@ -100,7 +105,10 @@ def home_page(request):
 				client_secret = CLIENT_SECRET
 	)
 
-	me_object = api.user()
+	try:
+		me_object = api.user()
+	except InstagramAPIError as errore:
+		errore_mortale(errore, instance)
 
 	username = me_object.username
 	avatar = me_object.profile_picture
@@ -259,7 +267,7 @@ def clean(request):
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
 	access_token = instance.tokens['access_token']		
 	
-	result = avvia_task_pulizia_follower.delay(access_token, instance, True)
+	result = avvia_task_pulizia_follower.delay(access_token, instance, True, None)
 	
 	id_task = result.task_id
 		
@@ -296,20 +304,20 @@ def contact_process(request):
 	richiesta = request.POST	
 
 	if richiesta.__contains__('email') is False:
-		errore = 'Per favore inserisci la tua email.<br />'
+		errore = 'Please insert your email.<br />'
 	else:
 		email_da_controllare = request.POST['email']	
 		f = forms.EmailField()
 		try:
 			f.clean(email_da_controllare)
 		except:
-			errore = 'Per favore inserisci un indirizzo email valido.<br />'
+			errore = 'Please insert a valid email.<br />'
 	
 	if (richiesta.__contains__('message') is False):
-		errore = 'Per favore inserisci un messaggio.<br />'		
+		errore = 'Please insert a message.<br />'		
 	else:
 		if len(request.POST['message']) < 10:
-			errore = 'Il tuo messaggio dovrebbe avere almeno dieci caratteri.<br />'		
+			errore = 'Your message should have at least 10 chars.<br />'		
 	
 	if errore == '':		
 		if richiesta.__contains__('subject'):
