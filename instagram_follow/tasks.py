@@ -59,10 +59,7 @@ def avvia_task_pulizia_follower(token, instance, task_diretto, id_task_padre):
 			time.sleep(65)			
 			
 		except InstagramAPIError as errore:
-			errore_mortale(errore, instance)				
-		except:
-			logger.error("avvia_task_pulizia_follower", exc_info=True)
-			pass
+			errore_mortale(errore, instance)
 			
 	if task_diretto:		
 		task = TaskStatus.objects.get(completato = False, utente = instance)	
@@ -148,10 +145,7 @@ def start_follow(instance, api):
 							time.sleep(65)	
 							
 					except InstagramAPIError as errore:
-						errore_mortale(errore, instance)						
-					except:
-						logger.error("how_i_met_your_follower", exc_info=True)
-						pass
+						errore_mortale(errore, instance)
 					
 			cursore, uscita = get_cursore(followed_by_obj)
 	

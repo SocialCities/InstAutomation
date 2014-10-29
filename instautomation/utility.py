@@ -100,9 +100,9 @@ def errore_mortale(e, instance):
 	elif (e.status_code == 429):
 		print username + " - " +  e.error_message #Rate limited
 		time.sleep(120)
-		
-	elif (e.status_code == 503):
-		print username + " - " +  e.error_message #Rate limited	
+
+	elif (e.status_code == 404):
+		print username + " - " +  e.error_message #Rate limited
 		time.sleep(120)	
 		
 	elif (e.status_code == 500):
@@ -112,11 +112,16 @@ def errore_mortale(e, instance):
 	elif (e.status_code == 502):
 		print username + " - " +  e.error_message #errore JSON
 		time.sleep(60)
+
+	elif (e.status_code == 503):
+		print username + " - " +  e.error_message #Rate limited	
+		time.sleep(120)			
 		
 	elif (e.status_code == 504):
 		print username + " - " +  e.error_message #errore JSON
 		time.sleep(60)	
 	else:
+		time.sleep(60)		
 		print username + " - " + 'errore mortale'
 		logger.error("errore mortale", exc_info=True)	
 

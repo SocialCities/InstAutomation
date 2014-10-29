@@ -107,8 +107,9 @@ def home_page(request):
 
 	try:
 		me_object = api.user()
-	except InstagramAPIError as errore:
+	except InstagramAPIError as errore:		
 		errore_mortale(errore, instance)
+		return HttpResponseRedirect('/')
 
 	username = me_object.username
 	avatar = me_object.profile_picture
@@ -277,15 +278,20 @@ def avvia_task(request):
 def clean(request):
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')	
 	access_token = instance.tokens['access_token']		
+
+	esistenza = TaskStatus.objects.filter(completato = False, utente = instance, sorgente = "unfollow").exists()
 	
-	result = avvia_task_pulizia_follower.delay(access_token, instance, True, None)
-	
-	id_task = result.task_id
+	if esistenza:
+		return HttpResponseRedirect('/')
+	else:
+		result = avvia_task_pulizia_follower.delay(access_token, instance, True, None)
 		
-	nuovo_task = TaskStatus(task_id = id_task, completato = False, utente = instance, sorgente = "unfollow")
-	nuovo_task.save()
-		
-	return HttpResponseRedirect('/')	
+		id_task = result.task_id
+			
+		nuovo_task = TaskStatus(task_id = id_task, completato = False, utente = instance, sorgente = "unfollow")
+		nuovo_task.save()
+			
+		return HttpResponseRedirect('/')	
 	
 @login_required(login_url='/login')
 def add_email(request):

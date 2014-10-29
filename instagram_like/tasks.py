@@ -5,7 +5,7 @@ from celery import shared_task
 from .models import ListaTag
 from accesso.models import TaskStatus, Utente
 from pagamenti.views import abbonamento_valido
-from instagram import InstagramAPIError
+from instagram.bind import InstagramAPIError
 from celery.exceptions import Terminated
 
 import time
@@ -61,11 +61,7 @@ def like_task(access_token, user_instance, api):
 				non_finito = chiamata_like(api, nome_tag, user_instance, id_task1)					
 				
 			except InstagramAPIError as errore:
-				errore_mortale(errore, user_instance)	
-												
-			except:
-				logger.error("insta_like", exc_info=True)
-				pass
+				errore_mortale(errore, user_instance)												
 													
 	return 'Fine Like'
 		
@@ -113,12 +109,6 @@ def chiamata_like(api, nome_tag, user_instance, id_task):
 					time.sleep(40)
 				
 				except InstagramAPIError as errore:
-					if errore.error_type == "APINotAllowedError":
-						pass
-					else:
-						logger.error("chiamata_like", exc_info=True)
-						pass										 						
-				except:
-					logger.error("chiamata_like", exc_info=True)
-					pass	
+					errore_mortale(errore, user_instance)	
+													
 	return True	
