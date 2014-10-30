@@ -95,18 +95,16 @@ def chiamata_like(api, nome_tag, user_instance, id_task):
 			like_sessione = user_obj.like_sessione
 			
 			id_elemento = foto.id
-			conto_like = foto.like_count		
-			#link_foto = foto.link		
+			conto_like = foto.like_count	
 			
 			if conto_like < 100:
 				try:
+					time.sleep(60)
 					api.like_media(id_elemento)
 					
 					user_obj.like_totali = like_messi + 1
 					user_obj.like_sessione = like_sessione + 1
-					user_obj.save()				
-					
-					time.sleep(40)
+					user_obj.save()								
 				
 				except InstagramAPIError as errore:
 					errore_mortale(errore, user_instance)	

@@ -91,11 +91,11 @@ def errore_mortale(e, instance):
 					
 		elif (e.error_type == 'APINotAllowedError'):
 			print username + " - " +  e.error_message
-			time.sleep(60)
+			time.sleep(90)
 
 		elif (e.error_type == 'APINotFoundError'):
 			print username + " - " +  e.error_message
-			time.sleep(60)	
+			time.sleep(90)	
 			
 	elif (e.status_code == 429):
 		print username + " - " +  e.error_message #Rate limited
@@ -107,22 +107,23 @@ def errore_mortale(e, instance):
 		
 	elif (e.status_code == 500):
 		print username + " - " +  e.error_message #errore JSON
-		time.sleep(60)
+		time.sleep(90)
 							
 	elif (e.status_code == 502):
 		print username + " - " +  e.error_message #errore JSON
-		time.sleep(60)
+		time.sleep(90)
 
 	elif (e.status_code == 503):
 		print username + " - " +  e.error_message #Rate limited	
-		time.sleep(120)			
+		time.sleep(90)			
 		
 	elif (e.status_code == 504):
 		print username + " - " +  e.error_message #errore JSON
-		time.sleep(60)	
+		time.sleep(90)	
 	else:
-		time.sleep(60)		
+		time.sleep(90)		
 		print username + " - " + 'errore mortale'
+		print e.status_code
 		logger.error("errore mortale", exc_info=True)	
 
 				

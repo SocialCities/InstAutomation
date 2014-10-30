@@ -53,11 +53,11 @@ def avvia_task_pulizia_follower(token, instance, task_diretto, id_task_padre):
 		check_limite(api)		
 			
 		try:
+			time.sleep(90)	
 			api.unfollow_user(user_id = user_id)
 			utente.unfollowato = True
 			utente.save()			
-			time.sleep(65)			
-			
+								
 		except InstagramAPIError as errore:
 			errore_mortale(errore, instance)
 			
@@ -129,6 +129,7 @@ def start_follow(instance, api):
 						
 						if (esistenza_nuovo_user is False) and (esistenza_in_white is False) and (is_private is False):
 					
+							time.sleep(90)	
 							api.follow_user(user_id = utente.id)
 							check_limite(api)
 				
@@ -140,10 +141,8 @@ def start_follow(instance, api):
 							user_obj.save()
 					
 							contatore = contatore + 1
-							contatore = check_contatore(contatore, access_token, instance, id_task)
-							
-							time.sleep(65)	
-							
+							contatore = check_contatore(contatore, access_token, instance, id_task)		
+														
 					except InstagramAPIError as errore:
 						errore_mortale(errore, instance)
 					
