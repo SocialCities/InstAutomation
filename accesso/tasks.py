@@ -34,7 +34,7 @@ def start_task(token, instance):
 	like_task.delay(token, instance, api)	
 	start_follow.delay(instance, api)
 		
-	return 'yo'
+	return 'Started!'
 
 @shared_task 
 def elimina_vecchi_utenti():

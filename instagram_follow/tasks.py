@@ -9,6 +9,7 @@ from instagram.bind import InstagramAPIError
 
 from instautomation.utility import get_cursore, check_limite, errore_mortale
 
+from django.db import transaction
 from django.conf import settings
 import time
 import logging
@@ -120,28 +121,29 @@ def start_follow(instance, api):
 					follow_sessione = user_obj.follow_sessione	
 					
 					try:
-						esistenza_nuovo_user = BlacklistUtenti.objects.filter(id_utente = utente.id, utente = instance).exists()				
-						esistenza_in_white = WhitelistUtenti.objects.filter(id_utente = utente.id, utente = instance).exists()			
-			
-						relationship = api.user_relationship(user_id = utente.id)
-						is_private = relationship.target_user_is_private
-						check_limite(api)
-						
-						if (esistenza_nuovo_user is False) and (esistenza_in_white is False) and (is_private is False):
-					
-							time.sleep(90)	
-							api.follow_user(user_id = utente.id)
-							check_limite(api)
+						with transaction.commit_on_success():
+							esistenza_nuovo_user = BlacklistUtenti.objects.filter(id_utente = utente.id, utente = instance).exists()				
+							esistenza_in_white = WhitelistUtenti.objects.filter(id_utente = utente.id, utente = instance).exists()			
 				
-							nuovo_user_blackilist = BlacklistUtenti(username = utente.username, id_utente = utente.id, utente = instance, unfollowato = False)
-							nuovo_user_blackilist.save()
+							relationship = api.user_relationship(user_id = utente.id)
+							is_private = relationship.target_user_is_private
+							check_limite(api)
+							
+							if (esistenza_nuovo_user is False) and (esistenza_in_white is False) and (is_private is False):
+						
+								time.sleep(90)	
+								api.follow_user(user_id = utente.id)
+								check_limite(api)
 					
-							user_obj.follow_totali = follow_totali + 1
-							user_obj.follow_sessione = follow_sessione + 1
-							user_obj.save()
-					
-							contatore = contatore + 1
-							contatore = check_contatore(contatore, access_token, instance, id_task)		
+								nuovo_user_blackilist = BlacklistUtenti(username = utente.username, id_utente = utente.id, utente = instance, unfollowato = False)
+								nuovo_user_blackilist.save()
+						
+								user_obj.follow_totali = follow_totali + 1
+								user_obj.follow_sessione = follow_sessione + 1
+								user_obj.save()
+						
+								contatore = contatore + 1
+								contatore = check_contatore(contatore, access_token, instance, id_task)		
 														
 					except InstagramAPIError as errore:
 						errore_mortale(errore, instance)

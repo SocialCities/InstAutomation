@@ -100,6 +100,8 @@ def chiamata_like(api, nome_tag, user_instance, id_task):
 			if conto_like < 100:
 				try:
 					time.sleep(60)
+					#print id_elemento
+					#print foto.link
 					api.like_media(id_elemento)
 					
 					user_obj.like_totali = like_messi + 1
