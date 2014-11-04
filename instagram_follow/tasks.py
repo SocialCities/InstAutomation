@@ -66,54 +66,48 @@ def avvia_task_pulizia_follower(token, instance, task_diretto, id_task_padre):
 	return "Fine unfollow"
 			
 @shared_task
-def start_follow(instance, api):
-	id_task = start_follow.request.id	
+def start_follow(instance, api):	
+	access_token = instance.tokens['access_token']
+
+	id_task = start_follow.request.id
 	nuovo_task = TaskStatus(task_id = id_task, completato = False, utente = instance, sorgente = "follow")
 	nuovo_task.save()
-	
-	access_token = instance.tokens['access_token']
-	
+
 	tutti_rivali = UtentiRivali.objects.filter(utente = instance).order_by('numero_follower').values()
-	
+
 	contatore = 0
-	
+
 	for rivale in tutti_rivali:
-		
 		id_rivale = rivale['id_utente']
-		
+
 		cursore = None
 		uscita = False
-		
+
 		while uscita is False:
-			
 			check_limite(api)
 			followed_by_obj = api.user_followed_by(id_rivale, cursor = cursore)
 			check_limite(api)
 			
 			utenti = followed_by_obj[0]
-			
+
 			for utente in iter(utenti):
+				task_obj = TaskStatus.objects.get(task_id = id_task)
+				task_completato = task_obj.completato
 
 				abbonamento_is_valido = abbonamento_valido(instance)
 
-				task_obj = TaskStatus.objects.get(utente = instance, sorgente = "follow", task_id = id_task)
-				task_completato = task_obj.completato
+				if task_completato or (abbonamento_is_valido is False):
+					#Riscrittura utile nel caso di abbonamento non valido
+					task_obj.completato = True
+					task_obj.save()
 
-				if abbonamento_is_valido is False:
-					task_obj.delete()
+					return "Stop Follow"
 
-					task_obj_accesso = TaskStatus.objects.get(utente = instance, sorgente = "accesso", completato = False)
-					task_obj_accesso.delete()
-					return "Stop follow per abbonamento scaduto"
-				
-				if task_completato:
-					task_obj.delete()
-					return "Fine follow"
 				else:
 					user_obj = Utente.objects.get(utente = instance)
 					follow_totali = user_obj.follow_totali
-					follow_sessione = user_obj.follow_sessione	
-					
+					follow_sessione = user_obj.follow_sessione
+
 					try:
 						with transaction.commit_on_success():
 							esistenza_nuovo_user = BlacklistUtenti.objects.filter(id_utente = utente.id, utente = instance).exists()				
@@ -144,9 +138,12 @@ def start_follow(instance, api):
 					
 			cursore, uscita = get_cursore(followed_by_obj)
 	
-	avvia_task_pulizia_follower(access_token, instance, False, id_task)		
-	task_da_eliminare = TaskStatus.objects.get(task_id = id_task, completato = False, utente = instance, sorgente = "follow")
-	task_da_eliminare.delete()								
+	avvia_task_pulizia_follower(access_token, instance, False, id_task)	
+
+	task_da_chiudure = TaskStatus.objects.get(task_id = id_task)
+	task_da_chiudure.completato = True
+	task_da_chiudure.save()			
+		
 								
 def check_contatore(contatore, token, instance, id_task_padre):
 	limite = 180

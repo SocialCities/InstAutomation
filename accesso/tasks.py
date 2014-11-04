@@ -33,6 +33,11 @@ def start_task(token, instance):
 	
 	like_task.delay(token, instance, api)	
 	start_follow.delay(instance, api)
+
+	id_task = start_task.request.id
+	task_obj = TaskStatus.objects.get(task_id = id_task)
+	task_obj.completato = True
+	task_obj.save()
 		
 	return 'Started!'
 

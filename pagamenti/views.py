@@ -6,7 +6,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import View
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 
 from social_auth.models import UserSocialAuth
 
