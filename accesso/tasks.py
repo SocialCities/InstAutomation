@@ -46,7 +46,6 @@ def elimina_vecchi_utenti():
     utenti_da_eliminare.delete()
     print 42
 
-    
 @shared_task 
 def pulsantone_rosso(oggetto, no_html, con_html):
 

@@ -258,12 +258,10 @@ def avvia_task(request):
 		user_obj.follow_sessione = 0
 		user_obj.save()
 		
-		result = start_task.delay(access_token, instance)
-		
-		id_task = result.task_id
-		
-		nuovo_task1 = TaskStatus(task_id = id_task, completato = False, utente = instance, sorgente = "accesso")
-		nuovo_task1.save()
+		result = start_task.delay(access_token, instance)		
+		id_task = result.task_id		
+		nuovo_task = TaskStatus(task_id = id_task, completato = False, utente = instance, sorgente = "accesso")
+		nuovo_task.save()
 
 		esistenza_pacchetto_da_attivare = Pacchetti.objects.filter(utente = instance, attivato = False)
 		if esistenza_pacchetto_da_attivare:
@@ -284,10 +282,8 @@ def clean(request):
 	if esistenza:
 		return HttpResponseRedirect('/')
 	else:
-		result = avvia_task_pulizia_follower.delay(access_token, instance, True, None)
-		
-		id_task = result.task_id
-			
+		result = avvia_task_pulizia_follower.delay(access_token, instance, True, None)		
+		id_task = result.task_id			
 		nuovo_task = TaskStatus(task_id = id_task, completato = False, utente = instance, sorgente = "unfollow")
 		nuovo_task.save()
 			

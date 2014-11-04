@@ -19,57 +19,51 @@ MIOIP = settings.IP_LOCALE
 CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
 	
 @shared_task   
-def avvia_task_pulizia_follower(token, instance, task_diretto, id_task_padre):		
-	
+def avvia_task_pulizia_follower(token, instance, task_diretto, id_task_padre):
 	api = InstagramAPI(
 		access_token = token,
 		client_ips = MIOIP,
 		client_secret = CLIENT_SECRET 
 	)
-	
+
 	utenti_da_unfolloware = BlacklistUtenti.objects.filter(utente = instance, unfollowato = False)
-	
+
 	for utente in utenti_da_unfolloware.iterator():
-		
+
 		if task_diretto:
 			id_task = avvia_task_pulizia_follower.request.id	
 			task_obj = TaskStatus.objects.get(utente = instance, task_id = id_task)
 
 		else:
 			task_obj = TaskStatus.objects.get(utente = instance, task_id = id_task_padre)
-		
+
+		task_completato = task_obj.completato
 		abbonamento_is_valido = abbonamento_valido(instance)
-		if abbonamento_is_valido is False:
-			task_obj.delete()
-				
-			return "Stop per scadenza abbonamento"
-		
-		task_completato = task_obj.completato	
-		if task_completato:
-			task_obj.delete()
+
+		if task_completato or (abbonamento_is_valido is False):
+			#Riscrittura utile nel caso di abbonamento non valido
+			task_obj.completato = True
+			task_obj.save()
+
 			return "Stop unfollow"
-				
+
 		user_id = utente.id_utente 
-				
-		check_limite(api)		
-			
-		try:
+		check_limite(api)
+
+		try:			
 			time.sleep(90)	
 			api.unfollow_user(user_id = user_id)
 			utente.unfollowato = True
-			utente.save()			
-								
+			utente.save()
 		except InstagramAPIError as errore:
 			errore_mortale(errore, instance)
-			
-	if task_diretto:		
-		task = TaskStatus.objects.get(completato = False, utente = instance)	
-		task.delete()
-		
-		return "Fine pulizia"
-			
-	return "Fine pulizia"				
-			
+
+
+	if task_diretto:
+		task_obj.completato = True
+		task_obj.save()
+
+	return "Fine unfollow"
 			
 @shared_task
 def start_follow(instance, api):
