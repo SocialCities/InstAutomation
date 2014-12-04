@@ -212,7 +212,7 @@ def home_page(request):
 		percentuale_tempo = 90	
 	elif percentuale_tempo == 0:
 		percentuale_tempo = 10
-
+		
 	context = RequestContext(request, {
 		'username' : username,
 		'avatar' : avatar,

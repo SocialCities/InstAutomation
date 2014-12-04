@@ -65,7 +65,6 @@
 			
 			<div class="row">
 				<div class="col-md-5">
-					<!--<img id="avatar" src="{% static "./_insta_images/default.png" %}" /> -->
 					<img id="avatar" src={{avatar}} />
 					<div id="nick">{{username}}</div>
 				</div>
@@ -112,7 +111,7 @@
 			
 			<div class="row pad40">
 				
-					
+				
 				{% if stato_pacchetto = 3 %}	
 				<div id="percentage" class="col-md-2">Elapsed time</div>
 
@@ -133,7 +132,6 @@
 				</div>
 
 				<div class="col-md-3">
-					<!--<a href="#" class="btn btn-danger pannelloControllo">PAUSE</a> -->
 					<form id = "pause">
 						{% csrf_token %}
 						<button type="submit" class="btn btn-danger pannelloControllo">PAUSE</button>
@@ -150,7 +148,7 @@
 					</div>			
 				</div>		
 
-				{% elif stato_pacchetto = 1%} 
+				{% elif stato_pacchetto = 1 and status_obj_attivi %} 
 
 				<div id="percentage" class="col-md-2">Elapsed time</div>
 
@@ -164,6 +162,7 @@
 
 			</div>
 
+		{% if stato_pacchetto > 1  %}
 			{% if not status_obj_attivi %}
 
 			<div class="row pad40">
@@ -230,6 +229,16 @@
 			</div>
 
 			{% endif %}
+
+		{% else %}						
+
+			{% if stato_pacchetto = 0 %}
+			 Non hai pacchetti, paga
+			{% elif stato_pacchetto = 1 %}
+			 Pacchetto scaduto, paga
+			{% endif %}
+
+		{% endif %}			
 			
 			<!--	SYSTEM SETTAGE PANEL	-->
 			<h4 class="title">System Settings</h4>
