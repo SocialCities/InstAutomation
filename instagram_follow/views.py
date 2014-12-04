@@ -79,7 +79,7 @@ def update_whitelist(api, instance):
 def cerca_competitor(request):
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
 	access_token = instance.tokens['access_token']	
-	nome_da_cercare =  request.POST['keyword']
+	nome_da_cercare = request.POST['keyword']
 
 	api = InstagramAPI(
 			access_token = access_token,
@@ -87,24 +87,22 @@ def cerca_competitor(request):
 			client_secret = CLIENT_SECRET 
 	)	
 
-	tutti_nomi = api.user_search(q = nome_da_cercare, count = 20)
+	tutti_nomi = api.user_search(q = nome_da_cercare, count = 10)
 
 	new_tutti_nomi = []
-	
-	for nome in tutti_nomi[:10]:
+
+	for nome in tutti_nomi:
 		try:
 			followed_by = api.user(nome.id).counts['followed_by']
 			nome.followed_by = followed_by
 			new_tutti_nomi.append(nome)
 		except:
-			pass
+			pass	
 		
 	new_tutti_nomi = sorted(new_tutti_nomi, key = lambda user_obj: user_obj.followed_by, reverse=True)
-	altri_nomi = tutti_nomi[10:]
 
 	output = {}
 	output_full_user = []
-	output_other_user = []
 
 	for name in new_tutti_nomi:
 		user = {}
@@ -113,14 +111,7 @@ def cerca_competitor(request):
 		user["followed_by"] = name.followed_by
 		output_full_user.append(user)
 
-	for other_name in altri_nomi:
-		user = {}
-		user["username"] = other_name.username
-		user["id"] = other_name.id
-		output_other_user.append(user)
-
 	output["users"] = output_full_user
-	output["other_users"] = output_other_user
 
 	return HttpResponse(
     	json.dumps(output),
