@@ -40,7 +40,7 @@
             <li><a href="//www.iubenda.com/privacy-policy/203721" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">Privacy</a></li>
             <li><a href="javascript:openSupport('{{email}}')">Support</a></li>
             <li><a href="javascript:openChange()">Change my email</a></li>
-            <li><a href="/logout">Logout</a></li>
+            <li><a href="javascript:loggingOut('1')">Logout</a></li>
           </ul>
 
         </div>
@@ -774,7 +774,8 @@
 				  <li><a href="//www.iubenda.com/privacy-policy/203721" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">Privacy</a></li>
 				  <li><a href="javascript:openSupport('{{email}}')">Support</a></li>
 				  <li><a href="javascript:openChange()">Change my email</a></li>
-				  <li><a href="/logout">Logout</a></li>
+				  <li><a href="javascript:loggingOut('2')">Logout</a></li>
+
 				</ul>
 				<p>Instautomation.com © 2014</p>
 			  </div>
@@ -783,9 +784,13 @@
 
     </div>
 
+    <div id= "logoutDiv1" style="visibility:hidden;"></div>
+    <div id= "logoutDiv2" style="visibility:hidden;"></div>
+
     <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
     <script type="text/javascript" src="https://checkout.stripe.com/checkout.js"></script>
     <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="{% static "logout.js" %}"</script>
     <script src="{% static "./bower_components/bootstrap/dist/js/bootstrap.min.js" %}"></script>
     <script src="{% static "WearProtection.js" %}"></script>
     <script src="{% static "./assets/js/bootswatch.js" %}"></script>
@@ -794,7 +799,7 @@
     <script src="{% static "./_insta_js/cumulative.js" %}"></script>
 	<script src="{% static "./_insta_js/function.js" %}"></script>
 	<script src="{% static "main.js" %}"></script>
-
+	
 
 	{% if email == "" or email == None %}
     	<script>
