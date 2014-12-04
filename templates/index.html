@@ -233,9 +233,23 @@
 		{% else %}						
 
 			{% if stato_pacchetto = 0 %}
-			 Non hai pacchetti, paga
+				<div class="row pad10">
+					<div class="col-md-12">
+			 			<div class="alert alert-dismissable alert-success">
+							<h4>Yo!</h4>
+							<p>You should buy a package to use the system.</a>
+						</div>
+					</div>
+				</div>
 			{% elif stato_pacchetto = 1 %}
-			 Pacchetto scaduto, paga
+				<div class="row pad10">
+					<div class="col-md-12">
+			 			<div class="alert alert-dismissable alert-success">
+							<h4>Yo!</h4>
+							<p>Your package is expired. You should buy a new package to use the system.</a>
+						</div>
+					</div>
+				</div>
 			{% endif %}
 
 		{% endif %}			
