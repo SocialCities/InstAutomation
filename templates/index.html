@@ -36,7 +36,7 @@
 
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#pricing" class="smooth-price">Prices</a></li>
-            <li><a href="javascript:openTerms()">Terms</a></li>
+            <li><a href="javascript:openTerms()">Our terms</a></li>
             <li><a href="//www.iubenda.com/privacy-policy/203721" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">Privacy</a></li>
             <li><a href="javascript:openSupport('{{email}}')">Support</a></li>
             <li><a href="javascript:openChange()">Change my email</a></li>
@@ -288,46 +288,6 @@
 													</form>
 												</div>
 											</div>	<!--row-->
-											
-											<div class="row pad20">
-												<div class="col-md-8">
-								
-													<div class="table-content">
-														<form id="form_competitor_0"></form>
-														<form id="form_competitor_1"></form>
-														<form id="form_competitor_2"></form>
-														<form id="form_competitor_3"></form>
-														<form id="form_competitor_4"></form>
-														<form id="form_competitor_5"></form>
-														<form id="form_competitor_6"></form>
-														<form id="form_competitor_7"></form>
-														<form id="form_competitor_8"></form>
-														<form id="form_competitor_9"></form>
-
-														<table class="table table-striped table-hover" id="full_user">
-														</table>													
-													</div>													
-												</div>
-												
-												<div class="col-md-4">
-													<div class="table-content">
-														<form id="other_competitor_0"></form>
-														<form id="other_competitor_1"></form>
-														<form id="other_competitor_2"></form>
-														<form id="other_competitor_3"></form>
-														<form id="other_competitor_4"></form>
-														<form id="other_competitor_5"></form>
-														<form id="other_competitor_6"></form>
-														<form id="other_competitor_7"></form>
-														<form id="other_competitor_8"></form>
-														<form id="other_competitor_9"></form>
-
-														<table class="table table-striped table-hover" id="other_user" >
-														</table> 
-														</div>	<!--table-->
-													
-													</div>
-												</div> <!--row-->
 
 											{% if rivali|length == 0 %}
 											<h6 class="row pad20" style="display:none" id = "header_target_competitor" >Target Inserted</h6>
@@ -363,6 +323,32 @@
 												{% endfor %}
 
 											</div> <!--row-->
+											
+											<div class="row pad20">
+
+												<div class="col-md-12">
+								
+													<div class="table-content">
+														<form id="form_competitor_0"></form>
+														<form id="form_competitor_1"></form>
+														<form id="form_competitor_2"></form>
+														<form id="form_competitor_3"></form>
+														<form id="form_competitor_4"></form>
+														<form id="form_competitor_5"></form>
+														<form id="form_competitor_6"></form>
+														<form id="form_competitor_7"></form>
+														<form id="form_competitor_8"></form>
+														<form id="form_competitor_9"></form>
+
+														<table class="table table-striped table-hover" id="full_user">
+														</table>													
+													</div>													
+												</div>
+											
+
+											</div> <!--row-->
+
+
 															
 										</div>	<!--panel-->
 													
@@ -506,9 +492,9 @@
 							<h3 class="price-icon pad20"><i class="fa fa-instagram fa-2x"></i></h3>
 							<h3>Entry Pack</h3>
 							<ul class="price-list pad10">
-								<li>15 days</li>
+								<li style="color:blue;">15 days</li>
 								<li>$4.99</li>
-								<li>$0.33 per day</li>
+								<li>$0.33 <span style="color:grey;">per day</span></li>
 							</ul>
 
 							{% if stato_pacchetto = 0 or stato_pacchetto = 1 %}
@@ -539,10 +525,9 @@
 							<h3 class="price-icon pad10"><i class="fa fa-instagram fa-3x"></i></h3>
 							<h3>Standard Pack</h3>
 							<ul class="price-list pad10">
-								<li>30 days</li>
+								<li style="color:blue;">30 days</li>
 								<li>$7.99</li>
-								<li>$0.26 
-									per day</li>
+								<li>$0.26 <span style="color:grey;">per day</span></li>
 							</ul>
 
 							{% if stato_pacchetto = 0 or stato_pacchetto = 1 %}
@@ -576,9 +561,9 @@
 							<h3 class="price-icon"><i class="fa fa-instagram fa-4x fa-spin"></i></h3>
 							<h3>Power Pack</h3>
 							<ul class="price-list pad10">
-								<li>90 days</li>
+								<li style="color:blue;">90 days</li>
 								<li>$19.99</li>
-								<li>$0.22 per day</li>
+								<li>$0.22 <span style="color:grey;">per day</span></li>
 							</ul>
 							
 							{% if stato_pacchetto = 0 or stato_pacchetto = 1 %}
@@ -738,7 +723,9 @@
 		        <h4 class="modal-title">Ooops!</h4>
 		      </div>
 		      <div class="modal-body">
-		        <p>Something went wrong! Please, try in a while. For support contact us at info@instautomation.com</p>
+		        <p>Something went wrong!
+		        <br/>Please, try in a while.
+		        <br/>For support contact us at info@instautomation.com</p>
 		      </div>
 		      <div class="modal-footer">
 		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -793,14 +780,14 @@
 				<ul class="list-unstyled">
 				  <li class="pull-right"><a href="#top" class="smooth-top">Back to top</a></li>
 				  <li><a href="#pricing" class="smooth-price">Prices</a></li>
-				  <li><a href="javascript:openTerms()">Terms</a></li>
+				  <li><a href="javascript:openTerms()">Our terms</a></li>
 				  <li><a href="//www.iubenda.com/privacy-policy/203721" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">Privacy</a></li>
 				  <li><a href="javascript:openSupport('{{email}}')">Support</a></li>
 				  <li><a href="javascript:openChange()">Change my email</a></li>
 				  <li><a href="javascript:loggingOut('2')">Logout</a></li>
 
 				</ul>
-				<p>Instautomation.com © 2014</p>
+				<p>Instautomation.com © 2014 - All Rights Reserved</p>
 			  </div>
 			</div>
 		  </footer>
