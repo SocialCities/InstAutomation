@@ -92,6 +92,20 @@ def get_dati_pacchetto(instance):
 
 @login_required(login_url='/login')
 def charge(request):
+
+	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
+
+	esistenza = Pacchetti.objects.filter(utente = instance).exists()
+
+	if esistenza:
+		valido = abbonamento_valido(instance)
+
+		if valido:
+			return HttpResponse("package_exists")
+		else:
+			pack_obk = Pacchetti.objects.get(utente = instance)
+			pack_obk.delete()
+
 	#stripeEmail = request.POST['stripeEmail']	
 	stripeToken = request.POST['stripeToken']
 	piano = request.POST['piano']
@@ -112,8 +126,6 @@ def charge(request):
 	  card = stripeToken, 
 	  description = "Charge for Instautomation.com",
 	)
-
-	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
 
 	nuovo_pacchetto(instance, giorni)
 
