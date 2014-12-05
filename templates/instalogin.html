@@ -21,7 +21,7 @@
     <div class="navbar navbar-default navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
-          <a href="../" class="navbar-brand"><img src="{% static "./_insta_images/instautomation-logo.png" %}" /> Instautomation</a>
+          <a href="../" class="navbar-brand"><img src="{% static "./_insta_images/instautomation-logo.png" %}" />Instautomation</a>
           <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -62,14 +62,23 @@
 				  <h1>Welcome to Instautomation!</h1>
 				  <p>A new generation of transparent BOT that provides <span class="hue coloured">optimization</span> and <span class="hue coloured">analytics</span> for igers.</p>
 				  
-				 <div class="row">
-				  	<div class="col-md-6">
-					  <div class="btn-group btn-group-justified">
-						  <a href="{% url 'socialauth_begin' 'instagram' %}" class="btn btn-primary" style="width:25%;"><i class="fa fa-instagram fa-2x"></i></a>
-						  <a href="{% url 'socialauth_begin' 'instagram' %}" class="btn btn-primary" style="width:75%;">Sign in with Instagram</a>
-					  </div>
-				 	</div>
-				  </div>
+
+				{% if numero_iscritti = 1 %}  
+
+					aiuto
+
+				{% else %}
+
+					<div class="row">
+					  	<div class="col-md-6">
+						 	<div class="btn-group btn-group-justified">
+							  	<a href="{% url 'socialauth_begin' 'instagram' %}" class="btn btn-primary" style="width:25%;"><i class="fa fa-instagram fa-2x"></i></a>
+							  	<a href="{% url 'socialauth_begin' 'instagram' %}" class="btn btn-primary" style="width:75%;">Sign in with Instagram</a>
+						  	</div>
+					 	</div>
+					</div>
+
+				{% endif %}
 
 				</div> <!--end jumbotron-->
 

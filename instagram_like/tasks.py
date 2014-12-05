@@ -64,15 +64,6 @@ def like_task(access_token, user_instance, api):
 					try:
 						time.sleep(60)
 						api.like_media(id_elemento)
-						
-						#user_obj = Utente.objects.get(utente = user_instance)
-						#like_messi = user_obj.like_totali
-						#like_sessione = user_obj.like_sessione
-						#user_obj.like_totali = like_messi + 1
-						#user_obj.like_sessione = like_sessione + 1
-						#user_obj.save()
-						#user_obj.update(like_totali = like_messi + 1)
-						#user_obj.update(like_sessione = like_sessione + 1)
 
 						Utente.objects.filter(utente = user_instance).update(like_totali = F('like_totali') + 1)
 						Utente.objects.filter(utente = user_instance).update(like_sessione = F('like_sessione') + 1)								

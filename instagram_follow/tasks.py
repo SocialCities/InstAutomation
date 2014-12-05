@@ -124,18 +124,6 @@ def start_follow(instance, api):
 								nuovo_user_blackilist = BlacklistUtenti(username = utente.username, id_utente = utente.id, utente = instance, unfollowato = False)
 								nuovo_user_blackilist.save()
 
-								####merda
-								#user_obj = Utente.objects.get(utente = instance)
-								#follow_totali = user_obj.follow_totali
-								#follow_sessione = user_obj.follow_sessione								
-						
-								#user_obj.follow_totali = follow_totali + 1
-								#user_obj.follow_sessione = follow_sessione + 1
-								#user_obj.save()
-								#user_obj.update(follow_totali = follow_totali + 1)
-								#user_obj.update(follow_sessione = follow_sessione + 1)
-								#merda2
-
 								Utente.objects.filter(utente = instance).update(follow_totali = F('follow_totali') + 1)
 								Utente.objects.filter(utente = instance).update(follow_sessione = F('follow_sessione') + 1)
 						

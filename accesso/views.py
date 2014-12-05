@@ -30,8 +30,14 @@ from instautomation.utility  import kill_all_tasks
 MIOIP = settings.IP_LOCALE
 CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
 	
-def index(request):	
-	return render_to_response('instalogin.html', context_instance=RequestContext(request))
+def index(request):
+	template_name = "instalogin.html"
+
+	numero_iscritti = Utente.objects.filter().count()
+
+	variabili = {'numero_iscritti' : numero_iscritti}
+
+	return render(request, template_name, variabili)
 	
 def uscita(request):
     logout(request)
