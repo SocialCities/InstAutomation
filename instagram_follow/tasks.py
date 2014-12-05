@@ -6,6 +6,7 @@ from pagamenti.views import abbonamento_valido
 from accesso.models import TaskStatus, Utente
 from instagram.client import InstagramAPI
 from instagram.bind import InstagramAPIError
+from django.db.models import F
 
 from instautomation.utility import get_cursore, check_limite, errore_mortale
 
@@ -104,9 +105,6 @@ def start_follow(instance, api):
 					return "Stop Follow"
 
 				else:
-					user_obj = Utente.objects.get(utente = instance)
-					follow_totali = user_obj.follow_totali
-					follow_sessione = user_obj.follow_sessione
 
 					try:
 						with transaction.commit_on_success():
@@ -125,10 +123,21 @@ def start_follow(instance, api):
 					
 								nuovo_user_blackilist = BlacklistUtenti(username = utente.username, id_utente = utente.id, utente = instance, unfollowato = False)
 								nuovo_user_blackilist.save()
+
+								####merda
+								#user_obj = Utente.objects.get(utente = instance)
+								#follow_totali = user_obj.follow_totali
+								#follow_sessione = user_obj.follow_sessione								
 						
-								user_obj.follow_totali = follow_totali + 1
-								user_obj.follow_sessione = follow_sessione + 1
-								user_obj.save()
+								#user_obj.follow_totali = follow_totali + 1
+								#user_obj.follow_sessione = follow_sessione + 1
+								#user_obj.save()
+								#user_obj.update(follow_totali = follow_totali + 1)
+								#user_obj.update(follow_sessione = follow_sessione + 1)
+								#merda2
+
+								Utente.objects.filter(utente = instance).update(follow_totali = F('follow_totali') + 1)
+								Utente.objects.filter(utente = instance).update(follow_sessione = F('follow_sessione') + 1)
 						
 								contatore = contatore + 1
 								contatore = check_contatore(contatore, access_token, instance, id_task)		

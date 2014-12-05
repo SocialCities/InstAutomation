@@ -201,12 +201,12 @@ def home_page(request):
 	
 	status_obj_attivi = TaskStatus.objects.filter(utente = instance, completato = False).exists()
 
-	if status_obj_attivi is False:
-		numero_like_sessione = 0
-		numero_follow_sessione = 0
-	else:
+	if status_obj_attivi:
 		numero_like_sessione = user_obj.like_sessione
 		numero_follow_sessione = user_obj.follow_sessione
+	else:
+		numero_like_sessione = 0
+		numero_follow_sessione = 0				
 
 	if percentuale_tempo == 100:
 		percentuale_tempo = 90	

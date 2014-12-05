@@ -6,6 +6,7 @@ from .models import ListaTag
 from accesso.models import TaskStatus, Utente
 from pagamenti.views import abbonamento_valido
 from instagram.bind import InstagramAPIError
+from django.db.models import F
 
 import time
 import logging
@@ -56,10 +57,6 @@ def like_task(access_token, user_instance, api):
 
 					return "Fine Like"
 
-				user_obj = Utente.objects.get(utente = user_instance)
-				like_messi = user_obj.like_totali
-				like_sessione = user_obj.like_sessione
-
 				id_elemento = foto.id
 				conto_like = foto.like_count
 
@@ -68,9 +65,17 @@ def like_task(access_token, user_instance, api):
 						time.sleep(60)
 						api.like_media(id_elemento)
 						
-						user_obj.like_totali = like_messi + 1
-						user_obj.like_sessione = like_sessione + 1
-						user_obj.save()								
+						#user_obj = Utente.objects.get(utente = user_instance)
+						#like_messi = user_obj.like_totali
+						#like_sessione = user_obj.like_sessione
+						#user_obj.like_totali = like_messi + 1
+						#user_obj.like_sessione = like_sessione + 1
+						#user_obj.save()
+						#user_obj.update(like_totali = like_messi + 1)
+						#user_obj.update(like_sessione = like_sessione + 1)
+
+						Utente.objects.filter(utente = user_instance).update(like_totali = F('like_totali') + 1)
+						Utente.objects.filter(utente = user_instance).update(like_sessione = F('like_sessione') + 1)								
 					
 					except InstagramAPIError as errore:
 						errore_mortale(errore, user_instance)
