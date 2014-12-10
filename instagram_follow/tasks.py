@@ -105,7 +105,6 @@ def start_follow(instance, api):
 					return "Stop Follow"
 
 				else:
-
 					try:
 						with transaction.commit_on_success():
 							esistenza_nuovo_user = BlacklistUtenti.objects.filter(id_utente = utente.id, utente = instance).exists()				

@@ -82,46 +82,49 @@ def errore_mortale(e, instance):
 			print username + " - " + e.error_message #Token errore
 			utente_obj = Utente.objects.get(utente = instance)
 			email_utente = utente_obj.email
-			utente_obj.token_block = True
-			utente_obj.save()
-			
-			avviso_email(email_utente)	
-			
-			kill_all_tasks(instance)	
+
+			if utente_obj.token_block is False:
+
+				utente_obj.token_block = True
+				utente_obj.save()
+				
+				avviso_email(email_utente)	
+				
+				kill_all_tasks(instance)	
 					
 		elif (e.error_type == 'APINotAllowedError'):
 			print username + " - " +  e.error_message
-			time.sleep(90)
+			time.sleep(180)
 
 		elif (e.error_type == 'APINotFoundError'):
 			print username + " - " +  e.error_message
-			time.sleep(90)	
+			time.sleep(180)	
 			
 	elif (e.status_code == 429):
 		print username + " - " +  e.error_message #Rate limited
-		time.sleep(120)
+		time.sleep(180)
 
 	elif (e.status_code == 404):
 		print username + " - " +  e.error_message #Rate limited
-		time.sleep(120)	
+		time.sleep(180)	
 		
 	elif (e.status_code == 500):
 		print username + " - " +  e.error_message #errore JSON
-		time.sleep(90)
+		time.sleep(180)
 							
 	elif (e.status_code == 502):
 		print username + " - " +  e.error_message #errore JSON
-		time.sleep(90)
+		time.sleep(180)
 
 	elif (e.status_code == 503):
 		print username + " - " +  e.error_message #Rate limited	
-		time.sleep(90)			
+		time.sleep(180)			
 		
 	elif (e.status_code == 504):
 		print username + " - " +  e.error_message #errore JSON
-		time.sleep(90)	
+		time.sleep(180)	
 	else:
-		time.sleep(90)		
+		time.sleep(180)		
 		print username + " - " + 'errore mortale'
 		print e.status_code
 		logger.error("errore mortale", exc_info=True)	
