@@ -161,7 +161,7 @@ LOGGING = {
 IP_LOCALE = '79.49.55.89'
 
 #Production
-IP_LOCALE = '178.62.48.51'
+#IP_LOCALE = '178.62.172.9'
 
 ### Configurazione Email ###
 EMAIL_USE_TLS = True 

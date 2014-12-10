@@ -62,7 +62,7 @@ def like_task(access_token, user_instance, api):
 
 				if conto_like < 100:
 					try:
-						time.sleep(60)
+						time.sleep(90)
 						api.like_media(id_elemento)
 
 						Utente.objects.filter(utente = user_instance).update(like_totali = F('like_totali') + 1)
