@@ -5,7 +5,7 @@ from .models import BlacklistUtenti, WhitelistUtenti, UtentiRivali
 from pagamenti.views import abbonamento_valido
 from accesso.models import TaskStatus, Utente
 from instagram.client import InstagramAPI
-from instagram.bind import InstagramAPIError
+from instagram.bind import InstagramAPIError, InstagramClientError 
 from django.db.models import F
 
 from instautomation.utility import get_cursore, check_limite, errore_mortale
@@ -51,13 +51,19 @@ def avvia_task_pulizia_follower(token, instance, task_diretto, id_task_padre):
 		user_id = utente.id_utente 
 		check_limite(api)
 
-		try:			
-			time.sleep(90)	
-			api.unfollow_user(user_id = user_id)
-			utente.unfollowato = True
-			utente.save()
+		time.sleep(90)	
+
+		try:
+			with transaction.commit_on_success():	
+				api.unfollow_user(user_id = user_id)
+				utente.unfollowato = True
+				utente.save()
+
 		except InstagramAPIError as errore:
 			errore_mortale(errore, instance)
+
+		except InstagramClientError as errore2:
+			errore_mortale(errore2, instance)
 
 
 	if task_diretto:
@@ -131,6 +137,9 @@ def start_follow(instance, api):
 														
 					except InstagramAPIError as errore:
 						errore_mortale(errore, instance)
+
+					except InstagramClientError as errore2:
+						errore_mortale(errore2, instance)		
 					
 			cursore, uscita = get_cursore(followed_by_obj)
 	

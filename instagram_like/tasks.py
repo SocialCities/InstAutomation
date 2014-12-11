@@ -5,7 +5,7 @@ from celery import shared_task
 from .models import ListaTag
 from accesso.models import TaskStatus, Utente
 from pagamenti.views import abbonamento_valido
-from instagram.bind import InstagramAPIError
+from instagram.bind import InstagramAPIError, InstagramClientError 
 from django.db.models import F
 
 import time
@@ -70,5 +70,8 @@ def like_task(access_token, user_instance, api):
 					
 					except InstagramAPIError as errore:
 						errore_mortale(errore, user_instance)
+
+					except InstagramClientError as errore2:
+						errore_mortale(errore2, user_instance)	
 	
 	return "Stop like"						
