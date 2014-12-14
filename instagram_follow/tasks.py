@@ -7,11 +7,10 @@ from accesso.models import TaskStatus, Utente
 from instagram.client import InstagramAPI
 from instagram.bind import InstagramAPIError, InstagramClientError 
 from django.db.models import F
-
 from instautomation.utility import get_cursore, check_limite, errore_mortale
-
 from django.db import transaction
 from django.conf import settings
+import random
 import time
 import logging
 logger = logging.getLogger('django')
@@ -51,7 +50,8 @@ def avvia_task_pulizia_follower(token, instance, task_diretto, id_task_padre):
 		user_id = utente.id_utente 
 		check_limite(api)
 
-		time.sleep(90)	
+		sleeping_time = random.randint(90, 3600)
+		time.sleep(sleeping_time)	
 
 		try:
 			with transaction.commit_on_success():	
@@ -122,7 +122,9 @@ def start_follow(instance, api):
 							
 							if (esistenza_nuovo_user is False) and (esistenza_in_white is False) and (is_private is False):
 						
-								time.sleep(90)	
+								sleeping_time = random.randint(90, 3600)
+								time.sleep(sleeping_time)	
+								
 								api.follow_user(user_id = utente.id)
 								check_limite(api)
 					

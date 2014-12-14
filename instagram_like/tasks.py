@@ -7,7 +7,7 @@ from accesso.models import TaskStatus, Utente
 from pagamenti.views import abbonamento_valido
 from instagram.bind import InstagramAPIError, InstagramClientError 
 from django.db.models import F
-
+import random
 import time
 import logging
 logger = logging.getLogger('django')
@@ -62,7 +62,8 @@ def like_task(access_token, user_instance, api):
 
 				if conto_like < 100:
 					try:
-						time.sleep(90)
+						sleeping_time = random.randint(90, 3600)
+						time.sleep(sleeping_time)
 						api.like_media(id_elemento)
 
 						Utente.objects.filter(utente = user_instance).update(like_totali = F('like_totali') + 1)
