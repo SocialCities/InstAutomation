@@ -50,7 +50,7 @@ def avvia_task_pulizia_follower(token, instance, task_diretto, id_task_padre):
 		user_id = utente.id_utente 
 		check_limite(api)
 
-		sleeping_time = random.randint(90, 3600)
+		sleeping_time = random.randint(60, 300)
 		time.sleep(sleeping_time)	
 
 		try:
@@ -122,7 +122,7 @@ def start_follow(instance, api):
 							
 							if (esistenza_nuovo_user is False) and (esistenza_in_white is False) and (is_private is False):
 						
-								sleeping_time = random.randint(90, 3600)
+								sleeping_time = random.randint(60, 300)
 								time.sleep(sleeping_time)	
 								
 								api.follow_user(user_id = utente.id)
@@ -153,7 +153,7 @@ def start_follow(instance, api):
 		
 								
 def check_contatore(contatore, token, instance, id_task_padre):
-	limite = 180
+	limite = 50
 	
 	if contatore > limite:
 		avvia_task_pulizia_follower(token, instance, False, id_task_padre)
