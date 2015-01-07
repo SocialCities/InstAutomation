@@ -90,7 +90,7 @@ INSTAGRAM_CLIENT_SECRET = 'e42bb095bdc6494aa351872ea17581ac'
 
 INSTAGRAM_REDIRECT_URI = "http://instautomation.com/complete/instagram/"
 
-DEFAULT_HOST = "http://instautomation.com"
+DEFAULT_HOST = "htt://instautomation.com"
 
 LOGIN_URL          = '/login'
 LOGIN_REDIRECT_URL = '/access'
