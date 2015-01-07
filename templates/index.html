@@ -304,12 +304,14 @@
 													<div class="col-md-4">
 													{% endif %}
 
+													<span title="{{rivale.username}}">
 														<form class="alert alert-dismissable alert-default rivale_form">
 															{% csrf_token %}
 															<button type="submit" class="close">×</button>
 															<input type="hidden" value="{{rivale.username}}" name = "nome_rivale">
-															<strong>{{rivale.username}}</strong>
+															<strong>{{rivale.username|truncatechars:10}}</strong>
 														</form>
+													</span>
 
 													{% if forloop.counter|divisibleby:2 %}
 													</div>
