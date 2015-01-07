@@ -63,9 +63,18 @@
 				  <p>A new generation of transparent BOT that provides <span class="hue coloured">optimization</span> and <span class="hue coloured">analytics</span> for igers.</p>
 				  
 
-				{% if numero_iscritti = 100 %}  
+				{% if numero_iscritti = 1 %}  
 
-					aiuto
+					<div class="alert alert-info" role="alert" style="width:70%;">
+						<h4 style="margin-left:13px;">We're sorry but we have reached our beta subscription limit!</h4>
+					<h6>Subscribe to our newsletter and stay update</h6>
+
+						<form action="/email_chimp" method="post" id = "email_chimp">{% csrf_token %}					
+								<input type="email" name="email" placeholder="&nbsp;&nbsp;Email" style="height:42px;width:300px;background-color: #ffffff;border-color: #dddddd;border-radius: 4px;color: #666;">
+								<button type="submit" class="btn btn-default">Save</button>
+							
+						</form>
+					</div>
 
 				{% else %}
 
@@ -167,6 +176,20 @@
 		  </div>
 		</div>
 
+		<!--SPINNER-->
+		<div id="spinner" class="modal">
+		  <div class="modal-dialog">
+			<div class="modal-content">
+			  	<div class="modal-body">
+			  		<p>LOADING</p>
+			  		<div class="progress progress-striped" class="col-md-10">
+						<div class="progress-bar progress-bar-success active" style="width:100%"></div>
+					</div>
+			 	 </div>
+			</div>
+		  </div>
+		</div>
+
 
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -197,6 +220,7 @@
     <script src="{% static "./_insta_js/ga.js" %}"></script>
     <script src="{% static "./_insta_js/privacy.js" %}"></script>
 	<script src="{% static "./_insta_js/function.js" %}"></script>
+	<script src="{% static "main.js" %}"></script>
   </body>
 </html>
 

@@ -26,6 +26,7 @@ from instagram.client import InstagramAPI
 from instagram.bind import InstagramAPIError
 
 from instautomation.utility  import kill_all_tasks
+from postmonkey import PostMonkey
 
 MIOIP = settings.IP_LOCALE
 CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
@@ -356,3 +357,13 @@ def contact_process(request):
 		return HttpResponse('OK')
 	else:
 		return HttpResponse('<div class="notification_error">'+errore+'</div>')	
+
+
+def email_chimp(request):
+	email = request.POST['email']
+	apikey = 'a36024c7bb5504d63b61963dd9741fa2-us8'
+	mailid = 'c4ed436de6'
+	
+	pm = PostMonkey(apikey)
+	pm.listSubscribe(id = mailid, email_address = email, double_optin = False)
+	return HttpResponse()
