@@ -401,13 +401,14 @@
 													{% if forloop.first %}
 													<div class="col-md-4">
 													{% endif %}
-
+													<span title="{{tag.keyword}}">
 														<form class="alert alert-dismissable alert-default tag-form">
 															{% csrf_token %}
 															<button type="submit" class="close" >×</button>
 															<input type="hidden" value="{{tag.keyword}}" name="keyword">
-															<strong>{{tag.keyword}}</strong>
+															<strong>{{tag.keyword|truncatechars:10}}</strong>
 														</form>
+													</span>
 
 													{% if forloop.counter|divisibleby:2 %}
 													</div>
@@ -488,15 +489,15 @@
 				<div class="col-md-3">
 					<div class="panel panel-default">
 						<div class="panel-heading" style="color:white; background-color:#E96E5D !important">
-							<h3 class="panel-title">15 days for $4.99</h3>
+							<h3 class="panel-title">15 days for $6.99</h3>
 						</div>
 						<div class="panel-body">
 							<h3 class="price-icon pad20"><i class="fa fa-instagram fa-2x"></i></h3>
 							<h3>Entry Pack</h3>
 							<ul class="price-list pad10">
 								<li style="color:blue;">15 days</li>
-								<li>$4.99</li>
-								<li>$0.33 <span style="color:grey;">per day</span></li>
+								<li>$6.99</li>
+								<li>$0.46 <span style="color:grey;">per day</span></li>
 							</ul>
 
 							{% if stato_pacchetto = 0 or stato_pacchetto = 1 %}
@@ -521,15 +522,15 @@
 				<div class="col-md-3">
 					<div class="panel panel-default">
 						<div class="panel-heading" style="color:white; background-color:#d24955 !important">
-							<h3 class="panel-title">30 days for $7.99</h3>
+							<h3 class="panel-title">30 days for $10.79</h3>
 						</div>
 						<div class="panel-body">
 							<h3 class="price-icon pad10"><i class="fa fa-instagram fa-3x"></i></h3>
 							<h3>Standard Pack</h3>
 							<ul class="price-list pad10">
 								<li style="color:blue;">30 days</li>
-								<li>$7.99</li>
-								<li>$0.26 <span style="color:grey;">per day</span></li>
+								<li>$10.79</li>
+								<li>$0.36 <span style="color:grey;">per day</span></li>
 							</ul>
 
 							{% if stato_pacchetto = 0 or stato_pacchetto = 1 %}
@@ -556,7 +557,7 @@
 				<div class="col-md-3">
 					<div class="panel panel-default">
 						<div class="panel-heading" style="color:white; background-color:#85212a !important">
-							<h3 class="panel-title">90 days for $19.99</h3>
+							<h3 class="panel-title">90 days for $24.49</h3>
 						</div>
 						<div class="panel-body">
 							
@@ -564,8 +565,8 @@
 							<h3>Power Pack</h3>
 							<ul class="price-list pad10">
 								<li style="color:blue;">90 days</li>
-								<li>$19.99</li>
-								<li>$0.22 <span style="color:grey;">per day</span></li>
+								<li>$24.49</li>
+								<li>$0.27 <span style="color:grey;">per day</span></li>
 							</ul>
 							
 							{% if stato_pacchetto = 0 or stato_pacchetto = 1 %}
@@ -791,7 +792,7 @@
 				  <li><a href="javascript:loggingOut('2')">Logout</a></li>
 
 				</ul>
-				<p>Instautomation.com © 2014 - All Rights Reserved</p>
+				<p>Instautomation.com © 2015 - <a href="http://www.socialcities.co" target="_blank">SocialCities s.r.l.</a></p>
 			  </div>
 			</div>
 		  </footer>

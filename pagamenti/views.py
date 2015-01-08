@@ -115,13 +115,13 @@ def charge(request):
 	piano = request.POST['piano']
 
 	if piano == "pagamento_15":
-		amount = 499
+		amount = 699
 		giorni = 15
 	elif piano == "pagamento_30":
-		amount = 799
+		amount = 1079
 		giorni = 30
 	elif piano == "pagamento_90":
-		amount = 1999
+		amount = 2449
 		giorni = 90
 
 	stripe.Charge.create(
@@ -160,7 +160,7 @@ class pay_tweet(View):
     		return HttpResponse()
 
 @shared_task
-def cron_scadenza_pacchetto(request):
+def cron_scadenza_pacchetto():
 	oggi = date.today() 
 	all_pack = Pacchetti.objects.filter(data_scadenza = oggi).values('utente')
 	for pack in all_pack:
@@ -175,6 +175,4 @@ def cron_scadenza_pacchetto(request):
 		
 		msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
 		msg.attach_alternative(html_content, "text/html")
-		msg.send()		
-
-	return HttpResponse(2)
+		msg.send()
