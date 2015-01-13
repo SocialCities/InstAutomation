@@ -102,11 +102,11 @@ def errore_mortale(e, instance):
 			
 	elif (e.status_code == 429):
 		print username + " - " +  e.error_message #Rate limited
-		time.sleep(180)
+		time.sleep(360)
 
 	elif (e.status_code == 404):
 		print username + " - " +  e.error_message #Rate limited
-		time.sleep(180)	
+		time.sleep(360)	
 		
 	elif (e.status_code == 500):
 		print username + " - " +  e.error_message #errore JSON
@@ -124,11 +124,16 @@ def errore_mortale(e, instance):
 		print username + " - " +  e.error_message #errore JSON
 		time.sleep(180)	
 	else:
-		time.sleep(180)		
-		print username + " - " + 'errore mortale'
-		print e.status_code
-		logger.error("errore mortale", exc_info=True)	
-
+		codice = e.status_code
+		if(codice == "Rate limited"):
+			time.sleep(360)
+			print username + " - Rate limited" 
+				
+		else:
+			time.sleep(360)
+			print username + " - " + 'errore mortale'
+			print codice
+			logger.error("errore mortale", exc_info=True)
 				
 def avviso_email(email_utente):
     subject, from_email, to = '[Instautomation] Access token issue', 'info@instautomation.com', email_utente

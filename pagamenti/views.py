@@ -43,7 +43,7 @@ def abbonamento_valido(instance):
 	now = date.today()
 	data_scadenza = pacchetto_obj.data_scadenza
 
-	if now > data_scadenza:
+	if now >= data_scadenza:
 		return False #Abbonamento scaduto
 	else:
 		return True #Abbonamento valido
@@ -80,7 +80,7 @@ def get_dati_pacchetto(instance):
 
 		if data_scadenza is None:
 			giorni_totali = pacchetto_obj.giorni
-			return 0, giorni_totali
+			return giorni_totali, giorni_totali
 		else:
 			delta_scadenza = data_scadenza - now  
 			delta_scadenza = delta_scadenza.days

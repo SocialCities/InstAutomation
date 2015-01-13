@@ -7,3 +7,16 @@ class BetaMiddleware(object):
     def process_request(self, request):
         if request.path != '/beta/' and not request.session.get('in_beta'):
             return HttpResponseRedirect('%s?next=%s' % ('/beta/', request.path))
+
+
+from social_auth.middleware import SocialAuthExceptionMiddleware
+from django.shortcuts import render
+from social_auth.exceptions import AuthCanceled, AuthFailed
+
+class SocialAuthExceptionMiddleware(SocialAuthExceptionMiddleware):
+    def process_exception(self, request, exception):
+    	tipo_ecc = type(exception)
+        if (tipo_ecc == AuthCanceled) or (tipo_ecc == AuthFailed):
+        	return render(request, "errore_auth.html")
+        else:
+            pass

@@ -136,6 +136,8 @@ def home_page(request):
 	rivali = UtentiRivali.objects.filter(utente = instance)
 	percentuale_tempo = 0
 
+	label_pacchetto = ""
+
 	#Status pacchetti
 	esistenza_pacchetto = Pacchetti.objects.filter(utente = instance).exists()
 	if esistenza_pacchetto:
@@ -145,14 +147,23 @@ def home_page(request):
 			if abbonamento_valido(instance):
 				stato_pacchetto = 2 #Abbonamento valido
 				percentuale_tempo = percentuale_tempo_rimanente(instance)  
-				time_remaining, giorni_totali = get_dati_pacchetto(instance)           
+				time_remaining, giorni_totali = get_dati_pacchetto(instance) 
+
+				if giorni_totali == 2:
+					label_pacchetto = 'You have a free package!'
+				else:
+					label_pacchetto = "You have already <br /> purchased a package"
 			else:
 				stato_pacchetto = 1 #Abbonamento scaduto
 				time_remaining, giorni_totali = get_dati_pacchetto(instance)
-
 		else:
 			stato_pacchetto = 3 #Pacchetto non usato ma valido
 			time_remaining, giorni_totali = get_dati_pacchetto(instance)
+
+			if giorni_totali == 2:
+				label_pacchetto = 'You have a free package!'
+			else:
+				label_pacchetto = "You have already <br /> purchased a package"
 	else:
 		giorni_totali = 0
 		stato_pacchetto = 0	
@@ -239,6 +250,7 @@ def home_page(request):
 		'numero_follow_sessione' : numero_follow_sessione,
 		'tweet_boolean' : tweet_boolean,
 		'avviso' : avviso,
+		'label_pacchetto' : label_pacchetto,
 	})
 
 	return HttpResponse(template.render(context)) 	
@@ -305,17 +317,22 @@ def add_email(request):
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
 		
 	user_obj = Utente.objects.get(utente = instance)
-	user_obj.email = email
-	user_obj.save()
 
-	username = user_obj.utente.extra_data['username']
+	email_utente = user_obj.email
+	if email_utente == email:
+		return HttpResponse("exists")
+	else:
+		user_obj.email = email
+		user_obj.save()
 
-	primo_avvio = request.POST['primo_avvio']
+		username = user_obj.utente.extra_data['username']
 
-	if(primo_avvio == 'true'):
-		invio_email_primo_avvio.delay(email, username)
-	
-	return HttpResponse('')	
+		primo_avvio = request.POST['primo_avvio']
+
+		if(primo_avvio == 'true'):
+			invio_email_primo_avvio.delay(email, username)
+		
+		return HttpResponse('')	
 
 @login_required(login_url='/login')
 def contact_process(request):

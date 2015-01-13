@@ -34,6 +34,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     #'instautomation.middleware.BetaMiddleware',
+    'instautomation.middleware.SocialAuthExceptionMiddleware',
 )
 
 ROOT_URLCONF = 'instautomation.urls'

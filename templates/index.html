@@ -17,7 +17,6 @@
     <title>Welcome | Instautomation</title>
   </head>
 
-  	<!--<body onload="goIndex()">-->
     <body>
 
     <div class="navbar navbar-default navbar-fixed-top">
@@ -31,8 +30,6 @@
           </button>
         </div>
         <div class="navbar-collapse collapse" id="navbar-main">
-         <!-- <ul class="nav navbar-nav">
-          </ul> -->
 
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#pricing" class="smooth-price">Prices</a></li>
@@ -53,12 +50,9 @@
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-
-
     <div class="container">
 
-		<div class="page-header" id="banner">
-	  
+		<div class="page-header" id="banner">	  
 	  
 			<!--	WELCOME PANEL	-->
 			<h3>Welcome back,</h3>
@@ -107,7 +101,7 @@
 			{% endif %}
 		
 			<!--	ACCOUNTING TIMING PANEL	-->
-			<h4 class="title">Accounting Timing<span class="pull-right no-hue"><span class="hue coloured">{{follower_since_registration}}</span> follower since your registration</span></h4>
+			<h4 class="title">Accounting Timing<span class="pull-right no-hue"><span class="hue coloured">{{follower_since_registration}}</span> new followers since your registration</span></h4>
 			
 			<div class="row pad40">
 				
@@ -176,7 +170,7 @@
 					<div class="panel panel-default elapsed">
 						<div class="panel-body">
 							Total Time Bought
-							<span class="badge">{{giorni_totali}} days</span>
+							<span class="badge" style="padding-left:10pt;padding-right:10pt;">{{giorni_totali}} days</span>
 						</div>
 					</div>
 				</div>
@@ -184,7 +178,7 @@
 					<div class="panel panel-default elapsed">
 						<div class="panel-body">
 							Time Remaining
-							<span class="badge">{{time_remaining}} days</span>
+							<span class="badge" style="padding-left:10pt;padding-right:10pt;">{{time_remaining}} days</span>
 						</div>
 					</div>
 				</div>
@@ -253,6 +247,8 @@
 			{% endif %}
 
 		{% endif %}			
+
+		<center><small><i>Once the start button has been hit, time will start to decrease, ad it will not be possible to stop it until it's completely drained.</i></small></center>
 			
 			<!--	SYSTEM SETTAGE PANEL	-->
 			<h4 class="title">System Settings</h4>
@@ -290,10 +286,10 @@
 											</div>	<!--row-->
 
 											{% if rivali|length == 0 %}
-											<h6 class="row pad20" style="display:none" id = "header_target_competitor" >Target Inserted</h6>
+											<h6 class="row pad20" style="display:none" id = "header_target_competitor" >Targets Inserted</h6>
 
 											{% else %}
-											<h6 class="row pad20" id = "header_target_competitor" >Target Inserted</h6>
+											<h6 class="row pad20" id = "header_target_competitor" >Targets Inserted</h6>
 											{% endif %}
 
 											<div class="row" id="competitor_container">
@@ -478,7 +474,7 @@
 							<a href="#" class="btn btn-default btn-xs disabled">Already redeemed!</a>
 
 							{% else %}
-							<a href="#" class="btn btn-default btn-xs disabled">You have already<br /> purchased a package</a>
+							<a href="#" class="btn btn-default btn-xs disabled">{{label_pacchetto|safe}}</a>
 							{% endif %}
 
 						</div>
@@ -506,7 +502,7 @@
 
 							{% else %}
 
-							<a href="#" class="btn btn-default disabled">You have already<br /> purchased a package</a>
+							<a href="#" class="btn btn-default disabled">{{label_pacchetto|safe}}</a>
 
 							{% endif %}
 
@@ -537,10 +533,9 @@
 
 							<a id="pagamento_30" class="btn btn-primary" href="charge">Pay With Card</a>
 
-
 							{% else %}
 
-							<a href="#" class="btn btn-default disabled">You have already<br /> purchased a package</a>
+							<a href="#" class="btn btn-default disabled">{{label_pacchetto|safe}}</a>
 
 							{% endif %}
 
@@ -576,7 +571,7 @@
 
 							{% else %}
 
-							<a href="#" class="btn btn-default disabled">You have already<br /> purchased a package</a>
+							<a href="#" class="btn btn-default disabled">{{label_pacchetto|safe}}</a>
 
 							{% endif %}
 
@@ -694,7 +689,9 @@
 			  </div>
 			  <div class="modal-body">
 			  	<form class="form-horizontal" id="ajax-contact-form_email">
-				  <fieldset>
+			  		<center>Your current email is: {{email}}</center>
+			  		<br/><br/>
+			  		<fieldset>				  
 					<div class="form-group row">
 				      	<label for="email1" class="col-lg-3 control-label">New email *</label>
 				      	<div class="col-lg-9">
