@@ -32,8 +32,8 @@ class TaskStatusAdmin(admin.ModelAdmin):
 	list_display = ('task_id', 'sorgente', 'completato', 'utente')	
 		
 class UtenteAdmin(admin.ModelAdmin):
-	fields = ['utente', 'follower_iniziali', 'email', 'token_block', 'like_totali', 'like_sessione', 'follow_totali', 'follow_sessione', 'data_blocco_forzato', 'tweet_boolean']
-	list_display = ('utente', 'follower_iniziali', 'email', 'time_stamp', 'token_block', 'like_totali', 'like_sessione', 'follow_totali', 'follow_sessione', 'data_blocco_forzato', 'tweet_boolean')	
+	fields = ['utente', 'follower_iniziali', 'email', 'token_block', 'like_totali', 'like_sessione', 'follow_totali', 'follow_sessione', 'data_blocco_forzato', 'tweet_boolean', 'lingua']
+	list_display = ('utente', 'follower_iniziali', 'email', 'time_stamp', 'token_block', 'like_totali', 'like_sessione', 'follow_totali', 'follow_sessione', 'data_blocco_forzato', 'tweet_boolean', 'lingua')	
 
 class PacchettiAdmin(admin.ModelAdmin):
     fields = ['utente', 'data_acquisto', 'giorni', 'attivato', 'data_sottoscrizione', 'data_scadenza']
@@ -52,9 +52,9 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
     url(r'', include('social_auth.urls')),
+    url(r'^$', 'accesso.views.home_page'),
     url(r'^login$', 'accesso.views.index'),     
     url(r'^access$', 'accesso.views.access'),
-    url(r'^$', 'accesso.views.home_page'),  
     url(r'^logout$', 'accesso.views.uscita'),
     url(r'^contact_process$', 'accesso.views.contact_process'),
         
@@ -83,7 +83,8 @@ urlpatterns = patterns('',
     url(r'^localize$', 'geoinstagram.views.localize'),
     url(r'^mappa$', 'geoinstagram.views.mappa'),    
     url(r'^report$', 'statistiche.views.report_statistico'), 
-    url(r'^email_chimp$', 'accesso.views.email_chimp'),      
+    url(r'^email_chimp$', 'accesso.views.email_chimp'), 
+    url(r'^change_lang$', 'accesso.views.change_lang'),        
 )
 
 # Instagram only allows one callback url so you'll have to change your urls.py to accomodate

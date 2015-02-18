@@ -1,4 +1,6 @@
-from django.shortcuts import render, render_to_response
+# -*- coding: utf-8 -*-
+
+from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.contrib.auth.decorators import login_required
@@ -14,7 +16,8 @@ from instagram_like.models import ListaTag
 from instagram_follow.models import UtentiRivali
 from instagram_follow.tasks import avvia_task_pulizia_follower
 from pagamenti.models import Pacchetti
-from pagamenti.views import nuovo_pacchetto, attiva_pacchetto, abbonamento_valido, estendi_scadenza, percentuale_tempo_rimanente, get_dati_pacchetto
+from pagamenti.views import nuovo_pacchetto, attiva_pacchetto, abbonamento_valido, estendi_scadenza, get_dati_pacchetto
+from instagram_like.views import nuovi_tag
 
 from .models import Utente, TaskStatus
 from .tasks import start_task, invio_email_primo_avvio
@@ -36,7 +39,50 @@ def index(request):
 
 	numero_iscritti = Utente.objects.filter().count()
 
-	variabili = {'numero_iscritti' : numero_iscritti}
+	linguaggio = request.META['LANGUAGE']
+	
+	if linguaggio == 'it':	
+		welcome = "Benvenuto su Instautomation"
+		sub_welcome = '<p>Un nuovo BOT per <span class="hue coloured">ottimizzare</span> il tuo account Instagram</p>'
+		start_now = 'INIZIA ORA GRATIS!'
+		small_credits = '<i>Usando Instautomation, accetti i nostri <a href="javascript:openTerms()">termini di servizio</a> e la nostra <a href="//www.iubenda.com/privacy-policy/203721" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">privacy policy</a></i>'
+		titolo_target = 'IL <span class="hue coloured">TARGET</span> PRIMA DI TUTTO.'
+		corpo_target = 'Instautomation works in a <span class="hue coloured">smart</span> way that engages people potentially interested in your profile. You have to select <span class="hue coloured">precise hashtags</span> and <span class="hue coloured">profiles</span> that has a strong traffic of people interested in your profile'
+		titolo_plan = 'SCEGLI IL <br /><span class="hue coloured">PIANO</span> CHE PREFERISCI.'
+		corpo_plan = 'Our plan is about time consumption. Configure Instautomation, start the <span class="hue coloured">free trial</span> and click start. If you are satisfied by our service, you can choose from <span class="hue coloured">three</span> different choices for your need'
+		termini = 'Termini di servizio'
+		privacy = 'Privacy'
+		chiudi = 'Chiudi'
+		torna_in_cima = 'Torna in cima'
+	else:
+		welcome = "Welcome to Instautomation!"
+		sub_welcome = 'A new generation of transparent BOT that provides <span class="hue coloured">optimization</span> for Instagram.'
+		start_now = 'START NOW FOR FREE!'
+		small_credits = '<i>By using Instautomation, you agree to the <a href="javascript:openTerms()">Terms of Service</a> and <a href="//www.iubenda.com/privacy-policy/203721" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">Privacy Policy</a><script type="text/javascript" src="//cdn.iubenda.com/iubenda_i_badge.js"></script></i>'
+		titolo_target = '<span class="hue coloured">TARGETING</span> MATTERS.'
+		corpo_target = 'Instautomation works in a <span class="hue coloured">smart</span> way that engages people potentially interested in your profile. You have to select <span class="hue coloured">precise hashtags</span> and <span class="hue coloured">profiles</span> that has a strong traffic of people interested in your profile'
+		titolo_plan = 'CHOOSE THE BEST <br><span class="hue coloured">PLAN</span> FOR YOU.'
+		corpo_plan = 'Our plan is about time consumption. Configure Instautomation, start the <span class="hue coloured">free trial</span> and click start. If you are satisfied by our service, you can choose from <span class="hue coloured">three</span> different choices for your need'
+		termini = 'Our terms'
+		privacy = 'Privacy'
+		chiudi = 'Close'
+		torna_in_cima = 'Back to top'
+
+	variabili = {
+	'numero_iscritti' : numero_iscritti, 
+	'welcome' : welcome, 
+	'sub_welcome' : sub_welcome,
+	'start_now' : start_now,
+	'small_credits' : small_credits,
+	'titolo_target' : titolo_target,
+	'corpo_target' : corpo_target,
+	'titolo_plan' : titolo_plan,
+	'corpo_plan' : corpo_plan,
+	'termini' : termini,
+	'privacy' : privacy,
+	'chiudi' : chiudi,
+	'torna_in_cima' : torna_in_cima
+	}
 
 	return render(request, template_name, variabili)
 	
@@ -60,9 +106,9 @@ def access(request):
 		
 	else:				
 		api = InstagramAPI(
-				access_token = access_token,
-				client_ips = MIOIP,
-				client_secret = CLIENT_SECRET
+			access_token = access_token,
+			client_ips = MIOIP,
+			client_secret = CLIENT_SECRET
 		)
 		
 		try:
@@ -72,10 +118,19 @@ def access(request):
 			errore_mortale(errore, instance)
 
 		followed_by = informazioni.counts['followed_by']
-		nuove_stats = Utente(utente = instance, follower_iniziali = followed_by)
+
+		linguaggio = request.META['LANGUAGE']
+		if linguaggio == 'it':
+			lingua = 'it'
+		else:
+			lingua = 'en'
+
+		nuove_stats = Utente(utente = instance, follower_iniziali = followed_by, lingua = lingua)
 		nuove_stats.save()
 		
 		nuovo_pacchetto(instance, 2)
+
+		nuovi_tag(instance)
 		
 		return HttpResponseRedirect('/')   
 		
@@ -97,7 +152,6 @@ class beta_home(View):
 		else:
 			return HttpResponseRedirect('/beta/')			
 			
-	
 @login_required(login_url='/login')
 @token_error
 def home_page(request):	
@@ -107,9 +161,9 @@ def home_page(request):
 	template = loader.get_template('index.html')
 
 	api = InstagramAPI(
-				access_token = access_token,
-				client_ips = MIOIP,
-				client_secret = CLIENT_SECRET
+		access_token = access_token,
+		client_ips = MIOIP,
+		client_secret = CLIENT_SECRET
 	)
 
 	try:
@@ -129,109 +183,402 @@ def home_page(request):
 	data_blocco = user_obj.data_blocco_forzato
 	tweet_boolean = user_obj.tweet_boolean
 	email = user_obj.email
+	lingua = user_obj.lingua
 	followers_at_registration = user_obj.follower_iniziali
 	follower_since_registration = followed_by - followers_at_registration 
 
 	lista_tag = ListaTag.objects.filter(utente = instance) 
 	rivali = UtentiRivali.objects.filter(utente = instance)
-	percentuale_tempo = 0
 
-	label_pacchetto = ""
-
-	#Status pacchetti
+	# Inizio sezione status pacchetti
 	esistenza_pacchetto = Pacchetti.objects.filter(utente = instance).exists()
 	if esistenza_pacchetto:
 		pacchetto_attivato = Pacchetti.objects.filter(utente = instance, attivato = True).exists()
 		if pacchetto_attivato:
 
 			if abbonamento_valido(instance):
-				stato_pacchetto = 2 #Abbonamento valido
-				percentuale_tempo = percentuale_tempo_rimanente(instance)  
+				stato_pacchetto = 2 #Abbonamento valido 
 				time_remaining, giorni_totali = get_dati_pacchetto(instance) 
-
-				if giorni_totali == 2:
-					label_pacchetto = 'You have a free package!'
-				else:
-					label_pacchetto = "You have already <br /> purchased a package"
 			else:
 				stato_pacchetto = 1 #Abbonamento scaduto
 				time_remaining, giorni_totali = get_dati_pacchetto(instance)
+				time_remaining = 0
 		else:
 			stato_pacchetto = 3 #Pacchetto non usato ma valido
 			time_remaining, giorni_totali = get_dati_pacchetto(instance)
-
-			if giorni_totali == 2:
-				label_pacchetto = 'You have a free package!'
-			else:
-				label_pacchetto = "You have already <br /> purchased a package"
 	else:
 		giorni_totali = 0
 		stato_pacchetto = 0	
 		time_remaining = 0
-
-	#Sezione che gestisce gli avvisi. Di base non ho avvisi impostati
+	# Fine sezione status pacchetti
+	
+	#Sezione che gestisce gli avvisi. Di base non ho avvisi.
 	avviso = None
 
-	if (stato_pacchetto == 2) and (data_blocco is not None):
-		
-		now = date.today()
-
-		delta_data_blocco = now - data_blocco
-		giorni = delta_data_blocco.days
-
-		if giorni == 0:
-			giorni = 1
-			testo_regalo = "one more free day"
-		else:
-			giorni = giorni + 1
-			testo_regalo = str(giorni) + ' more free days'
-
-		avviso = 'Dear user, unfortunately the system was blocked for unknown reasons. Your account has been enlarged with '+testo_regalo+'. Sorry for the inconvenience'
-		estendi_scadenza(instance, giorni)
-		user_obj.data_blocco_forzato = None
-		user_obj.save()
-
-	if (stato_pacchetto == 1) and (data_blocco is not None):
-		pacchetto_obj = Pacchetti.objects.get(utente = instance, attivato = True)
-		data_scadenza = pacchetto_obj.data_scadenza
-
-		if data_blocco > data_scadenza:
+	if(data_blocco is not None):
+		if(stato_pacchetto == 3):
 			user_obj.data_blocco_forzato = None
-			user_obj.save()
-		else:
-			delta_data_blocco = data_scadenza - data_blocco
+			user_obj.save()		
+
+		elif(stato_pacchetto == 2):			
+			now = date.today()
+			delta_data_blocco = now - data_blocco
 			giorni = delta_data_blocco.days
 
-			if giorni == 1:
-				testo_regalo = "one more free day"
+			if giorni == 0:
+				giorni = 1
+
+				if lingua == 'it':
+					testo_regalo = "un giorno in più di utilizzo"
+				else:
+					testo_regalo = "one more free day"
 			else:
 				giorni = giorni + 1
-				testo_regalo = str(giorni) + ' more free days'
+
+				if lingua == 'it':
+					testo_regalo = str(giorni) + ' giorni in più di utilizzo'
+				else:
+					testo_regalo = str(giorni) + ' more free days'					
+
+			if lingua == 'it':
+				avviso = "Gentile utente, purtroppo il sistema si è bloccato per ragioni inaspettate. Ti abbiamo regalato "+testo_regalo+". Ci scusiamo per il disagio."
+			else:
+				avviso = 'Dear user, unfortunately the system was blocked for unknown reasons. Your account has been enlarged with '+testo_regalo+'. Sorry for the inconvenience'
 			
-			avviso = 'Dear user, unfortunately the system was blocked for unknown reasons. Your account has been enlarged with '+testo_regalo+'. Sorry for the inconvenience'
+			estendi_scadenza(instance, giorni)
+			time_remaining, giorni_totali = get_dati_pacchetto(instance)
 			user_obj.data_blocco_forzato = None
 			user_obj.save()
-			pacchetto_obj.delete()
-			nuovo_pacchetto(instance, giorni)
-			stato_pacchetto = 3
 
-	######################################################################		
-	
-	status_obj_attivi = TaskStatus.objects.filter(utente = instance, completato = False).exists()
+		elif(stato_pacchetto == 1):
+			pacchetto_obj = Pacchetti.objects.get(utente = instance, attivato = True)
+			data_scadenza = pacchetto_obj.data_scadenza
 
-	if status_obj_attivi:
-		numero_like_sessione = user_obj.like_sessione
-		numero_follow_sessione = user_obj.follow_sessione
+			if data_blocco > data_scadenza:
+				user_obj.data_blocco_forzato = None
+				user_obj.save()
+			else:
+				delta_data_blocco = data_scadenza - data_blocco
+				giorni = delta_data_blocco.days
+
+				if giorni == 1:
+					if lingua == 'it':
+						testo_regalo = "un giorno in più di utilizzo"
+					else:
+						testo_regalo = "one more free day"					
+				else:
+					giorni = giorni + 1
+
+					if lingua == 'it':
+						testo_regalo = str(giorni) + ' giorni in più di utilizzo'
+					else:
+						testo_regalo = str(giorni) + ' more free days'	
+				
+				if lingua == 'it':
+					avviso = "Gentile utente, purtroppo il sistema si è bloccato per ragioni inaspettate. Ti abbiamo regalato "+testo_regalo+". Ci scusiamo per il disagio."
+				else:
+					avviso = 'Dear user, unfortunately the system was blocked for unknown reasons. Your account has been enlarged with '+testo_regalo+'. Sorry for the inconvenience'
+
+				user_obj.data_blocco_forzato = None
+				user_obj.save()
+				pacchetto_obj.delete()
+				nuovo_pacchetto(instance, giorni)
+				time_remaining, giorni_totali = get_dati_pacchetto(instance)
+				stato_pacchetto = 3
+	######################################################################					
+
+	like_totali = user_obj.like_totali
+	follow_totali = user_obj.follow_totali
+
+	if(giorni_totali == 2) and (stato_pacchetto == 3):
+		if lingua == 'it':
+			warning_string = 'Ciao!'
+			avviso = "Puoi iniziare ad usare Instautomation gratuitamente per due giorni!<br/>\
+			Per prima cosa aggiungi un utente target, quindi scegli qualche bel hashtag (ti abbiamo inserito un paio di tag utili), e infine...\
+			premi START!"
+		else:
+			warning_string = 'Hi!'
+			avviso = 'You can start using Instautomation for free for 2 days!<br/>\
+			First add an user target, then choose some cool hashtag (we give you a couple for start), then...\
+			push START!'			
 	else:
-		numero_like_sessione = 0
-		numero_follow_sessione = 0				
+		if lingua == 'it':
+			warning_string = 'Attenzione!'
+		else:
+			warning_string = 'Warning!'			
 
-	if percentuale_tempo == 100:
-		percentuale_tempo = 90	
-	elif percentuale_tempo == 0:
-		percentuale_tempo = 10
-		
-	context = RequestContext(request, {
+	status_obj_attivi = TaskStatus.objects.filter(utente = instance, completato = False).exists()	
+
+	if lingua == 'it':
+		prezzi = "Prezzi"
+		termini = 'Termini di servizi'
+		privacy = 'Privacy'
+		supporto = 'Supporto'
+		cambia_email = 'Cambia indirizzo email'
+		logout = 'Logout'
+		post_string = 'Post'
+		follower_string = 'Follower'
+		following_string = 'Following'
+		nuovi_seguaci_string = 'nuovi followers dalla registrazione'
+		elapsed_time_string = 'Tempo trascorso'
+		pause_string = 'PAUSA'
+		avvia_string = 'START'
+		total_time_string = 'Tempo totale acquistato'
+		giorni_string = 'giorni'
+		tempo_restante_string = 'Tempo restante'
+		comprato_string = 'Comprato'
+		rimanenti_string = 'Rimasto'
+		compra_pacchetto_string = 'Per usare il sistema devi acquistare un nuovo pacchetto di giorni!'
+		time_over_string = 'Hai esaurito il tempo'
+		avviso_partenza_string = 'Una volta premuto il pulsante di avvio, il tempo inizierà a scorrere, e non sarà possibile fermarlo fino alla sua conclusione.'
+		settings_title = 'Targets & Tags'
+		target_users_title = 'Utenti target'
+		search_placeholder = 'Cerca un utente target'
+		ricerca_string = 'Cerca'
+		selected_users_string = 'Utenti selezionati'
+		selected_tags_string = "Tag selezionati"
+		tags_string = 'Tag'
+		salva_sting = 'Salva'
+		subscription_bonus_string = 'Bonus di benvenuto'
+		giorni_free_subscription_string = "2 giorni in regalo all'iscrizione"
+		pay_tweet_string = 'Pay with a Tweet'
+		corpo_pay_tweet = 'Paga con un tweet e ricevi un giorno di utilizzo in regalo'
+		un_giorno_free_string = '1 giorno gratis'
+		gia_preso_string = 'Già effettuato!'
+		string_15_giorni_titolo = '15 giorni a &euro;6.99'
+		entry_pack_string = 'Entry Pack'
+		string_15_giorni = '15 giorni'
+		prezzo_15_giorni = '&euro;6.99'
+		paga_card_string = 'Paga con carta'
+		titolo_30_giorni = '30 giorni a &euro;10.79'
+		standard_pack_string = 'Standard Pack'
+		string_30_giorni = '30 giorni'
+		prezzo_30_giorni = '&euro;10.79'
+		titolo_90_giorni_string = '90 giorni a &euro;24.49'
+		power_pack_string = 'Power Pack'
+		stringa_90_giorni = '90 giorni'
+		prezzo_90_giorni_string = '&euro;24.49'
+		stringa_iva_inclusa = 'Prezzi IVA inclusa.'
+		accettazione_termini_string = 'Accettazione dei termini'
+		you_have_to_accept = 'Devi accettare i termini di servizio e inserire un indirizzo email per continuare.'		
+		conferma_lettura_string = 'Ho letto i termini e acconsento alle condizioni *'
+		continua_string = 'Continua'
+		aiuto_string = 'Hai bisogno di aiuto?'
+		titolo_string_supporto = 'Titolo *'
+		placeholder_titolo_supporto_string = 'Titolo'
+		messaggio_string_support = 'Messaggio *'
+		write_a_message_placeholder = 'Scrivi un messaggio'
+		chiudi_string = 'Chiudi'
+		cambia_email_string = 'Cambia indirizzo email'
+		email_attuale_string = 'La tua email è'
+		nuova_email_string = 'Nuova email *'
+		placeholder_nuova_email = 'Inserisci la nuova email'
+		conferma_nuova_email = 'Ripeti la nuova email *'
+		conferma_email_string_placeholder = 'Conferma il tuo indirizzo email'
+		errore_corpo_modale_string = '<p>Qualcosa è andato storto!<br/>Perfavore, riprova tra poco.<br/>Per informazioni scrivici a info@instautomation.com</p>'		
+		errore_numero_tag_e_target = 'Per iniziare ad usare il sistema devi inserire almeno un utente target e almeno un hashtag'
+		caricamento_string = 'Caricamento...'
+		torna_in_cima = 'Torna in cima'
+		no_target_found_string = 'Nessun utente target trovato'
+		utente_esiste_string = 'Target già inserito!'
+		added_generico_string = 'Fatto!'
+		tag_esistente_string = 'Tag già inserito'
+		choose_target_profile_string = 'Scegli un profilo target'
+		choose_tag_string = 'Scegli un tag!'
+		your_account_string = "Il tuo account"
+		il_tuo_abbonamento_string = "I tuoi dati"
+		il_sistema_ha_generato = "Statistiche"
+		utenti_stringa = 'utenti'
+		seguiti_dal_sistema_string = 'seguiti dal sistema'
+		liked_by_system_string = 'likeati dal sistema'
+		titolo_pagamenti_string = "Aumenta i giorni"
+		aumenta_giorni_string = 'Aumenta i giorni!'
+		errore_myself_string = "Non puoi scegliere te stesso come target!"
+		num_tag_modal_string = "Una parola alla volta!"
+		insert_a_tag_place = 'Inserisci un TAG'
+		lingua_string = 'Lingua'
+	else:
+		prezzi = "Prices"
+		termini = 'Our terms'
+		privacy = 'Privacy'
+		supporto = 'Support'
+		cambia_email = 'Change my email'
+		logout = 'Logout'
+		post_string = 'Posts'
+		follower_string = 'Followers'
+		following_string = 'Following'
+		nuovi_seguaci_string = 'new followers since your registration!'
+		elapsed_time_string = 'Elapsed time'
+		pause_string = 'PAUSE'
+		avvia_string = 'START'
+		total_time_string = 'Total time bought'
+		giorni_string = 'days'
+		tempo_restante_string = 'Time remaining'
+		comprato_string = 'Bought'
+		rimanenti_string = 'Left'
+		compra_pacchetto_string = 'To use the system you have to buy a new package!'
+		time_over_string = 'Your time is over!'
+		avviso_partenza_string = 'Once the start button has been hit, time will start to decrease, ad it will not be possible to stop it until it is completely drained.'
+		settings_title = 'Targets & Tags'
+		target_users_title = 'Target users'
+		search_placeholder = 'Search a target user'
+		ricerca_string = 'Search'
+		selected_users_string = 'Selected users'
+		selected_tags_string = "Selected tags"
+		tags_string = 'Tags'
+		salva_sting = 'Save'
+		subscription_bonus_string = 'Subscrition bonus'
+		giorni_free_subscription_string = '2 free days for every new account!'
+		pay_tweet_string = 'Pay with a Tweet'
+		corpo_pay_tweet = 'Pay with a tweet and get another free day for your account'
+		un_giorno_free_string = '1 free day'
+		gia_preso_string = 'Already redeemed!'
+		string_15_giorni_titolo = '15 days for &euro;6.99'
+		entry_pack_string = 'Entry Pack'
+		string_15_giorni = '15 days'
+		prezzo_15_giorni = '&euro;6.99'
+		paga_card_string = 'Pay with card'
+		titolo_30_giorni = '30 days for &euro;10.79'
+		standard_pack_string = 'Standard Pack'
+		string_30_giorni = '30 days'
+		prezzo_30_giorni = '&euro;10.79'
+		titolo_90_giorni_string = '90 days for &euro;24.49'
+		power_pack_string = 'Power Pack'
+		stringa_90_giorni = '90 days'
+		prezzo_90_giorni_string = '&euro;24.49'
+		stringa_iva_inclusa = 'All prices are VAT included.'
+		accettazione_termini_string = 'Acceptance of terms'
+		you_have_to_accept = 'You have to accept terms and insert you email address to continue.'
+		conferma_lettura_string = 'I have read this Agreement and I agree to the terms and conditions *'
+		continua_string = 'Continue'
+		aiuto_string = 'Need help?'
+		titolo_string_supporto = 'Subject *'
+		placeholder_titolo_supporto_string = 'Subject'
+		messaggio_string_support = 'Message *'
+		write_a_message_placeholder = 'Write a message'
+		chiudi_string = 'Close'
+		cambia_email_string = 'Change email address'
+		email_attuale_string = 'Your current email is'
+		nuova_email_string = 'New email *'
+		placeholder_nuova_email = 'Insert a new email'
+		conferma_nuova_email = 'Repeat email *'
+		conferma_email_string_placeholder = 'Confirm your email'
+		errore_corpo_modale_string = '<p>Something went wrong!<br/>Please, try in a while.<br/>For support contact us at info@instautomation.com</p>'
+		errore_numero_tag_e_target = 'To start the system you must insert at least one target user and one hashtag.'
+		caricamento_string = 'LOADING...'
+		torna_in_cima = 'Back to top'
+		no_target_found_string = 'No target users found'
+		utente_esiste_string = 'This user already exists!'
+		added_generico_string = 'Added!'
+		tag_esistente_string = 'This tag exists'
+		choose_target_profile_string = 'Choose a target profile!'
+		choose_tag_string = 'Choose a tag!'
+		your_account_string = "Your account"
+		il_tuo_abbonamento_string = "Your subscription"
+		il_sistema_ha_generato = "Statistics"
+		utenti_stringa = 'users'
+		seguiti_dal_sistema_string = 'followed by the system'
+		liked_by_system_string = 'liked by the system'
+		titolo_pagamenti_string = "Buy more days!"
+		aumenta_giorni_string = 'Increase your days!'
+		errore_myself_string = "You can't add yourself as a target!"
+		num_tag_modal_string = "One word at a time please!"
+		insert_a_tag_place = 'Insert a TAG'
+		lingua_string = 'Language'
+
+	variabili = {
+		'termini' : termini,
+		'privacy' : privacy,
+		'prezzi' : prezzi,
+		'supporto' : supporto,
+		'cambia_email' : cambia_email,
+		'logout' : logout,
+		'post_string' : post_string,
+		'follower_string' : follower_string,
+		'following_string' : following_string,
+		'warning_string' : warning_string,
+		'nuovi_seguaci_string' : nuovi_seguaci_string,
+		'elapsed_time_string' : elapsed_time_string,
+		'pause_string' : pause_string,
+		'avvia_string' : avvia_string,
+		'total_time_string' : total_time_string,
+		'giorni_string' : giorni_string,
+		'tempo_restante_string' : tempo_restante_string,
+		'comprato_string' : comprato_string,
+		'rimanenti_string' : rimanenti_string,
+		'compra_pacchetto_string' : compra_pacchetto_string,
+		'time_over_string' : time_over_string,
+		'avviso_partenza_string' : avviso_partenza_string,
+		'settings_title' : settings_title,
+		'target_users_title' : target_users_title,
+		'search_placeholder' : search_placeholder,
+		'ricerca_string' : ricerca_string,
+		'selected_users_string' : selected_users_string,
+		'tags_string' : tags_string,
+		'salva_sting' : salva_sting,
+		'subscription_bonus_string' : subscription_bonus_string,
+		'giorni_free_subscription_string' : giorni_free_subscription_string,
+		'pay_tweet_string' : pay_tweet_string,
+		'corpo_pay_tweet' : corpo_pay_tweet,
+		'un_giorno_free_string' : un_giorno_free_string,
+		'gia_preso_string' : gia_preso_string,
+		'string_15_giorni_titolo' : string_15_giorni_titolo,
+		'entry_pack_string' : entry_pack_string,
+		'string_15_giorni' : string_15_giorni,
+		'prezzo_15_giorni' : prezzo_15_giorni,
+		'paga_card_string' : paga_card_string,
+		'titolo_30_giorni' : titolo_30_giorni,
+		'standard_pack_string' : standard_pack_string,
+		'string_30_giorni' : string_30_giorni,
+		'prezzo_30_giorni' : prezzo_30_giorni,
+		'titolo_90_giorni_string' : titolo_90_giorni_string,
+		'power_pack_string' : power_pack_string,
+		'stringa_90_giorni' : stringa_90_giorni,
+		'prezzo_90_giorni_string' : prezzo_90_giorni_string,
+		'stringa_iva_inclusa' : stringa_iva_inclusa,
+		'accettazione_termini_string' : accettazione_termini_string,
+		'you_have_to_accept' : you_have_to_accept,
+		'conferma_lettura_string' : conferma_lettura_string,
+		'continua_string' : continua_string,
+		'aiuto_string' : aiuto_string,
+		'titolo_string_supporto' : titolo_string_supporto,
+		'placeholder_titolo_supporto_string' : placeholder_titolo_supporto_string,
+		'messaggio_string_support' : messaggio_string_support,
+		'write_a_message_placeholder' : write_a_message_placeholder,
+		'chiudi_string' : chiudi_string,
+		'cambia_email_string' : cambia_email_string,
+		'email_attuale_string' : email_attuale_string,
+		'nuova_email_string' : nuova_email_string,
+		'placeholder_nuova_email' : placeholder_nuova_email,
+		'conferma_nuova_email' : conferma_nuova_email,
+		'conferma_email_string_placeholder' : conferma_email_string_placeholder,
+		'errore_corpo_modale_string' : errore_corpo_modale_string,
+		'errore_numero_tag_e_target' : errore_numero_tag_e_target,
+		'caricamento_string' : caricamento_string,
+		'torna_in_cima' : torna_in_cima,
+		'no_target_found_string' : no_target_found_string,
+		'utente_esiste_string' : utente_esiste_string,
+		'added_generico_string' : added_generico_string,
+		'selected_tags_string' : selected_tags_string,
+		'tag_esistente_string' : tag_esistente_string,
+		'choose_target_profile_string' : choose_target_profile_string,
+		'choose_tag_string' : choose_tag_string,
+		'your_account_string' : your_account_string,
+		'il_tuo_abbonamento_string' : il_tuo_abbonamento_string,
+		'il_sistema_ha_generato' : il_sistema_ha_generato,
+		'like_totali' : like_totali,
+		'follow_totali' : follow_totali,
+		'utenti_stringa' : utenti_stringa,
+		'seguiti_dal_sistema_string' : seguiti_dal_sistema_string,
+		'liked_by_system_string' : liked_by_system_string,
+		'titolo_pagamenti_string' : titolo_pagamenti_string,
+		'aumenta_giorni_string' : aumenta_giorni_string,
+		'status_obj_attivi' : status_obj_attivi,
+		'errore_myself_string' : errore_myself_string,
+		'num_tag_modal_string' : num_tag_modal_string,
+		'insert_a_tag_place' : insert_a_tag_place,
+		'lingua_string' : lingua_string,
+
 		'username' : username,
 		'avatar' : avatar,
 		'num_post' : num_post,
@@ -242,16 +589,13 @@ def home_page(request):
 		'rivali' : rivali,
 		'email' : email,
 		'stato_pacchetto' : stato_pacchetto,
-		'percentuale_tempo' : percentuale_tempo,
 		'time_remaining' : time_remaining,
 		'giorni_totali' : giorni_totali,
-		'status_obj_attivi' : status_obj_attivi,
-		'numero_like_sessione' : numero_like_sessione,
-		'numero_follow_sessione' : numero_follow_sessione,
 		'tweet_boolean' : tweet_boolean,
-		'avviso' : avviso,
-		'label_pacchetto' : label_pacchetto,
-	})
+		'avviso' : avviso
+		}	
+		
+	context = RequestContext(request, variabili)
 
 	return HttpResponse(template.render(context)) 	
 
@@ -383,4 +727,13 @@ def email_chimp(request):
 	
 	pm = PostMonkey(apikey)
 	pm.listSubscribe(id = mailid, email_address = email, double_optin = False)
+	return HttpResponse()
+
+@login_required(login_url='/login')
+def change_lang(request):
+	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
+
+	lingua = request.POST['lingua']
+
+	Utente.objects.filter(utente = instance).update(lingua = lingua)
 	return HttpResponse()

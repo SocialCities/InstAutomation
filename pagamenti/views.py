@@ -42,6 +42,9 @@ def abbonamento_valido(instance):
 			
 	now = date.today()
 	data_scadenza = pacchetto_obj.data_scadenza
+	
+	if data_scadenza is None:
+		return True #Il pacchetto non e' stato ancora aperto, quindi e' valido
 
 	if now >= data_scadenza:
 		return False #Abbonamento scaduto
@@ -52,8 +55,10 @@ def abbonamento_valido(instance):
 def estendi_scadenza(instance, giorni):
 	pacchetto_obj = Pacchetti.objects.get(utente = instance, attivato = True)
 	data_scadenza = pacchetto_obj.data_scadenza
+	giorni_old = pacchetto_obj.giorni
 
 	pacchetto_obj.data_scadenza = data_scadenza + timedelta(giorni)
+	pacchetto_obj.giorni = giorni_old + giorni
 	pacchetto_obj.save()
 
 
@@ -92,21 +97,12 @@ def get_dati_pacchetto(instance):
 		return 0,0
 
 
+
 @login_required(login_url='/login')
 def charge(request):
-
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
 
 	esistenza = Pacchetti.objects.filter(utente = instance).exists()
-
-	if esistenza:
-		valido = abbonamento_valido(instance)
-
-		if valido:
-			return HttpResponse("package_exists")
-		else:
-			pack_obk = Pacchetti.objects.get(utente = instance)
-			pack_obk.delete()
 
 	#stripeEmail = request.POST['stripeEmail']	
 	stripeToken = request.POST['stripeToken']
@@ -129,7 +125,23 @@ def charge(request):
 	  description = "Charge for Instautomation.com",
 	)
 
-	nuovo_pacchetto(instance, giorni)
+	if esistenza:
+		valido = abbonamento_valido(instance)
+		if valido:
+			pack_obk = Pacchetti.objects.get(utente = instance)
+			if pack_obk.attivato:
+				giorniprecedenti = pack_obk.giorni
+				data_scadenza_precedente = pack_obk.data_scadenza
+				Pacchetti.objects.filter(pk = pack_obk.id).update(giorni = giorniprecedenti + giorni, data_scadenza = data_scadenza_precedente + timedelta(giorni))
+			else:
+				giorniprecedenti = pack_obk.giorni
+				Pacchetti.objects.filter(pk = pack_obk.id).update(giorni = giorniprecedenti + giorni)
+		else:
+			pack_obk = Pacchetti.objects.get(utente = instance)
+			pack_obk.delete()
+			nuovo_pacchetto(instance, giorni)
+	else:
+		nuovo_pacchetto(instance, giorni)
 
 	return HttpResponse()
 
@@ -153,7 +165,26 @@ class pay_tweet(View):
     	else:
     		user_obj.tweet_boolean = True
     		user_obj.save()
+    		giorni = 1
+    		esistenza = Pacchetti.objects.filter(utente = instance).exists()
 
-    		nuovo_pacchetto(instance, 1)
+    		if esistenza:
+				valido = abbonamento_valido(instance)
+				if valido:
+					pack_obk = Pacchetti.objects.get(utente = instance)
+					if pack_obk.attivato:
+						giorniprecedenti = pack_obk.giorni
+						data_scadenza_precedente = pack_obk.data_scadenza
+						Pacchetti.objects.filter(pk = pack_obk.id).update(giorni = giorniprecedenti + giorni, data_scadenza = data_scadenza_precedente + timedelta(giorni))
+					else:
+						giorniprecedenti = pack_obk.giorni
+						Pacchetti.objects.filter(pk = pack_obk.id).update(giorni = giorniprecedenti + giorni)
+				else:
+					pack_obk = Pacchetti.objects.get(utente = instance)
+					pack_obk.delete()
+					nuovo_pacchetto(instance, giorni)
+    		else:
+				nuovo_pacchetto(instance, giorni)
+
     		return HttpResponse()
 

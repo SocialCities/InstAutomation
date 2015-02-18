@@ -25,6 +25,10 @@ def aggiungi_competitor(request):
 	if rivale_form.is_valid():
 		username = rivale_form.cleaned_data['username']
 		id_utente = rivale_form.cleaned_data['id_utente']
+
+		mio_username = instance.extra_data['username']
+		if username == mio_username:
+			return HttpResponse("myself")
 		
 		api = InstagramAPI(
 			access_token = access_token,
@@ -37,7 +41,6 @@ def aggiungi_competitor(request):
 		
 		if esistenza:
 			return HttpResponse("user_exists")
-
 		else:
 			nuovo_rivale = UtentiRivali(username = username, id_utente = id_utente, utente = instance, numero_follower = numero_follower)
 			nuovo_rivale.save()
@@ -49,9 +52,11 @@ def rimuovi_competitor(request):
 	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
 	
 	nome_rivale = request.POST['nome_rivale']
-	
-	utente_da_eliminare = UtentiRivali.objects.get(username = nome_rivale, utente = instance)
-	utente_da_eliminare.delete()
+
+	esisteza_user = UtentiRivali.objects.filter(username = nome_rivale, utente = instance).exists()
+	if esisteza_user:
+		utente_da_eliminare = UtentiRivali.objects.get(username = nome_rivale, utente = instance)
+		utente_da_eliminare.delete()
 	
 	return HttpResponse()
 

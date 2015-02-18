@@ -14,6 +14,7 @@ class Utente(models.Model):
 	follow_sessione = models.IntegerField(default = 0)
 	data_blocco_forzato = models.DateField(null = True, blank = True)	
 	tweet_boolean = models.NullBooleanField(default = False)
+	lingua = models.CharField(max_length = 3, default = 'en')
 	
 	class Meta:
 		verbose_name = "Dati dell'utente"

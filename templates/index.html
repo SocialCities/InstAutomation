@@ -1,823 +1,756 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    {% load staticfiles %}
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{% static "theme/bootstrap.css" %}" media="screen">
-    <link rel="stylesheet" href="{% static "assets/css/bootswatch.min.css" %}">
-    <link rel="stylesheet" href="{% static "_insta_css/style.css" %}">
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-	<link rel="icon" type="image/png" href="{% static "favicon.png" %}">
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="{% static "./bower_components/html5shiv/dist/html5shiv.js" %}"></script>
-      <script src="{% static "./bower_components/respond/dest/respond.min.js" %}"></script>
-    <![endif]-->
-    <title>Welcome | Instautomation</title>
-  </head>
+{% extends 'instalogin.html' %}
+{% load staticfiles %}
 
-    <body>
+{% block corpo %}
 
-    <div class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <a href="/" class="navbar-brand"><img src="{% static "./_insta_images/instautomation-logo.png" %}" /> Instautomation</a>
-          <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-        </div>
+<!-- Inizio header -->
+<div class="navbar navbar-default navbar-fixed-top">
+	<div class="container">
+		<div class="navbar-header">
+			<a href="/" class="navbar-brand">
+				<img src="{% static "./_insta_images/instautomation-logo.png" %}" alt=""/>
+				Instautomation
+			</a>
+          	<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+          		<span class="icon-bar"></span>
+          		<span class="icon-bar"></span>
+          		<span class="icon-bar"></span>
+          	</button>
+       	</div>
         <div class="navbar-collapse collapse" id="navbar-main">
+          	<ul class="nav navbar-nav navbar-right">
+          		<li><a href="#pricing" class="smooth-price">{{prezzi}}</a></li>
+			    <li><a href="javascript:openTerms()">{{termini}}</a></li>
+			    <li><a href="//www.iubenda.com/privacy-policy/203721" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">{{privacy}}</a></li>
+			    <li><a href="javascript:openSupport('{{email}}')">{{supporto}}</a></li>
+			    <li><a href="javascript:openChange()">{{cambia_email}}</a></li>
+			    <li><a href="javascript:loggingOut('1')">{{logout}}</a></li>
+			    <li class="dropdown">
+			    	<a href="" class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+			    		{{lingua_string}} <span class="caret"></span>
+			   		</a>
+			   		<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+			   			<li role="presentation">
+			   				<a role="menuitem" tabindex="-1" href="javascript:changeLang('it')">
+			   					ITALIANO
+			   				</a>
+			   			</li>
+   						<li role="presentation">
+   							<a role="menuitem" tabindex="-1" href="javascript:changeLang('en')">
+   								ENGLISH
+   							</a>
+   						</li>
+   					</ul>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
 
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="#pricing" class="smooth-price">Prices</a></li>
-            <li><a href="javascript:openTerms()">Our terms</a></li>
-            <li><a href="//www.iubenda.com/privacy-policy/203721" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">Privacy</a></li>
-            <li><a href="javascript:openSupport('{{email}}')">Support</a></li>
-            <li><a href="javascript:openChange()">Change my email</a></li>
-            <li><a href="javascript:loggingOut('1')">Logout</a></li>
-          </ul>
+<!-- Fine header -->
 
-        </div>
-      </div>
-    </div>
-
-<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-<!-- - - - - - - - - - END HEADER  - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
-    <div class="container">
-
-		<div class="page-header" id="banner">	  
-	  
-			<!--	WELCOME PANEL	-->
-			<h3>Welcome back,</h3>
-			
-			<div class="row">
-				<div class="col-md-5">
-					<img id="avatar" src={{avatar}} />
-					<div id="nick">{{username}}</div>
-				</div>
-				
-				<div class="col-md-1"></div>
-				
-				<div class="col-md-2">
-					<div class="panel panel-default stats">
-						<div class="panel-body">Posts</div>
-						<div class="panel-footer">{{num_post}}</div>
-					</div>
-				</div>
-				
-				<div class="col-md-2">
-					<div class="panel panel-default stats">
-						<div class="panel-body">Followers</div>
-						<div class="panel-footer">{{followed_by}}</div>
-					</div>
-				</div>
-				
-				<div class="col-md-2">
-					<div class="panel panel-default stats">
-						<div class="panel-body">Following</div>
-						<div class="panel-footer">{{follows}}</div>
-					</div>
-				</div>
-					
-			</div>
-
-			<!-- Avviso -->
-			{% if avviso != None %}
-				<div class="row pad10">
-					<div class="col-md-12">
-						<div class="alert alert-dismissable alert-warning">
-						  <h4>Warning!</h4>
-						  <p>{{ avviso }}</a>.</p>
-						</div>
-					</div>
-				</div>					
-			{% endif %}
+<!-- Inizio corpo -->
+<div class = "container" id = "corpo">
+	<h3>Welcome,</h3>
+	<!-- Inizio riga con i dati -->
+    <div class="row">
+		<div class="col-md-6">
+			<img id="avatar" src={{avatar}} alt=""/>
+			<div id="nick">{{username}}</div>
+		</div>				
 		
-			<!--	ACCOUNTING TIMING PANEL	-->
-			<h4 class="title">Accounting Timing<span class="pull-right no-hue"><span class="hue coloured">{{follower_since_registration}}</span> new followers since your registration</span></h4>
-			
-			<div class="row pad40">
-				
-				
-				{% if stato_pacchetto = 3 %}	
-				<div id="percentage" class="col-md-2 active">Elapsed time</div>
-
-				<div class="col-md-10">
-					<div class="progress progress-striped">
-						<div class="progress-bar progress-bar-primary" style="width:10%"></div>
-					</div>
-				</div>	
-
-				{% elif stato_pacchetto = 2 and status_obj_attivi %}
-
-				<div id="percentage" class="col-md-2 barra-avviata">Elapsed time</div>
-
-				<div class="col-md-7">
-					<div class="progress progress-striped barra-avviata active">
-						<div class="progress-bar progress-bar-success" style="width:{{percentuale_tempo}}%"></div>
-					</div>	
+		<div class="col-md-2">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					{{num_post}}
 				</div>
-
-				<div class="col-md-3">
-					<form id = "pause">
-						{% csrf_token %}
-						<button type="submit" class="btn btn-danger pannelloControllo">PAUSE</button>
-					</form>	
-				</div>
-
-				{% elif stato_pacchetto = 2 %}
-
-				<div id="percentage" class="col-md-2">Elapsed time</div>
-
-				<div class="col-md-10">
-					<div class="progress progress-striped">
-						<div class="progress-bar progress-bar-success active" style="width:{{percentuale_tempo}}%"></div>
-					</div>			
-				</div>		
-
-				{% elif stato_pacchetto = 1 and status_obj_attivi %} 
-
-				<div id="percentage" class="col-md-2">Elapsed time</div>
-
-				<div class="col-md-10">
-					<div class="progress progress-striped">
-						<div class="progress-bar progress-bar-warning" style="width:100%"></div>
-					</div>
-				</div>
-
-				{% endif %}
-
-			</div>
-
-		{% if stato_pacchetto > 1  %}
-			{% if not status_obj_attivi %}
-
-			<div class="row pad40">
-				<div class="col-md-6">
-					<form id = "start">
-						{% csrf_token %}
-						<button type="submit" class="btn btn-success pannelloControllo">START</button>
-					</form>														
-				</div>
-				<div class="col-md-3">
-					<div class="panel panel-default elapsed">
-						<div class="panel-body">
-							Total Time Bought
-							<span class="badge" style="padding-left:10pt;padding-right:10pt;">{{giorni_totali}} days</span>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-3">
-					<div class="panel panel-default elapsed">
-						<div class="panel-body">
-							Time Remaining
-							<span class="badge" style="padding-left:10pt;padding-right:10pt;">{{time_remaining}} days</span>
-						</div>
-					</div>
+				<div class="panel-body">
+					{{post_string}}
 				</div>
 			</div>
-
-			{% else %}
-
-			<div class="row">
-				<div class="col-md-3">
-					<div class="panel panel-default elapsed">
-						<div class="panel-body">
-							Bought
-							<span class="badge">{{giorni_totali}} days</span>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-3">
-					<div class="panel panel-default elapsed">
-						<div class="panel-body">
-							Left 
-							<span class="badge">{{time_remaining}} days</span>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-3">
-					<div class="panel panel-default elapsed">
-						<div class="panel-body">
-							Likes in this session
-							<span class="badge">{{numero_like_sessione}}</span>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-3">
-					<div class="panel panel-default elapsed">
-						<div class="panel-body">
-							Following in this session
-							<span class="badge">{{numero_follow_sessione}}</span>
-						</div>
-					</div>
-				</div>
-
-			</div>
-
-			{% endif %}
-
-		{% else %}						
-
-			{% if stato_pacchetto = 0 %}
-				<div class="row pad10">
-					<div class="col-md-12">
-			 			<div class="alert alert-dismissable alert-success">
-							<h4>Yo!</h4>
-							<p>You should buy a package to use the system.</a>
-						</div>
-					</div>
-				</div>
-			{% elif stato_pacchetto = 1 %}
-				<div class="row pad10">
-					<div class="col-md-12">
-			 			<div class="alert alert-dismissable alert-success">
-							<h4>Yo!</h4>
-							<p>Your package is expired. You should buy a new package to use the system.</a>
-						</div>
-					</div>
-				</div>
-			{% endif %}
-
-		{% endif %}			
-
-		<center><small><i>Once the start button has been hit, time will start to decrease, ad it will not be possible to stop it until it's completely drained.</i></small></center>
-			
-			<!--	SYSTEM SETTAGE PANEL	-->
-			<h4 class="title">System Settings</h4>
-
-			<div class="row pad40">
+		</div>
 				
-				<div class="col-md-6">
-						
-							<!--FOLLOWING-->
-							<div class="row">
-								
-								<div class="col-md-12">
-									<div id="followingSet" class="panel panel-default">
-									
-										<div class="panel-heading">
-											<h3 class="panel-title">Target users</h3>
-										</div>
-										
-										<div class="panel-body">
-											  
-											<div class="row pad20">
-												<div class="col-md-12">
-													<form id ="cerca_competitor">
-													<div id="tagSearch_competitor" class="input-group">
-														<span class="input-group-addon">
-															<i class="fa fa-users"></i>
-														</span>
-														<input type="text" id ="cerca_competitor_keyword" class="form-control" placeholder="Insert a targeted profile" name="keyword" />
-														<span class="input-group-btn">
-														  <button class="btn btn-default" type="submit">Submit</button>
-														</span>
-													</div>
-													</form>
-												</div>
-											</div>	<!--row-->
+		<div class="col-md-2">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					{{followed_by}}
+				</div>
+				<div class="panel-body">
+					{{follower_string}}
+				</div>
+			</div>
+		</div>
+				
+		<div class="col-md-2">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					{{follows}}
+				</div>
+				<div class="panel-body">
+					{{following_string}}
+				</div>
+			</div>
+		</div>	
+	</div>
+	<!-- Fine riga con i dati -->
+	
+	<!-- Avviso -->
+	{% if avviso != None %}
+		<div class="row pad10">
+			<div class="col-md-12">
+				<div class="alert alert-dismissable alert-warning">
+					<h4>{{warning_string}}</h4>
+					<p>{{avviso|safe}}</a></p>
+				</div>
+			</div>
+		</div>					
+	{% endif %}	
+	<!-- Fine avviso -->
 
-											{% if rivali|length == 0 %}
-											<h6 class="row pad20" style="display:none" id = "header_target_competitor" >Targets Inserted</h6>
+	<br/>
 
-											{% else %}
-											<h6 class="row pad20" id = "header_target_competitor" >Targets Inserted</h6>
-											{% endif %}
-
-											<div class="row" id="competitor_container">
-
-												{% for rivale in rivali %}
-
-													{% if forloop.first %}
-													<div class="col-md-4">
-													{% endif %}
-
-													<span title="{{rivale.username}}">
-														<form class="alert alert-dismissable alert-default rivale_form">
-															{% csrf_token %}
-															<button type="submit" class="close">×</button>
-															<input type="hidden" value="{{rivale.username}}" name = "nome_rivale">
-															<strong>{{rivale.username|truncatechars:10}}</strong>
-														</form>
-													</span>
-
-													{% if forloop.counter|divisibleby:2 %}
-													</div>
-													<div class="col-md-4">
-													{% endif %}
-
-													{% if forloop.last %}
-													</div>
-													{% endif %}
-
-												{% endfor %}
-
-											</div> <!--row-->
-											
-											<div class="row pad20">
-
-												<div class="col-md-12">
-								
-													<div class="table-content">
-														<form id="form_competitor_0"></form>
-														<form id="form_competitor_1"></form>
-														<form id="form_competitor_2"></form>
-														<form id="form_competitor_3"></form>
-														<form id="form_competitor_4"></form>
-														<form id="form_competitor_5"></form>
-														<form id="form_competitor_6"></form>
-														<form id="form_competitor_7"></form>
-														<form id="form_competitor_8"></form>
-														<form id="form_competitor_9"></form>
-
-														<table class="table table-striped table-hover" id="full_user">
-														</table>													
-													</div>													
-												</div>
-											
-
-											</div> <!--row-->
-
-
-															
-										</div>	<!--panel-->
-													
-									</div>	<!--panel followingSet-->
+	<!-- Inizio blocco tag e target -->
+	<div class="panel-group" role="tablist" aria-multiselectable="true">
+  		<div class="panel panel-default">
+    		<div class="panel-heading" role="tab" id="heading" data-toggle="collapse" href="#collapse" aria-controls="collapse">
+      			<h4 class="panel-title">
+      				{{settings_title}}
+      				<span id="logo_da_cambiare" class="glyphicon glyphicon-chevron-down" aria-hidden="true" style="float: right;"/>
+      			</h4>
+    		</div>
+    		<div id="collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading">
+      			<div class="panel-body">
+      				<div class="row">
+      					<!-- Inizio sezione user target -->      					
+      					<div class="col-md-6">
+      						<div class="alert alert-default" role="alert">
+      							<span class="titolo_sezione">
+      								{{choose_target_profile_string}}
+      							</span>	
+      						</div>
+      						
+      						<div id="sezione_user_target" class="panel panel-default">
+      							<div class="panel-heading">
+									<h3 class="panel-title">
+										{{target_users_title}}
+									</h3>
 								</div>
-								
-							</div>	<!-- closing row-->
-
-				</div>
-				<div class="col-md-6">
-					
-							<!--TAGGING-->
-							<div class="row">
-																
-								<div class="col-md-12">
-								
-									<div id="followingSet_tag" class="panel panel-default">
-									
-										<div class="panel-heading">
-											<h3 class="panel-title">Tags</h3>
+								<div class="panel-body">
+									<form id ="cerca_competitor">
+										<div id="tagSearch_competitor" class="input-group">
+											<span class="input-group-addon">
+												<i class="fa fa-users"></i>
+											</span>
+											<input type="text" id ="cerca_competitor_keyword" class="form-control" placeholder="{{search_placeholder}}" name="keyword" / required>
+											<span class="input-group-btn">
+												<button class="btn btn-default" type="submit">
+													{{ricerca_string}} 
+												</button>
+											</span>
 										</div>
-										
-										<div class="panel-body">
-										
-											<div class="row pad20">
-												<div class="col-md-12">
-														<form id ="aggiungi_tag">
-															<div id="tagSearch" class="input-group">
-																<span class="input-group-addon">
-																	<i class="fa fa-tags"></i>
-																</span>
-																<span class="input-group-addon">
-																	#
-																</span>														
-																<input type="text" id ="aggiungi_tag_keyword" class="form-control" placeholder="Insert a TAG" name="keyword">
-																<span class="input-group-btn">
-																  <button class="btn btn-default" type="submit">Submit</button>												
-																</span>
-															</div>
-														</form>
-													</div>
-											<div style="height:47pt;">&nbsp;</div>
-											</div>	<!--row-->
-							  
-											<div class="row pad20" id="tag_container">
-												{% for tag in lista_tag %}
+									</form>
 
-													{% if forloop.first %}
-													<div class="col-md-4">
-													{% endif %}
-													<span title="{{tag.keyword}}">
-														<form class="alert alert-dismissable alert-default tag-form">
-															{% csrf_token %}
-															<button type="submit" class="close" >×</button>
-															<input type="hidden" value="{{tag.keyword}}" name="keyword">
-															<strong>{{tag.keyword|truncatechars:10}}</strong>
-														</form>
-													</span>
+									<span id="avviso_vuoto" style="display:none;">
+										<b>{{no_target_found_string}}</b>
+									</span>
 
-													{% if forloop.counter|divisibleby:2 %}
-													</div>
-													<div class="col-md-4">
-													{% endif %}
+									<div class="pad20" id="risultato_ricerca" style="display:none;">
+										<form id="form_competitor_0"></form>
+										<form id="form_competitor_1"></form>
+										<form id="form_competitor_2"></form>
+										<form id="form_competitor_3"></form>
+										<form id="form_competitor_4"></form>
+										<form id="form_competitor_5"></form>
+										<form id="form_competitor_6"></form>
+										<form id="form_competitor_7"></form>
+										<form id="form_competitor_8"></form>
+										<form id="form_competitor_9"></form>
+										<table class="table table-striped table-hover">
+											<thead>
+												<tr>
+													<th>Profiles</th>
+													<th>Followers</th>
+													<th></th>
+												</tr>
+											</thead>
+											<tbody id="corpo_tabella"></tbody>
+										</table>
+									</div>
 
-													{% if forloop.last %}
-													</div>
-													{% endif %}
+									<h6 class="row pad10">
+										{{selected_users_string}}
+									</h6>
 
-												{% endfor %}
-												
-											</div>	<!--row-->											  
-											  							
-										</div>	<!--panel body-->
-										  
-									</div>	<!-- panel followingSet_tag-->
-								
+									<ul class="list-group" id="lista_utenti">
+										{% for rivale in rivali %}	
+											<li class="list-group-item">								
+												<form title="{{rivale.username}}" class="rivale_form">
+													{% csrf_token %}
+													<button type="submit" class="close">×</button>
+													<input type="hidden" value="{{rivale.username}}" name = "nome_rivale">
+													{{rivale.username}}
+												</form>
+											</li>														
+										{% endfor %}
+									</ul>
+								</div>	
+      						</div>
+      					</div>
+      					<!-- Fine sezione user target -->
+
+      					<!-- Inizio sezione tag -->
+  						<div class="col-md-6">
+  							<div class="alert alert-default" role="alert">
+      							<span class="titolo_sezione">{{choose_tag_string}}</span>
+      						</div>
+  							<div id="sezione_user_tag" class="panel panel-default">
+      							<div class="panel-heading">
+									<h3 class="panel-title">
+										{{tags_string}}
+									</h3>
 								</div>
-								
-							</div>	<!-- closing row-->
+								<div class="panel-body">
+									<form id ="aggiungi_tag">
+										<div class="input-group">
+											<span class="input-group-addon">
+												<i class="fa fa-tags"></i>
+											</span>
+											<span class="input-group-addon">
+												#
+											</span>
+											<input type="text" id ="aggiungi_tag_keyword" class="form-control" placeholder="{{insert_a_tag_place}}" name="keyword">
+											<span class="input-group-btn">
+												<button class="btn btn-default" type="submit">
+													{{salva_sting}}
+												</button>
+											</span>
+										</div>
+									</form>
 
-				</div>
+									<span id="avviso_tag_esistente" style="display:none;">
+										<b>{{tag_esistente_string}}</b>
+									</span>
 
-			</div>
-				
-			
-			<div id="pricing-pane"></div>			
+									<h6 class="row pad10">
+										{{selected_tags_string}}
+									</h6>
 
-			<hr>
+									<ul class="list-group" id="lista_tag_completa">
+										{% for tag in lista_tag %}	
+											<li class="list-group-item">
+												<form title="{{tag.keyword}}" class="tag-form">
+													{% csrf_token %}
+													<button type="submit" class="close">×</button>
+													<input type="hidden" value="{{tag.keyword}}" name = "keyword">
+													#{{tag.keyword}}
+												</form>
+											</li>														
+										{% endfor %}
+									</ul>
+								</div>  								
+  							</div>
+  						</div>
+  						<!-- Fine sezione tag -->
+      				</div>
+      			</div>
+   			 </div>
+  		</div>
+	</div>
+	<!-- Fine blocco tag e target -->
 
-			<!-- pricing table -->
-			<div class="row pad20" >
-				<div class="col-md-3">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<a name="pricing"></a><h3 class="panel-title">Free with Registration</h3>
-						</div>
-						<div class="panel-body" style="height:106pt">
-							
-						<h3><i class="fa fa-gift fa-2x"></i></h3>
-							<ul class="price-list-no-pad">
-								<li>2 free days for every new account</li>
-							</ul>
-						</div>
-					</div>
+	{% if stato_pacchetto = 2 and status_obj_attivi %}
 
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<a name="pricing"></a><h3 class="panel-title">Free with a Tweet</h3>
-						</div>
-						<div class="panel-body" style="height:200pt">
-							
-						<h3><i class="fa fa-twitter fa-2x"></i></h3>
-							<p class="pad10">
-								Pay with a tweet and give another 1 free day for your account
-							</p>
-							<ul class="price-list-no-pad">
-								<li>1 free days</li>
-							</ul>
-							
-							{% if stato_pacchetto = 0 or stato_pacchetto = 1 %}
+	<form id = "pause">
+		{% csrf_token %}
+		<button type="submit" class="btn btn-danger btn-lg pannelloControllo">
+			{{pause_string}}
+		</button>
+	</form>	
 
-							<div class="pad10"><iframe src="https://www.paywithatweet.com/dlbutton01.php?id=eb7efe3d-ec52-4a6f-88da-90da4392269a" class="spaced-right" name="paytweet_button" scrolling="no" frameborder="no" height="24px" width="145px"></iframe></div>
+	{% else %}
 
-							{% elif tweet_boolean %}
-							<a href="#" class="btn btn-default btn-xs disabled">Already redeemed!</a>
+	<form id = "start">
+		{% csrf_token %}
+		<button type="submit" class="btn btn-primary btn-lg pannelloControllo">
+			{{avvia_string}}
+		</button>
+	</form>	
 
-							{% else %}
-							<a href="#" class="btn btn-default btn-xs disabled">{{label_pacchetto|safe}}</a>
-							{% endif %}
+	{% endif %}
 
-						</div>
-					</div>
+	<br/>
 
-				</div>
-			
-				<div class="col-md-3">
-					<div class="panel panel-default">
-						<div class="panel-heading" style="color:white; background-color:#E96E5D !important">
-							<h3 class="panel-title">15 days for $6.99</h3>
-						</div>
-						<div class="panel-body">
-							<h3 class="price-icon pad20"><i class="fa fa-instagram fa-2x"></i></h3>
-							<h3>Entry Pack</h3>
-							<ul class="price-list pad10">
-								<li style="color:blue;">15 days</li>
-								<li>$6.99</li>
-								<li>$0.46 <span style="color:grey;">per day</span></li>
-							</ul>
+	<!-- Inizio sezione account --> 
+	<div class="panel-group">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+    			<h3 class="panel-title">
+    				{{your_account_string}}
+    			</h3>
+  			</div>
+  			<div class="panel-body">
+  				<div class="row">
+  					<!-- Inizio sezione tuo abbonamento -->
+  					<div class="col-md-6">
+  						<div class="panel panel-default">
+  							<div class="panel-heading">
+  								<h3 class="panel-title">
+  									{{il_tuo_abbonamento_string}}
+  								</h3>
+  							</div>
+  							<div class="panel-body">
+  								<div class="row">
+  									<div class="col-md-12">
+	  									<div class="panel panel-default">
+	  										<div class="panel-body">
+	  											<a href="#pricing" class="smooth-price">
+	  												{{aumenta_giorni_string}}
+	  											</a> 											
+	  										</div>
+	  									</div>
+  									</div>
+  								</div>
+  								<div class="row pad10">
+  									<div class="col-md-6">
+  										<div class="panel panel-default">
+  											<div class="panel-body">
+  												{{total_time_string}}
+  												<br/>
+  												<span class="hue coloured">{{giorni_totali}} {{giorni_string}}</span> 
+  											</div>
+  										</div>
+  									</div>
+  									<div class="col-md-6">
+  										<div class="panel panel-default">
+  											<div class="panel-body">
+  												{{tempo_restante_string}}
+  												<br/>
+  												<span class="hue coloured">{{time_remaining}} {{giorni_string}}</span>
+  											</div>
+  										</div>
+  									</div>  									
+  								</div>
+  							</div>
+  						</div>
+  					</div>
+  					<!-- Fine sezione tuo abbonamento -->
 
-							{% if stato_pacchetto = 0 or stato_pacchetto = 1 %}
-
-							<a id="pagamento_15" class="btn btn-primary" href="charge">Pay With Card</a>
-
-							{% else %}
-
-							<a href="#" class="btn btn-default disabled">{{label_pacchetto|safe}}</a>
-
-							{% endif %}
-
-							<hr />
-							<i class="fa fa-cc-mastercard fa-2x"></i> 
-							<i class="fa fa-cc-visa fa-2x"></i> 
-							<i class="fa fa-cc-amex fa-2x"></i> 
-							<i class="fa fa-cc-stripe fa-2x"></i>
-						</div>
-					</div>
-				</div>
-				
-				<div class="col-md-3">
-					<div class="panel panel-default">
-						<div class="panel-heading" style="color:white; background-color:#d24955 !important">
-							<h3 class="panel-title">30 days for $10.79</h3>
-						</div>
-						<div class="panel-body">
-							<h3 class="price-icon pad10"><i class="fa fa-instagram fa-3x"></i></h3>
-							<h3>Standard Pack</h3>
-							<ul class="price-list pad10">
-								<li style="color:blue;">30 days</li>
-								<li>$10.79</li>
-								<li>$0.36 <span style="color:grey;">per day</span></li>
-							</ul>
-
-							{% if stato_pacchetto = 0 or stato_pacchetto = 1 %}
-
-							<a id="pagamento_30" class="btn btn-primary" href="charge">Pay With Card</a>
-
-							{% else %}
-
-							<a href="#" class="btn btn-default disabled">{{label_pacchetto|safe}}</a>
-
-							{% endif %}
-
-							<hr />
-							<i class="fa fa-cc-mastercard fa-2x"></i> 
-							<i class="fa fa-cc-visa fa-2x"></i> 
-							<i class="fa fa-cc-amex fa-2x"></i> 
-							<i class="fa fa-cc-stripe fa-2x"></i>
-							
-						</div>
-					</div>
-				</div>
-				
-				<div class="col-md-3">
-					<div class="panel panel-default">
-						<div class="panel-heading" style="color:white; background-color:#85212a !important">
-							<h3 class="panel-title">90 days for $24.49</h3>
-						</div>
-						<div class="panel-body">
-							
-							<h3 class="price-icon"><i class="fa fa-instagram fa-4x fa-spin"></i></h3>
-							<h3>Power Pack</h3>
-							<ul class="price-list pad10">
-								<li style="color:blue;">90 days</li>
-								<li>$24.49</li>
-								<li>$0.27 <span style="color:grey;">per day</span></li>
-							</ul>
-							
-							{% if stato_pacchetto = 0 or stato_pacchetto = 1 %}
-
-							<a id="pagamento_90" class="btn btn-primary" href="charge">Pay With Card</a>
-
-
-							{% else %}
-
-							<a href="#" class="btn btn-default disabled">{{label_pacchetto|safe}}</a>
-
-							{% endif %}
-
-							<hr />
-							<i class="fa fa-cc-mastercard fa-2x"></i> 
-							<i class="fa fa-cc-visa fa-2x"></i> 
-							<i class="fa fa-cc-amex fa-2x"></i> 
-							<i class="fa fa-cc-stripe fa-2x"></i>
-							
-						</div>
-					</div>
-				</div>
-
-				<center><small><i>All prices are VAT included.</i></small></center>
-				
-			</div>	<!-- closing row-->	
-					
-		</div>	<!-- banner-->
-		
-		
-		<!--MODALS-->
-
-		<!--TERMS ACCEPTANCE-->
-		<div id="okTerms" class="modal">
-		  <div class="modal-dialog">
-			<div class="modal-content">
-			  <div class="modal-header">
-				<h4 class="modal-title">Acceptance of terms</h4>
-			  </div>
-			  <div class="modal-body">
-					<div id="panelTerms">...</div>
-					<div id="formTerms">
-						<hr>
-						<p>You have to accept terms and insert you email address to continue.</p>
-						<div class="row">
-							<div class="col-sm-6">
-					        	<input type="text" class="form-control" id="emailCheck" placeholder="Email address *">
-					      	</div>
-				          	<label class="col-sm-6" style="padding-top:5pt">
-				            	<input id="agreeCheck" type="checkbox"> <span>I have read this Agreement and I agree to the terms and conditions *</span>
-				          	</label>
-				          </div>
-					</div>
-					<div id="note2"></div>
-			  </div>
-			  <div class="modal-footer">
-					<button type="button" class="btn btn-primary" id="submitTerms" onClick="checkEmail()">Continue</button>
-			  </div>
-			</div>
-		  </div>
+  					<!-- Inizio sezione il sistema ha generato -->
+  					<div class="col-md-6">
+  						<div class="panel panel-default">
+  							<div class="panel-heading">
+  								<h3 class="panel-title">
+  									{{il_sistema_ha_generato}}
+  								</h3>
+  							</div>
+  							<div class="panel-body">
+  								<div class="row">
+  									<div class="col-md-12">
+  										<div class="panel panel-default">
+  											<div class="panel-body">
+												<span class="hue coloured">
+													{{follower_since_registration}}
+												</span> {{nuovi_seguaci_string}}
+											</div>
+										</div>
+  									</div>
+  								</div>
+  								<div class="row pad10">
+  									<div class="col-md-6">
+  										<div class="panel panel-default">
+  											<div class="panel-body">
+  												<span class="hue coloured">{{like_totali}} media</span>
+  												<br/>
+  												{{liked_by_system_string}}
+  											</div>
+  										</div>
+  									</div>
+  									<div class="col-md-6">
+  										<div class="panel panel-default">
+  											<div class="panel-body">
+  												<span class="hue coloured">{{follow_totali}} {{utenti_stringa}}</span>
+  												<br/>
+  												{{seguiti_dal_sistema_string}}
+  											</div>
+  										</div>
+  									</div>  									
+  								</div>
+  							</div>
+  						</div>
+  					</div>
+  					<!-- Fine sezione il sistema ha generato -->  					
+  				</div>				
+  			</div>
 		</div>
+	</div>
+	<!-- Fine sezione account --> 
 
-		<!--SUPPORT-->
-		<div id="support" class="modal">
-		  <div class="modal-dialog">
-			<div class="modal-content">
-			  <div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-				<h4 class="modal-title">Need help?</h4>
-			  </div>
-			  <div class="modal-body">
-				<form class="form-horizontal" id="ajax-contact-form">
-				  <fieldset>
-				    <div class="form-group">
-				      <input id="inputEmail" type="hidden" name="" value="">
-				      <label for="inputSubject" class="col-lg-3 control-label">Subject *</label>
-				      <div class="col-lg-9">
-				        <input type="text" class="form-control" id="inputSubject" placeholder="Subject">
-				      </div>
-				    </div>
-				    <div class="form-group">
-				      <label for="textArea" class="col-lg-3 control-label">Message *</label>
-				      <div class="col-lg-9">
-				        <textarea class="form-control" rows="3" id="inputMessage" placeholder="Write something"></textarea>
-				        <span class="help-block"></span>
-				      </div>
-				    </div>
-				  </fieldset>
-				</form>
-				<div id="note"></div>
-			  </div>
-			  <div class="modal-footer">
-			  		<!--<button class="btn btn-default" data-dismiss="modal">Cancel</button>
-				    <button class="btn btn-primary" onClick="sendSupport()">Continue</button>-->
-			  </div>
+
+	<!-- Inizio sezione pagamenti -->
+	<div class="panel-group" id="pricing">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">
+					{{titolo_pagamenti_string}}
+				</h3>
 			</div>
-		  </div>
-		</div>
+			<div class="panel-body">
+				<div class="row">
+					<!-- Inizio sezione free e tweet -->
+					<div class="col-md-3">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title">
+									{{subscription_bonus_string}}
+								</h3>
+							</div>
+							<div class="panel-body">
+								<span class="fa fa-gift fa-3x"></span>
+								<br/>
+								<span style="font-size:small;">
+									{{giorni_free_subscription_string}}
+								</span>
+							</div>
+						</div>
+						<br/>
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title">
+									{{pay_tweet_string}}
+								</h3>
+							</div>
+							<div class="panel-body">
+								<span class="fa fa-twitter fa-3x"></span>								
+								<p style="font-size:small;">
+									{{corpo_pay_tweet}}
+								</p>
+								<span style="color:blue;">
+									<strong>
+										{{un_giorno_free_string}}
+									</strong>									
+								</span>						
+								<div class="pad10">
+									{% if tweet_boolean %}
+										<div class="alert alert-warning" role="alert">
+											{{gia_preso_string}}
+										</div>
+									{% else %}
+										<iframe src="https://www.paywithatweet.com/dlbutton01.php?id=eb7efe3d-ec52-4a6f-88da-90da4392269a" class="spaced-right" name="paytweet_button" scrolling="no" frameborder="no" height="24px" width="145px"></iframe>
+									{% endif %}
+								</div>
+							</div>
+						</div>
+					</div> 
+					<!-- Fine sezione free e tweet -->
 
-		<!--TERMS-->
-		<div id="terms" class="modal">
-		  <div class="modal-dialog">
-			<div class="modal-content">
-			  <div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-				<h4 class="modal-title">Terms</h4>
-			  </div>
-			  <div id="termsDiv" class="modal-body">
-					...
-			  </div>
-			  <div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			  </div>
+					<!-- Inizio sezione 15 giorni -->
+					<div class="col-md-3">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title">
+									{{string_15_giorni_titolo|safe}}
+								</h3>
+							</div>
+							<div class="panel-body">
+								<span class="fa fa-instagram fa-4x"></span>
+								<h3>{{entry_pack_string}}</h3>
+								<ul class="pad10">
+									<li style="color:blue;">{{string_15_giorni}}</li>
+									<li>{{prezzo_15_giorni|safe}}</li>
+								</ul>
+								<a id="pagamento_15" class="btn btn-primary" href="charge">
+									{{paga_card_string}}
+								</a>
+								<hr/>
+								<span class="fa fa-cc-mastercard fa-2x"></span> 
+								<span class="fa fa-cc-visa fa-2x"></span> 
+								<span class="fa fa-cc-amex fa-2x"></span> 
+								<span class="fa fa-cc-stripe fa-2x"></span>
+							</div>
+						</div>
+					</div>
+					<!-- Fine sezione 15 giorni -->
+
+					<!-- Inizio sezione 30 giorni -->
+					<div class="col-md-3">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title">
+									{{titolo_30_giorni|safe}}
+								</h3>
+							</div>
+							<div class="panel-body">
+								<span class="fa fa-instagram fa-4x"></span>
+								<h3>{{standard_pack_string}}</h3>
+								<ul class="pad10">
+									<li style="color:blue;">{{string_30_giorni}}</li>
+									<li>{{prezzo_30_giorni|safe}}</li>
+								</ul>
+								<a id="pagamento_30" class="btn btn-primary" href="charge">{{paga_card_string}}</a>
+								<hr />
+								<i class="fa fa-cc-mastercard fa-2x"></i> 
+								<i class="fa fa-cc-visa fa-2x"></i> 
+								<i class="fa fa-cc-amex fa-2x"></i> 
+								<i class="fa fa-cc-stripe fa-2x"></i>
+							</div>
+						</div>
+					</div>
+					<!-- Fine sezione 30 giorni -->
+
+					<!-- Inizio sezione 90 giorni -->
+					<div class="col-md-3">
+						<div class="panel panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title">
+									{{titolo_90_giorni_string|safe}}
+								</h3>
+							</div>
+							<div class="panel-body">
+								<span class="fa fa-instagram fa-4x"></span>
+								<h3>{{power_pack_string}}</h3>
+								<ul class="pad10">
+									<li style="color:blue;">{{stringa_90_giorni}}</li>
+									<li>{{prezzo_90_giorni_string|safe}}</li>
+								</ul>
+								<a id="pagamento_90" class="btn btn-primary" href="charge">{{paga_card_string}}</a>
+								<hr />
+								<i class="fa fa-cc-mastercard fa-2x"></i> 
+								<i class="fa fa-cc-visa fa-2x"></i> 
+								<i class="fa fa-cc-amex fa-2x"></i> 
+								<i class="fa fa-cc-stripe fa-2x"></i>
+							</div>
+						</div>
+					</div>
+					<!-- Fine sezione 90 giorni -->					
+				</div>
 			</div>
-		  </div>
 		</div>
+	</div>
+	<!-- Fine sezione pagamenti -->
 
-		<!--CHANGE EMAIL-->
-		<div id="changeEmail" class="modal">
-		  <div class="modal-dialog">
-			<div class="modal-content">
-			  <div class="modal-header">
+</div>
+<!-- Fine corpo -->
+
+<!--SPINNER-->
+<div id="spinner" class="modal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+		  	<div class="modal-body">
+		  		<p>{{caricamento_string}}</p>
+		  		<div class="progress progress-striped">
+					<div class="progress-bar progress-bar-success active" style="width:100%"></div>
+				</div>
+		 	</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal" id="utente_esiste_modal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+	    	<div class="modal-header">
+	        	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	        	<h4 class="modal-title">Ooops!</h4>
+	      	</div>
+	      	<div class="modal-body">
+	        	{{utente_esiste_string}}
+	      	</div>
+	      	<div class="modal-footer">
+	        	<button type="button" class="btn btn-default" data-dismiss="modal">{{chiudi_string}}</button>
+	      	</div>
+	    </div>
+	</div>
+</div>
+
+<div class="modal" id="errore_generico">
+	<div class="modal-dialog">
+		<div class="modal-content">
+	    	<div class="modal-header">
+	        	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	        	<h4 class="modal-title">Ooops!</h4>
+	      	</div>
+	      	<div class="modal-body">
+	        	{{errore_numero_tag_e_target}}
+	      	</div>
+	      	<div class="modal-footer">
+	        	<button type="button" class="btn btn-default" data-dismiss="modal">{{chiudi_string}}</button>
+	      	</div>
+	    </div>
+	</div>
+</div>
+
+<div class="modal" id="errore_myself">
+	<div class="modal-dialog">
+		<div class="modal-content">
+	    	<div class="modal-header">
+	        	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	        	<h4 class="modal-title">Ooops!</h4>
+	      	</div>
+	      	<div class="modal-body">
+	        	{{errore_myself_string}}
+	      	</div>
+	      	<div class="modal-footer">
+	        	<button type="button" class="btn btn-default" data-dismiss="modal">{{chiudi_string}}</button>
+	      	</div>
+	    </div>
+	</div>
+</div>
+
+<div class="modal" id="num_tag_modal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+	    	<div class="modal-header">
+	        	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	        	<h4 class="modal-title">Ooops!</h4>
+	      	</div>
+	      	<div class="modal-body">
+	        	{{num_tag_modal_string}}
+	      	</div>
+	      	<div class="modal-footer">
+	        	<button type="button" class="btn btn-default" data-dismiss="modal">{{chiudi_string}}</button>
+	      	</div>
+	    </div>
+	</div>
+</div>
+
+<div class="modal" id="added_model">
+	<div class="modal-dialog">
+		<div class="modal-content">
+	    	<div class="modal-header">
+	        	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+	        	<h4 class="modal-title">Yay!</h4>
+	      	</div>
+	      	<div class="modal-body">
+	        	{{added_generico_string}}
+	      	</div>
+	      	<div class="modal-footer">
+	        	<button type="button" class="btn btn-default" data-dismiss="modal">{{chiudi_string}}</button>
+	      	</div>
+	    </div>
+	</div>
+</div>
+
+<!--TERMS-->
+<div id="terms" class="modal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-				<h4 class="modal-title">Change email address</h4>
-			  </div>
-			  <div class="modal-body">
-			  	<form class="form-horizontal" id="ajax-contact-form_email">
-			  		<center>Your current email is: {{email}}</center>
-			  		<br/><br/>
-			  		<fieldset>				  
-					<div class="form-group row">
-				      	<label for="email1" class="col-lg-3 control-label">New email *</label>
-				      	<div class="col-lg-9">
-				       		<input type="text" class="form-control" id="email1" placeholder="Insert your email">
-				      	</div>
-				    </div>
-				    <div class="form-group row">
-				      	<label for="email2" class="col-lg-3 control-label">Repeat email *</label>
-				      	<div class="col-lg-9">
-				       		<input type="text" class="form-control" id="email2" placeholder="Insert your email">
-				      	</div>
-				    </div>
-				   </fieldset>
+				<h4 class="modal-title">{{termini}}</h4>
+		  	</div>
+		  	<div id="termsDiv" class="modal-body">
+		  		<h4>Welcome to Instautomation!</h4>
+				<p>By using our service, you agree to these Terms. Please, read them carefully before accessing our service.</p>
+				<p>We are not affiliated with Instagram, Facebook or any Instagram third-party partners in any way. The Instagram logo is registered trademarks of Instagram, LLC.</p>
+				<p><b>If you don’t accept all Terms you can’t use Instautomation.</b></p>
+				<p><ul><li>It is your sole responsibility to comply with Instagram rules and any legislation that you are subject to.</li>
+				<li><b>We discourage spam and violation of the law.</b></li>
+				<li>You use Instautomation at your own risk.</li>
+				<li>We are not responsible for your actions and their consequences.</li>
+				<li>We are not to blame if your Instagram account is banned for any reason.</li>
+				<li>It is your sole responsibility to check that the data you’ve provided us (email, for example) is correct.</li>
+				<li><b>Instautomation will send you an email if the system is down and/or your access token is reset. It is your sole responsibility to check our emails and follow the instructions for not wasting the time you’ve bought.</b></li>
+				<li>We require your Instagram username and password to deliver securely the service through Instagram API OAuth 2.0.</li>
+				<li>We don't store, give away or otherwise distribute your password to any third parties.</li>
+				<li>The expected amount of followers and likes is not guaranteed to you in any way. It all depends on the quality and interestingness of your content and the tags you've chosen.</li>
+				<li>We bring attention of real users to your feed, but we can't protect you from spam, fake or inactive followers. It's not possible to stop them, but you can remove unwanted followers by yourself.</li>
+				<li>Before you make a purchase decision you are advised to try Instautomation for free for 2 days.</li>
+				<li>You agree that upon purchasing our service you clearly understand and agree what you are purchasing and will not file a fraudulent dispute via Stripe.</li>
+				<li><b>Time is counting down when your payment is accepted.</b></li>
+				<li>You have 7 days after you bought a package to refund your money.</li>
+				<li>We do not offer refunds after package is activating by you and time is counting down.</li>
+				<li>All sales are final. Chargeback your payment and you’ll be banned immediately.</li>
+				<li>We cannot guarantee the continuous, uninterrupted or error-free operability of the services.</li>
+				<li>We reserve the right to modify, suspend or withdraw the whole or any part of our service or any of its content at any time without notice and without incurring any liability.</li>
+				<li>We are aloud to stop this service at anytime without informing you. Only refunds that are valid by terms will be processed.</li>
+				<li>You are solely responsible any consequences, losses or damages that we may directly or indirectly incur or suffer due to any unauthorized activities conducted by you, as explained above, and may incur criminal or civil liability.</li>
+				<li>It is your sole responsibility to check whether the Terms have changed.</li></ul></p>
+				<h4>Termination of Use</h4>
+				<p>You agree that we may, at our sole discretion, suspend or terminate your access to all or part of our website and Resources with or without notice and for any reason, including, without limitation, breach of this Terms. Any suspected illegal, fraudulent or abusive activity may be grounds for terminating your relationship and may be referred to appropriate law enforcement authorities.</p>
+				<h4>Law</h4>
+				<p>This website can be accessed by most countries around the world. By accessing our website, you agree that the statutes and laws of our state.</p>
+				<h4>Guarantee</h4>
+				<p>By using our website, you understand and agree that all services we provide are “as is” and “as available”.</p>
+				<p>You expressly understand and agree that any claim against us shall be limited to the amount you paid, if any, for use of products and/or services. We will not be liable for any direct, indirect, incidental, consequential or exemplary loss or damages which may be incurred by you as a result of using our service, or as a result of any changes, data loss or corruption, cancellation, loss of access, or downtime to the full extent that applicable limitation of liability laws apply.</p>
+				<p>UNLESS OTHERWISE EXPRESSED, INSTAUTOMATION EXPRESSLY DISCLAIMS ALL WARRANTIES AND CONDITIONS OF ANY KIND, WHETHER EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.</p>
+				<h4>Contact Information</h4>
+				<p>Please read these Terms carefully.</p>
+				<p>Instautomation is property by SocialCities s.r.l. located in Via Selice 84/A, 40026 Imola (BO), Italy, VAT code IT03368221200.</p>
+				<p>If you have any questions or comments about these our Terms of Service as outlined above, you can contact us at: info@instautomation.com</p>
+		  	</div>
+		  	<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">{{chiudi_string}}</button>
+		 	</div>
+		</div>
+	</div>
+</div>
+
+<!--CHANGE EMAIL-->
+<div id="changeEmail" class="modal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title">
+					{{cambia_email_string}}
+				</h4>
+		 	</div>
+		  	<div class="modal-body">
+		  		<form class="form-horizontal" id="ajax-contact-form_email">
+		  			<div style="text-align:center">
+		  				{{email_attuale_string}}: {{email}}
+		  			</div>
+		  			<br/><br/>
+		  			<fieldset>				  
+						<div class="form-group row">
+			      			<label for="email1" class="col-lg-3 control-label">
+			      				{{nuova_email_string}}
+			      			</label>
+			      			<div class="col-lg-9">
+			       				<input type="email" class="form-control" id="email1" placeholder="{{placeholder_nuova_email}}">
+			      			</div>
+			    		</div>
+			    		<div class="form-group row">
+			      			<label for="email2" class="col-lg-3 control-label">
+			      				{{conferma_nuova_email}}
+			      			</label>
+			      			<div class="col-lg-9">
+			       				<input type="email" class="form-control" id="email2" placeholder="{{conferma_email_string_placeholder}}">
+			      			</div>
+			    		</div>
+			  		</fieldset>
 				</form>
 				<div id="note1"></div>
-			  </div>
-			  <div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				<button class="btn btn-primary" id = "chiusura_modale_change" onClick="sendChange()">Submit</button>
-			  </div>
-			</div>
-		  </div>
+		  	</div>
+		  	<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">{{chiudi_string}}</button>
+				<button class="btn btn-primary" id = "chiusura_modale_change" onClick="sendChange()">{{salva_sting}}</button>
+		 	</div>
 		</div>
+	</div>
+</div>
 
-		<!-- ERRORE -->
-     	<div class="modal" id="errore">
-		  <div class="modal-dialog">
-		    <div class="modal-content">
-		      <div class="modal-header">
-		        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		        <h4 class="modal-title">Ooops!</h4>
-		      </div>
-		      <div class="modal-body">
-		        <p>Something went wrong!
-		        <br/>Please, try in a while.
-		        <br/>For support contact us at info@instautomation.com</p>
-		      </div>
-		      <div class="modal-footer">
-		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-		      </div>
-		    </div>
-		  </div>
-		</div>
-
-     	<div class="modal" id="errore_generico">
-		  <div class="modal-dialog">
-		    <div class="modal-content">
-		      <div class="modal-header">
-		        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-		        <h4 class="modal-title">Ooops!</h4>
-		      </div>
-		      <div class="modal-body">
-		        <p id="corpo">To start the system you must insert at least one target user and one hashtag.</p>
-		      </div>
-		      <div class="modal-footer">
-		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-		      </div>
-		    </div>
-		  </div>
-		</div>
-      
-		<!--SPINNER-->
-		<div id="spinner" class="modal">
-		  <div class="modal-dialog">
-			<div class="modal-content">
-			  	<div class="modal-body">
-			  		<p>LOADING</p>
-			  		<div class="progress progress-striped" class="col-md-10">
-						<div class="progress-bar progress-bar-success active" style="width:100%"></div>
-					</div>
-			 	 </div>
-			</div>
-		  </div>
-		</div>
-
-
-
-
-<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-<!-- - - - - - - - - - FOOTER  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		  <footer>
-		  <hr>
-			<div class="row">
-			  <div class="col-lg-12">
+<!-- Inizio footer -->
+<footer>
+	<div class="container">
+		<hr/>
+		<div class="row">
+			<div class="col-lg-12">
 				<ul class="list-unstyled">
-				  <li class="pull-right"><a href="#top" class="smooth-top">Back to top</a></li>
-				  <li><a href="#pricing" class="smooth-price">Prices</a></li>
-				  <li><a href="javascript:openTerms()">Our terms</a></li>
-				  <li><a href="//www.iubenda.com/privacy-policy/203721" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">Privacy</a></li>
-				  <li><a href="javascript:openSupport('{{email}}')">Support</a></li>
-				  <li><a href="javascript:openChange()">Change my email</a></li>
-				  <li><a href="javascript:loggingOut('2')">Logout</a></li>
-
+					<li class="pull-right"><a href="#top" class="smooth-top">{{torna_in_cima}}</a></li>
+					<li><a href="javascript:openTerms()">{{termini}}</a></li>
+					<li><a href="//www.iubenda.com/privacy-policy/203721" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">{{privacy}}</a></li>
 				</ul>
-				<p>Instautomation.com © 2015 - <a href="http://www.socialcities.co" target="_blank">SocialCities s.r.l.</a></p>
-			  </div>
+				<p>
+					Instautomation.com © 2015 - <a href="http://www.socialcities.co" target="_blank">SocialCities s.r.l.</a>
+				</p>
 			</div>
-		  </footer>
+		</div>
+	</div>
+</footer>
+<!-- Fine footer -->
 
-    </div>
+<div id= "logoutDiv1" style="visibility:hidden;"></div>
+<div id= "logoutDiv2" style="visibility:hidden;"></div>
 
-    <div id= "logoutDiv1" style="visibility:hidden;"></div>
-    <div id= "logoutDiv2" style="visibility:hidden;"></div>
-
-    <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
-    <script type="text/javascript" src="https://checkout.stripe.com/checkout.js"></script>
-    <script src="{% static "jquery-2.1.1.min.js" %}"></script>
-    <script src="{% static "logout.js" %}"></script>
-    <script src="{% static "./bower_components/bootstrap/dist/js/bootstrap.min.js" %}"></script>
-    <script src="{% static "WearProtection.js" %}"></script>
-    <script src="{% static "./assets/js/bootswatch.js" %}"></script>
-    <script src="{% static "./_insta_js/ga.js" %}"></script>
-    <script src="{% static "./_insta_js/privacy.js" %}"></script>
-    <script src="{% static "./_insta_js/cumulative.js" %}"></script>
-	<script src="{% static "./_insta_js/function.js" %}"></script>
-	<script src="{% static "main.js" %}"></script>
-	
-
-	{% if email == "" or email == None %}
-    	<script>
-    		goIndex();
-    	</script>
-    {% endif %}	
-
-  </body>
-</html>
+{% endblock %}

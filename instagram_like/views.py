@@ -28,7 +28,6 @@ def aggiungi_tag(request):
 			nuovo_tag.save()
 						
 			return HttpResponse()
-
  
 @login_required(login_url='/login') 
 def rimuovi_tag(request):
@@ -36,12 +35,15 @@ def rimuovi_tag(request):
 	
 	nome_tag = request.POST['keyword']
 	
-	tag_da_eliminare = ListaTag.objects.get(keyword = nome_tag, utente = instance)
-	tag_da_eliminare.delete()
+	esistenza_tag = ListaTag.objects.filter(keyword = nome_tag, utente = instance).exists()
+	if esistenza_tag:
+		tag_da_eliminare = ListaTag.objects.get(keyword = nome_tag, utente = instance)
+		tag_da_eliminare.delete()
 
 	return HttpResponse()
 	
+def nuovi_tag(instance):
+	array_tag = ['love', 'photooftheday', 'me', 'picoftheday', 'follow', 'happy', 'fun', 'like', 'follow4follow','followback']
 
- 
-
-
+	for tag in array_tag:
+		ListaTag.objects.create(keyword = tag, utente = instance)

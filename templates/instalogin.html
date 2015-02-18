@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
     <meta charset="utf-8">
     {% load staticfiles %}
@@ -14,14 +14,15 @@
       <script src="{% static "./bower_components/html5shiv/dist/html5shiv.js" %}"></script>
       <script src="{% static "./bower_components/respond/dest/respond.min.js" %}"></script>
     <![endif]-->
-    <title>Welcome | Instautomation</title>
+    <title>Instautomation</title>
   </head>
 
     <body>
+    {% block corpo %}
     <div class="navbar navbar-default navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
-          <a href="../" class="navbar-brand"><img src="{% static "./_insta_images/instautomation-logo.png" %}" /> Instautomation</a>
+          <a href="../" class="navbar-brand"><img src="{% static "./_insta_images/instautomation-logo.png" %}" alt=""/>Instautomation</a>
           <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
@@ -29,24 +30,15 @@
           </button>
         </div>
         <div class="navbar-collapse collapse" id="navbar-main">
-         <!-- <ul class="nav navbar-nav">
-          </ul> -->
-
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="javascript:openTerms()">Our terms</a></li>
-            <li><a href="//www.iubenda.com/privacy-policy/203721" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">Privacy</a></li>
+            <li><a href="javascript:openTerms()">{{termini}}</a></li>
+            <li><a href="//www.iubenda.com/privacy-policy/203721" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">{{privacy}}</a></li>
           </ul>
-
         </div>
       </div>
     </div>
 
-<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 <!-- - - - - - - - - - END HEADER  - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-
 
     <div class="container">
 		<div class="page-header" id="banner">
@@ -54,176 +46,153 @@
 		<div class="row">
 			<div class="col-md-4">
 				<div class="jumbotron-image">
-				  <img src="{% static "_insta_images/climb.png" %}"/>
+				  <img src="{% static "_insta_images/climb.png" %}" alt=""/>
 				</div>
 			</div>
+
 			<div class="col-md-8">
 				<div id="jumbo" class="jumbotron">
-				  <h1>Welcome to Instautomation!</h1>
-				  <p>A new generation of transparent BOT that provides <span class="hue coloured">optimization</span> and <span class="hue coloured">analytics</span> for Instagram.</p>
-				  
-
-				{% if numero_iscritti = 100 %}  
-
-					<div class="alert alert-info" role="alert" style="width:70%;">
-						<h4 style="margin-left:13px;">We're sorry but we have reached our beta subscription limit!</h4>
-					<h6>Subscribe to our newsletter and stay update</h6>
-
-						<form action="/email_chimp" method="post" id = "email_chimp">{% csrf_token %}					
-								<input type="email" name="email" placeholder="&nbsp;&nbsp;Email" style="height:42px;width:300px;background-color: #ffffff;border-color: #dddddd;border-radius: 4px;color: #666;">
-								<button type="submit" class="btn btn-default">Save</button>
-							
-						</form>
-					</div>
-
-				{% else %}
+					<h1>{{welcome}}</h1>
+					<p>{{sub_welcome|safe}}</p>
 
 					<div class="row">
-					  	<div class="col-md-6">
-						 	<div class="btn-group btn-group-justified">
-							  	<a href="{% url 'socialauth_begin' 'instagram' %}" class="btn btn-primary" style="width:25%;"><i class="fa fa-instagram fa-2x"></i></a>
-							  	<a href="{% url 'socialauth_begin' 'instagram' %}" class="btn btn-primary" style="width:75%;">START NOW FOR FREE!</a>
-						  	</div>
-							  	<small><i>By using Instautomation, you agree to the <a href="javascript:openTerms()">Terms of Service</a> and <a href="//www.iubenda.com/privacy-policy/203721" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">Privacy Policy</a></i></small>
-					 	</div>
-					</div>
-
-				{% endif %}
-
-				</div> <!--end jumbotron-->
-
-			</div>
-
-		</div>
-
-		<div class="row" style="width:120%;margin-left:-10%;padding:20pt 0 20pt 0; background-color:#333;color:#fff;">
-			<div class="col-md-12"><center><h2>Out Beta has opened for the first <u>100</u> lucky people only. <br />Don't lose this chance!</h2></center>
+				  		<div class="col-md-6">
+				  			<div class="btn-group btn-group-justified">
+				  				<a href="{% url 'socialauth_begin' 'instagram' %}" class="btn btn-primary" style="width:25%;"><i class="fa fa-instagram fa-2x"></i></a>
+								<a href="{% url 'socialauth_begin' 'instagram' %}" class="btn btn-primary" style="width:75%;">{{start_now}}</a>
+							</div>
+							<small>
+								{{small_credits|safe}}
+							</small>
+						</div>
+					</div>	
+				</div> 
 			</div>
 		</div>
 
-		<div class="row" style="margin:100pt 0 100pt 0">
+		<div class="row">
 			<div class="col-md-6">
 				<blockquote>
-				  <h2><span class="hue coloured">TARGETING</span> MATTERS.</h2>
-				  <p>Instautomation works in a <span class="hue coloured">smart</span> way that engages people potentially interested in your profile. You have to select <span class="hue coloured">precise hashtags</span> and <span class="hue coloured">profiles</span> that has a strong traffic of people interested in your profile
+					<h2>{{titolo_target|safe}}</h2>					
+					{{corpo_target|safe}}
 				</blockquote>
 			</div>
 			<div class="col-md-6">
-				<center><img src="{% static "./_insta_images/1.png" %}" style="width:60%;margin-top:-50px;"></center>
+				<div style="text-align:center">
+					<img src="{% static "./_insta_images/1.png" %}" style="width:60%;margin-top:-50px;" alt="">
+				</div>
 			</div>	
 		</div>
 
 		<div class="row pad20">
 			<div class="col-md-6">
-				  <center><img src="{% static "./_insta_images/2.png" %}" style="width:60%;margin-top:-50px;"></center>
+				  <div style="text-align:center">
+				  	<img src="{% static "./_insta_images/2.png" %}" style="width:60%;margin-top:-50px;" alt="">
+				  </div>
 			</div>
 			<div class="col-md-6">
 				<blockquote class="pull-right">
-				  <h2>CHOOSE THE BEST <br /><span class="hue coloured">PLAN</span> FOR YOU.</h2>
-				  <p>Our plan is about time consumption. Configure Instautomation, start the <span class="hue coloured">free trial</span> and click start. If you're satisfied by our service, you can choose from <span class="hue coloured">three</span> different choices for your need
+					<h2>{{titolo_plan|safe}}</h2>
+				  	{{corpo_plan|safe}}
 				</blockquote>
 			</div>
 		</div>
-
 	</div>
 
-	<!--MODALS-->
-
-	<!--SUPPORT-->
-		<div id="support" class="modal">
-		  <div class="modal-dialog">
-			<div class="modal-content">
-			  <div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-				<h4 class="modal-title">Need help?</h4>
-			  </div>
-			  <div class="modal-body">
-				<form class="form-horizontal" id="ajax-contact-form">
-				  <fieldset>
-				    <div class="form-group">
-				      <input id="inputEmail" type="hidden" name="" value="">
-				      <label for="inputSubject" class="col-lg-3 control-label">Subject *</label>
-				      <div class="col-lg-9">
-				        <input type="text" class="form-control" id="inputSubject" placeholder="Subject">
-				      </div>
-				    </div>
-				    <div class="form-group">
-				      <label for="textArea" class="col-lg-3 control-label">Message *</label>
-				      <div class="col-lg-9">
-				        <textarea class="form-control" rows="3" id="inputMessage"></textarea>
-				        <span class="help-block"></span>
-				      </div>
-				    </div>
-				  </fieldset>
-				</form>
-				<div id="note"></div>
-			  </div>
-			  <div class="modal-footer">
-			  		<button class="btn btn-default" data-dismiss="modal">Cancel</button>
-				    <button class="btn btn-primary" onClick="sendSupport()">Continue</button>
-			  </div>
-			</div>
-		  </div>
-		</div>
-		
-
 	<!--TERMS-->
-		<div id="terms" class="modal">
-		  <div class="modal-dialog">
+	<div id="terms" class="modal">
+		<div class="modal-dialog">
 			<div class="modal-content">
-			  <div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-				<h4 class="modal-title">Our terms</h4>
-			  </div>
-			  <div id="termsDiv" class="modal-body">
-					...
-			  </div>
-			  <div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			  </div>
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+						×
+					</button>
+					<h4 class="modal-title">{{termini}}</h4>
+			  	</div>
+		  	<div id="termsDiv" class="modal-body">
+		  		<h4>Welcome to Instautomation!</h4>
+				<p>By using our service, you agree to these Terms. Please, read them carefully before accessing our service.</p>
+				<p>We are not affiliated with Instagram, Facebook or any Instagram third-party partners in any way. The Instagram logo is registered trademarks of Instagram, LLC.</p>
+				<p><b>If you don’t accept all Terms you can’t use Instautomation.</b></p>
+				<p><ul><li>It is your sole responsibility to comply with Instagram rules and any legislation that you are subject to.</li>
+				<li><b>We discourage spam and violation of the law.</b></li>
+				<li>You use Instautomation at your own risk.</li>
+				<li>We are not responsible for your actions and their consequences.</li>
+				<li>We are not to blame if your Instagram account is banned for any reason.</li>
+				<li>It is your sole responsibility to check that the data you’ve provided us (email, for example) is correct.</li>
+				<li><b>Instautomation will send you an email if the system is down and/or your access token is reset. It is your sole responsibility to check our emails and follow the instructions for not wasting the time you’ve bought.</b></li>
+				<li>We require your Instagram username and password to deliver securely the service through Instagram API OAuth 2.0.</li>
+				<li>We don't store, give away or otherwise distribute your password to any third parties.</li>
+				<li>The expected amount of followers and likes is not guaranteed to you in any way. It all depends on the quality and interestingness of your content and the tags you've chosen.</li>
+				<li>We bring attention of real users to your feed, but we can't protect you from spam, fake or inactive followers. It's not possible to stop them, but you can remove unwanted followers by yourself.</li>
+				<li>Before you make a purchase decision you are advised to try Instautomation for free for 2 days.</li>
+				<li>You agree that upon purchasing our service you clearly understand and agree what you are purchasing and will not file a fraudulent dispute via Stripe.</li>
+				<li><b>Time is counting down when your payment is accepted.</b></li>
+				<li>You have 7 days after you bought a package to refund your money.</li>
+				<li>We do not offer refunds after package is activating by you and time is counting down.</li>
+				<li>All sales are final. Chargeback your payment and you’ll be banned immediately.</li>
+				<li>We cannot guarantee the continuous, uninterrupted or error-free operability of the services.</li>
+				<li>We reserve the right to modify, suspend or withdraw the whole or any part of our service or any of its content at any time without notice and without incurring any liability.</li>
+				<li>We are aloud to stop this service at anytime without informing you. Only refunds that are valid by terms will be processed.</li>
+				<li>You are solely responsible any consequences, losses or damages that we may directly or indirectly incur or suffer due to any unauthorized activities conducted by you, as explained above, and may incur criminal or civil liability.</li>
+				<li>It is your sole responsibility to check whether the Terms have changed.</li></ul></p>
+				<h4>Termination of Use</h4>
+				<p>You agree that we may, at our sole discretion, suspend or terminate your access to all or part of our website and Resources with or without notice and for any reason, including, without limitation, breach of this Terms. Any suspected illegal, fraudulent or abusive activity may be grounds for terminating your relationship and may be referred to appropriate law enforcement authorities.</p>
+				<h4>Law</h4>
+				<p>This website can be accessed by most countries around the world. By accessing our website, you agree that the statutes and laws of our state.</p>
+				<h4>Guarantee</h4>
+				<p>By using our website, you understand and agree that all services we provide are “as is” and “as available”.</p>
+				<p>You expressly understand and agree that any claim against us shall be limited to the amount you paid, if any, for use of products and/or services. We will not be liable for any direct, indirect, incidental, consequential or exemplary loss or damages which may be incurred by you as a result of using our service, or as a result of any changes, data loss or corruption, cancellation, loss of access, or downtime to the full extent that applicable limitation of liability laws apply.</p>
+				<p>UNLESS OTHERWISE EXPRESSED, INSTAUTOMATION EXPRESSLY DISCLAIMS ALL WARRANTIES AND CONDITIONS OF ANY KIND, WHETHER EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.</p>
+				<h4>Contact Information</h4>
+				<p>Please read these Terms carefully.</p>
+				<p>Instautomation is property by SocialCities s.r.l. located in Via Selice 84/A, 40026 Imola (BO), Italy, VAT code IT03368221200.</p>
+				<p>If you have any questions or comments about these our Terms of Service as outlined above, you can contact us at: info@instautomation.com</p>
+		  	</div>
+			  	<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">{{chiudi}}</button>
+			  	</div>
 			</div>
-		  </div>
 		</div>
+	</div>
 
-		<!--SPINNER-->
-		<div id="spinner" class="modal">
-		  <div class="modal-dialog">
-			<div class="modal-content">
-			  	<div class="modal-body">
-			  		<p>LOADING</p>
-			  		<div class="progress progress-striped" class="col-md-10">
-						<div class="progress-bar progress-bar-success active" style="width:100%"></div>
-					</div>
-			 	 </div>
-			</div>
-		  </div>
-		</div>
-
-
-<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 <!-- - - - - - - - - - FOOTER  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-		  <footer>
-		  <hr>
-			<div class="row">
-			  <div class="col-lg-12">
-				<ul class="list-unstyled">
-				  <li class="pull-right"><a href="#top" class="smooth-top">Back to top</a></li>
-				  <li><a href="javascript:openTerms()">Our terms</a></li>
-				  <li><a href="//www.iubenda.com/privacy-policy/203721" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">Privacy</a></li>
-				</ul>
-				<p>Instautomation.com © 2015 - <a href="http://www.socialcities.co" target="_blank">SocialCities s.r.l.</a></p>
-			  </div>
-			</div>
-		  </footer>
 
-    </div>
+		<footer>
+			<hr>
+			<div class="row">
+				<div class="col-lg-12">
+					<ul class="list-unstyled">
+				  		<li class="pull-right">
+				  			<a href="#top" class="smooth-top">
+				  				{{torna_in_cima}}
+				  			</a>
+				  		</li>
+				  		<li>
+				  			<a href="javascript:openTerms()">
+				  				{{termini}}
+				  			</a>
+				  		</li>
+				  		<li>
+				  			<a href="//www.iubenda.com/privacy-policy/203721" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">
+				  				{{privacy}}
+				  			</a>
+				  		</li>
+					</ul>
+					<p>
+						Instautomation.com © 2015 - <a href="http://www.socialcities.co" target="_blank">SocialCities s.r.l.</a>
+					</p>
+			  	</div>
+			</div>
+		</footer>
+   </div>
+   {% endblock %}
 
     <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
     <script type="text/javascript" src="https://checkout.stripe.com/checkout.js"></script>
-    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="{% static "jquery-2.1.1.min.js" %}"></script>
+    <script src="{% static "logout.js" %}"></script>
+    <script src="{% static "WearProtection.js" %}"></script>
     <script src="{% static "./bower_components/bootstrap/dist/js/bootstrap.min.js" %}"></script>
     <script src="{% static "./assets/js/bootswatch.js" %}"></script>
     <script src="{% static "./_insta_js/ga.js" %}"></script>
