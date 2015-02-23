@@ -265,6 +265,26 @@
 
 	{% if stato_pacchetto = 2 and status_obj_attivi %}
 
+	<div class="well">
+		<div class="row">
+			<div class="col-md-2">
+		  		<center>
+		  			<i class="fa fa-instagram fa-5x fa-spin"></i>
+		  		</center>	
+		  	</div>
+		  	<div class="col-md-8">
+		  		<center>
+		  			<h1>{{sistema_attivo_string}}</h1>
+			</center>	  
+			</div>	
+		  	<div class="col-md-2">
+		  		<center>
+		  			<i class="fa fa-instagram fa-5x fa-spin"></i>
+		  		</center>
+		  	</div>
+		</div>
+	</div>
+
 	<form id = "pause">
 		{% csrf_token %}
 		<button type="submit" class="btn btn-danger btn-lg pannelloControllo">
@@ -273,7 +293,7 @@
 	</form>	
 
 	{% else %}
-
+	
 	<form id = "start">
 		{% csrf_token %}
 		<button type="submit" class="btn btn-primary btn-lg pannelloControllo">
@@ -735,6 +755,46 @@
 	</div>
 </div>
 
+<!--SUPPORT-->
+<div id="support" class="modal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title">
+					{{aiuto_string}}
+				</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal" id="ajax-contact-form">
+				  	<fieldset>
+				    	<div class="form-group">
+				      		<input id="inputEmail" type="hidden" name="" value="">
+				      		<label for="inputSubject" class="col-lg-3 control-label">
+				      			{{titolo_string_supporto}}
+				      		</label>
+				     		<div class="col-lg-9">
+				       			<input type="text" class="form-control" id="inputSubject" placeholder="{{placeholder_titolo_supporto_string}}"></div>
+				    		</div>
+				    		<div class="form-group">
+				      			<label for="inputMessage" class="col-lg-3 control-label">
+				      				{{messaggio_string_support}}
+				      			</label>
+				     			<div class="col-lg-9">
+				        			<textarea class="form-control" rows="3" id="inputMessage" placeholder="{{write_a_message_placeholder}}"></textarea>
+				       				<span class="help-block"></span>
+				      			</div>
+				   			</div>
+				   		</div>	
+				  	</fieldset>
+				</form>	
+				<div id="note"></div>		
+				<div class="modal-footer"></div>
+			</div>
+		</div>
+	</div>
+</div>	
+
 <!-- Inizio footer -->
 <footer>
 	<div class="container">
@@ -745,7 +805,7 @@
 					<li class="pull-right"><a href="#top" class="smooth-top">{{torna_in_cima}}</a></li>
 					<li><a href="javascript:openTerms()">{{termini}}</a></li>
 					<li><a href="{{iubenda_link}}" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">{{privacy}}</a></li>
-				</ul>
+				</ul>invia_string
 				<p>
 					Instautomation.com © 2015 - <a href="http://www.socialcities.co" target="_blank">SocialCities s.r.l.</a>
 				</p>
@@ -757,5 +817,15 @@
 
 <div id= "logoutDiv1" style="visibility:hidden;"></div>
 <div id= "logoutDiv2" style="visibility:hidden;"></div>
+
+<script type="text/javascript">
+chiudi_string = "{{chiudi_string}}";
+invia_string = "{{invia_string}}";
+string_js_15_giorni = "{{string_js_15_giorni}}";
+string_js_30_giorni = "{{string_js_30_giorni}}"; 
+string_js_90_giorni = "{{string_js_90_giorni}}";
+
+
+</script>
 
 {% endblock %}

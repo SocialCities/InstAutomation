@@ -49,7 +49,7 @@ def index(request):
 		start_now = 'INIZIA ORA GRATIS!'
 		small_credits = '<i>Usando Instautomation, accetti i nostri <a href="javascript:openTerms()">termini di servizio</a> e la nostra <a href="//www.iubenda.com/privacy-policy/203721" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">privacy policy</a></i>'
 		titolo_target = "L'importanza del <span class='hue coloured'>TARGET</span>"
-		corpo_target = 'Instautomation lavora in maniera <span class="hue coloured">intelligente</span>: utilizza i giusti <span class="hue coloured">target</span> ed <span class="hue coloured">hashtag</span> per portare più traffico al tuo profilo ed aumentare i tuoi <span class="hue coloured">follower</span>'
+		corpo_target = 'Instautomation lavora in maniera <span class="hue coloured">intelligente</span>: utilizza i giusti <span class="hue coloured">target</span> ed <span class="hue coloured">hashtag</span> per portare più traffico al tuo profilo ed aumentare i tuoi <span class="hue coloured">follower</span>.'
 		titolo_plan = 'Scegli la <span class="hue coloured">TUA</span> offerta!'
 		corpo_plan = 'Il servizio è <span class="hue coloured">gratuito</span> per due giorni dalla tua iscrizione. Se la prova gratis soddisfa le tue esigenze, potrai scegliere uno dei nostri <span class="hue coloured">tre</span> differenti pacchetti.'
 		termini = 'Termini di servizio'
@@ -158,7 +158,7 @@ def access(request):
 		
 class beta_home(View):
     template_name = 'beta_home.html'
-    codice_beta = "Xyiu753!qa4?"
+    codice_beta = "betapene"
 
     def dispatch(self, *args, **kwargs):
         return super(beta_home, self).dispatch(*args, **kwargs)
@@ -351,9 +351,12 @@ def home_page(request):
 
 	status_obj_attivi = TaskStatus.objects.filter(utente = instance, completato = False).exists()	
 
-	print lingua
-
 	if lingua == 'it':
+		sistema_attivo_string = "Il sistema è attivo!"
+		string_js_15_giorni = 'Entry Pack - 15 giorni'
+		string_js_30_giorni = 'Medium Pack - 30 giorni'
+		string_js_90_giorni = 'Long Pack - 90 giorni'
+		invia_string = "Invia"
 		prezzi = "Prezzi"
 		termini = 'Termini di servizi'
 		privacy = 'Privacy'
@@ -444,6 +447,11 @@ def home_page(request):
 		iubenda_link = '//www.iubenda.com/privacy-policy/578901'
 		benvenuto_avatar_string = 'Benvenuto'
 	elif lingua == 'ro':
+		sistema_attivo_string = "Sistemul este activ!"
+		string_js_15_giorni = 'Entry Pack - 15 zile'
+		string_js_30_giorni = 'Medium Pack - 30 zile'
+		string_js_90_giorni = 'Long Pack - 90 zile'
+		invia_string = "Trimite"
 		prezzi = "Prețuri"
 		termini = 'Termeni'
 		privacy = 'Confidențialitate'
@@ -534,6 +542,11 @@ def home_page(request):
 		iubenda_link = '//www.iubenda.com/privacy-policy/203721'
 		benvenuto_avatar_string = 'Bine ai venit'
 	else:
+		sistema_attivo_string = "System is running!"
+		string_js_15_giorni = 'Entry Pack - 15 Days'
+		string_js_30_giorni = 'Medium Pack - 30 Days'
+		string_js_90_giorni = 'Long Pack - 90 Days'
+		invia_string = "Send"
 		prezzi = "Prices"
 		termini = 'Our terms'
 		privacy = 'Privacy'
@@ -625,6 +638,11 @@ def home_page(request):
 		benvenuto_avatar_string = 'Welcome'
 
 	variabili = {
+		'sistema_attivo_string' : sistema_attivo_string,
+		'string_js_15_giorni' : string_js_15_giorni,
+		'string_js_30_giorni' : string_js_30_giorni,
+		'string_js_90_giorni' : string_js_90_giorni,
+		'invia_string' : invia_string,
 		'termini' : termini,
 		'privacy' : privacy,
 		'prezzi' : prezzi,
@@ -864,7 +882,7 @@ def email_chimp(request):
 	email = request.POST['email']
 	apikey = 'a36024c7bb5504d63b61963dd9741fa2-us8'
 	mailid = 'c4ed436de6'
-	
+
 	pm = PostMonkey(apikey)
 	pm.listSubscribe(id = mailid, email_address = email, double_optin = False)
 	return HttpResponse()

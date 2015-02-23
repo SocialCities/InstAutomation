@@ -1,7 +1,35 @@
-<h2>Inserisci il codice per accedere alla beta</h2>
+{% extends 'instalogin.html' %}
+{% load staticfiles %}
 
-<form action="/beta/" method="post">{% csrf_token %}
-	<input type="password" name="beta_code"/>
-	<button type="submit" class="btn btn-default">Invia</button>
-</form>
+{% block corpo %}
 
+<div class="container">
+	<h2>We're sorry but we have reached our beta subscription limit!</h2>
+	<h3>Subscribe to our newsletter and stay update</h3>
+
+	<form id = "email_chimp">
+		{% csrf_token %}
+		<div class="form-group">
+	    	<label for="exampleInputEmail1">Email address</label>
+	    	<input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email">
+	  	</div>
+	  	<button type="submit" class="btn btn-default">Submit</button>
+	</form>
+
+	<h2>...or if you have our secret code you can access our new private beta!</h2>
+
+	<form action="/beta/" method="post">
+		{% csrf_token %}
+		<div class="form-group">
+			<label for="beta_code">Beta code</label>
+	    	<input type="text" name="beta_code" class="form-control" id="beta_code" placeholder="Beta code">
+		</div>
+		<button type="submit" class="btn btn-default">Go!</button>
+	</form>
+
+</div>
+
+
+
+
+{% endblock %}					

@@ -94,43 +94,53 @@ def errore_mortale(e, instance):
 					
 		elif (e.error_type == 'APINotAllowedError'):
 			print username + " - " +  e.error_message
-			time.sleep(180)
+			#time.sleep(180)
+			time.sleep(120)
 
 		elif (e.error_type == 'APINotFoundError'):
 			print username + " - " +  e.error_message
-			time.sleep(180)	
+			#time.sleep(180)
+			time.sleep(120)	
 			
 	elif (e.status_code == 429):
 		print username + " - " +  e.error_message #Rate limited
-		time.sleep(360)
+		#time.sleep(360)
+		time.sleep(240)
 
 	elif (e.status_code == 404):
 		print username + " - " +  e.error_message #Rate limited
-		time.sleep(360)	
+		#time.sleep(360)
+		time.sleep(240)	
 		
 	elif (e.status_code == 500):
 		print username + " - " +  e.error_message #errore JSON
-		time.sleep(180)
+		#time.sleep(180)
+		time.sleep(120)
 							
 	elif (e.status_code == 502):
 		print username + " - " +  e.error_message #errore JSON
-		time.sleep(180)
+		#time.sleep(180)
+		time.sleep(120)
 
 	elif (e.status_code == 503):
 		print username + " - " +  e.error_message #Rate limited	
-		time.sleep(180)			
+		#time.sleep(180)
+		time.sleep(120)			
 		
 	elif (e.status_code == 504):
 		print username + " - " +  e.error_message #errore JSON
-		time.sleep(180)	
+		#time.sleep(180)
+		time.sleep(120)	
 	else:
 		codice = e.status_code
 		if(codice == "Rate limited"):
-			time.sleep(360)
+			#time.sleep(360)
+			time.sleep(240)
 			print username + " - Rate limited" 
 				
 		else:
-			time.sleep(360)
+			#time.sleep(360)
+			time.sleep(240)
 			print username + " - " + 'errore mortale'
 			print codice
 			logger.error("errore mortale", exc_info=True)
