@@ -21,7 +21,7 @@
           	<ul class="nav navbar-nav navbar-right">
           		<li><a href="#pricing" class="smooth-price">{{prezzi}}</a></li>
 			    <li><a href="javascript:openTerms()">{{termini}}</a></li>
-			    <li><a href="//www.iubenda.com/privacy-policy/203721" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">{{privacy}}</a></li>
+			    <li><a href="{{iubenda_link}}" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">{{privacy}}</a></li>
 			    <li><a href="javascript:openSupport('{{email}}')">{{supporto}}</a></li>
 			    <li><a href="javascript:openChange()">{{cambia_email}}</a></li>
 			    <li><a href="javascript:loggingOut('1')">{{logout}}</a></li>
@@ -32,14 +32,19 @@
 			   		<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
 			   			<li role="presentation">
 			   				<a role="menuitem" tabindex="-1" href="javascript:changeLang('it')">
-			   					ITALIANO
+			   					Italiano
 			   				</a>
 			   			</li>
    						<li role="presentation">
    							<a role="menuitem" tabindex="-1" href="javascript:changeLang('en')">
-   								ENGLISH
+   								English
    							</a>
    						</li>
+   						<li role="presentation">
+   							<a role="menuitem" tabindex="-1" href="javascript:changeLang('ro')">
+   								Română
+   							</a>
+   						</li>   						
    					</ul>
 				</li>
 			</ul>
@@ -51,7 +56,7 @@
 
 <!-- Inizio corpo -->
 <div class = "container" id = "corpo">
-	<h3>Welcome,</h3>
+	<h3>{{benvenuto_avatar_string}},</h3>
 	<!-- Inizio riga con i dati -->
     <div class="row">
 		<div class="col-md-6">
@@ -739,7 +744,7 @@
 				<ul class="list-unstyled">
 					<li class="pull-right"><a href="#top" class="smooth-top">{{torna_in_cima}}</a></li>
 					<li><a href="javascript:openTerms()">{{termini}}</a></li>
-					<li><a href="//www.iubenda.com/privacy-policy/203721" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">{{privacy}}</a></li>
+					<li><a href="{{iubenda_link}}" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">{{privacy}}</a></li>
 				</ul>
 				<p>
 					Instautomation.com © 2015 - <a href="http://www.socialcities.co" target="_blank">SocialCities s.r.l.</a>

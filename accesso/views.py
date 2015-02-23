@@ -34,39 +34,57 @@ from postmonkey import PostMonkey
 MIOIP = settings.IP_LOCALE
 CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
 	
+from django.utils import translation	
 def index(request):
 	template_name = "instalogin.html"
 
 	numero_iscritti = Utente.objects.filter().count()
-
-	linguaggio = request.META['LANGUAGE']
 	
+	#linguaggio = request.META['LANGUAGE']
+	linguaggio = translation.get_language_from_request(request)
+
 	if linguaggio == 'it':	
 		welcome = "Benvenuto su Instautomation"
-		sub_welcome = '<p>Un nuovo BOT per <span class="hue coloured">ottimizzare</span> il tuo account Instagram</p>'
+		sub_welcome = '<p>Un nuovo modo per <span class="hue coloured">ottimizzare</span> le funzioni di Instagram!</p>'
 		start_now = 'INIZIA ORA GRATIS!'
 		small_credits = '<i>Usando Instautomation, accetti i nostri <a href="javascript:openTerms()">termini di servizio</a> e la nostra <a href="//www.iubenda.com/privacy-policy/203721" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">privacy policy</a></i>'
-		titolo_target = 'IL <span class="hue coloured">TARGET</span> PRIMA DI TUTTO.'
-		corpo_target = 'Instautomation works in a <span class="hue coloured">smart</span> way that engages people potentially interested in your profile. You have to select <span class="hue coloured">precise hashtags</span> and <span class="hue coloured">profiles</span> that has a strong traffic of people interested in your profile'
-		titolo_plan = 'SCEGLI IL <br /><span class="hue coloured">PIANO</span> CHE PREFERISCI.'
-		corpo_plan = 'Our plan is about time consumption. Configure Instautomation, start the <span class="hue coloured">free trial</span> and click start. If you are satisfied by our service, you can choose from <span class="hue coloured">three</span> different choices for your need'
+		titolo_target = "L'importanza del <span class='hue coloured'>TARGET</span>"
+		corpo_target = 'Instautomation lavora in maniera <span class="hue coloured">intelligente</span>: utilizza i giusti <span class="hue coloured">target</span> ed <span class="hue coloured">hashtag</span> per portare più traffico al tuo profilo ed aumentare i tuoi <span class="hue coloured">follower</span>'
+		titolo_plan = 'Scegli la <span class="hue coloured">TUA</span> offerta!'
+		corpo_plan = 'Il servizio è <span class="hue coloured">gratuito</span> per due giorni dalla tua iscrizione. Se la prova gratis soddisfa le tue esigenze, potrai scegliere uno dei nostri <span class="hue coloured">tre</span> differenti pacchetti.'
 		termini = 'Termini di servizio'
 		privacy = 'Privacy'
 		chiudi = 'Chiudi'
 		torna_in_cima = 'Torna in cima'
+		iubenda_link = '//www.iubenda.com/privacy-policy/578901'
+	elif linguaggio == 'ro':
+		welcome = "Bine ați venit pe Instautomation!"
+		sub_welcome = '<p>Un nou mod de a <span class="hue coloured">optimiza</span> utilizarea programului Instagram!</p>'
+		start_now = 'INCEPE ACUMA GRATIS!'
+		small_credits = 'Utilizand Instautomation accepți condițiile de utilizare și politica de privacy'
+		titolo_target = '<span class="hue coloured">Targetul</span> conteaza!'
+		corpo_target = 'Instautomation lucreaza în mod <span class="hue coloured">inteligent</span>: utilizeaza targetul și <span class="hue coloured">hashtagul potrivit</span> pentru a aduce mai mult trafic de persoane interesate de <span class="hue coloured">profilul</span> tau și face sa-ți creasca numarul de Followers.'
+		titolo_plan = 'Alege <span class="hue coloured">oferta</span> potrivita!'
+		corpo_plan = 'Serviciu este <span class="hue coloured">gratuit</span> pentru primele doua zile. Daca proba gratis satisface dorințele tale, poți să alegi una dintre cele <span class="hue coloured">trei</span> propuneri oferite de noi.'
+		termini = 'Termeni'
+		privacy = 'Confidenţialitate'
+		chiudi = 'Închide'
+		torna_in_cima = 'Back to top' 
+		iubenda_link = '//www.iubenda.com/privacy-policy/203721'		
 	else:
 		welcome = "Welcome to Instautomation!"
-		sub_welcome = 'A new generation of transparent BOT that provides <span class="hue coloured">optimization</span> for Instagram.'
+		sub_welcome = 'A new way that provide <span class="hue coloured">optimization</span> for Instagram.'
 		start_now = 'START NOW FOR FREE!'
 		small_credits = '<i>By using Instautomation, you agree to the <a href="javascript:openTerms()">Terms of Service</a> and <a href="//www.iubenda.com/privacy-policy/203721" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">Privacy Policy</a><script type="text/javascript" src="//cdn.iubenda.com/iubenda_i_badge.js"></script></i>'
 		titolo_target = '<span class="hue coloured">TARGETING</span> MATTERS.'
-		corpo_target = 'Instautomation works in a <span class="hue coloured">smart</span> way that engages people potentially interested in your profile. You have to select <span class="hue coloured">precise hashtags</span> and <span class="hue coloured">profiles</span> that has a strong traffic of people interested in your profile'
-		titolo_plan = 'CHOOSE THE BEST <br><span class="hue coloured">PLAN</span> FOR YOU.'
-		corpo_plan = 'Our plan is about time consumption. Configure Instautomation, start the <span class="hue coloured">free trial</span> and click start. If you are satisfied by our service, you can choose from <span class="hue coloured">three</span> different choices for your need'
+		corpo_target = 'Instautomation works in a <span class="hue coloured">smart</span> way. Using <span class="hue coloured">precise hashtags</span> and the <span class="hue coloured">right target</span> you can increase the number of your followers.'
+		titolo_plan = 'CHOOSE THE <span class="hue coloured">BEST</span> FOR YOU.'
+		corpo_plan = 'You start with the <span class="hue coloured">free trial</span> for two days, than, if you are satisfied by our service, you can choose one of our <span class="hue coloured">three</span> different packs.'
 		termini = 'Our terms'
 		privacy = 'Privacy'
 		chiudi = 'Close'
 		torna_in_cima = 'Back to top'
+		iubenda_link = '//www.iubenda.com/privacy-policy/203721'		
 
 	variabili = {
 	'numero_iscritti' : numero_iscritti, 
@@ -81,7 +99,8 @@ def index(request):
 	'termini' : termini,
 	'privacy' : privacy,
 	'chiudi' : chiudi,
-	'torna_in_cima' : torna_in_cima
+	'torna_in_cima' : torna_in_cima,
+	'iubenda_link' : iubenda_link
 	}
 
 	return render(request, template_name, variabili)
@@ -119,9 +138,12 @@ def access(request):
 
 		followed_by = informazioni.counts['followed_by']
 
-		linguaggio = request.META['LANGUAGE']
+		#linguaggio = request.META['LANGUAGE']
+		linguaggio = translation.get_language_from_request(request)
 		if linguaggio == 'it':
 			lingua = 'it'
+		elif linguaggio == 'ro':
+			lingua = 'ro'
 		else:
 			lingua = 'en'
 
@@ -230,6 +252,8 @@ def home_page(request):
 
 				if lingua == 'it':
 					testo_regalo = "un giorno in più di utilizzo"
+				elif lingua == 'ro':
+					testo_regalo = "O zi în plus"
 				else:
 					testo_regalo = "one more free day"
 			else:
@@ -237,11 +261,15 @@ def home_page(request):
 
 				if lingua == 'it':
 					testo_regalo = str(giorni) + ' giorni in più di utilizzo'
+				elif lingua == "ro":
+					testo_regalo = str(giorni) + ' zile în plus'
 				else:
 					testo_regalo = str(giorni) + ' more free days'					
 
 			if lingua == 'it':
 				avviso = "Gentile utente, purtroppo il sistema si è bloccato per ragioni inaspettate. Ti abbiamo regalato "+testo_regalo+". Ci scusiamo per il disagio."
+			elif lingua == "ro":
+				avviso = "Dragă utiizator, din pacate sistemul sa blocat. Iți facem cadou încă"+testo_regalo+". Ne scuzam pentru disconfort."
 			else:
 				avviso = 'Dear user, unfortunately the system was blocked for unknown reasons. Your account has been enlarged with '+testo_regalo+'. Sorry for the inconvenience'
 			
@@ -264,6 +292,8 @@ def home_page(request):
 				if giorni == 1:
 					if lingua == 'it':
 						testo_regalo = "un giorno in più di utilizzo"
+					elif lingua == 'ro':
+						testo_regalo = "O zi în plus"	
 					else:
 						testo_regalo = "one more free day"					
 				else:
@@ -271,11 +301,15 @@ def home_page(request):
 
 					if lingua == 'it':
 						testo_regalo = str(giorni) + ' giorni in più di utilizzo'
+					elif lingua == "ro":
+						testo_regalo = str(giorni) + ' zile în plus'						
 					else:
 						testo_regalo = str(giorni) + ' more free days'	
 				
 				if lingua == 'it':
 					avviso = "Gentile utente, purtroppo il sistema si è bloccato per ragioni inaspettate. Ti abbiamo regalato "+testo_regalo+". Ci scusiamo per il disagio."
+				elif lingua == "ro":
+					avviso = "Dragă utiizator, din pacate sistemul sa blocat. Iți facem cadou încă"+testo_regalo+". Ne scuzam pentru disconfort."
 				else:
 					avviso = 'Dear user, unfortunately the system was blocked for unknown reasons. Your account has been enlarged with '+testo_regalo+'. Sorry for the inconvenience'
 
@@ -294,8 +328,14 @@ def home_page(request):
 		if lingua == 'it':
 			warning_string = 'Ciao!'
 			avviso = "Puoi iniziare ad usare Instautomation gratuitamente per due giorni!<br/>\
+			1) Aggiungi un utente target<br/>\
+			2) Scegli qualche bel hashtag (ti abbiamo inserito un paio di tag utili)<br/>\
+			3) Premi START!"
+		elif lingua == "ro":
+			warning_string = 'Salut!'
+			avviso = "Puoi iniziare ad usare Instautomation gratuitamente per due giorni!<br/>\
 			Per prima cosa aggiungi un utente target, quindi scegli qualche bel hashtag (ti abbiamo inserito un paio di tag utili), e infine...\
-			premi START!"
+			premi START!"			
 		else:
 			warning_string = 'Hi!'
 			avviso = 'You can start using Instautomation for free for 2 days!<br/>\
@@ -304,10 +344,14 @@ def home_page(request):
 	else:
 		if lingua == 'it':
 			warning_string = 'Attenzione!'
+		elif lingua == "ro":
+			warning_string = "Attenție!"	
 		else:
 			warning_string = 'Warning!'			
 
 	status_obj_attivi = TaskStatus.objects.filter(utente = instance, completato = False).exists()	
+
+	print lingua
 
 	if lingua == 'it':
 		prezzi = "Prezzi"
@@ -397,6 +441,98 @@ def home_page(request):
 		num_tag_modal_string = "Una parola alla volta!"
 		insert_a_tag_place = 'Inserisci un TAG'
 		lingua_string = 'Lingua'
+		iubenda_link = '//www.iubenda.com/privacy-policy/578901'
+		benvenuto_avatar_string = 'Benvenuto'
+	elif lingua == 'ro':
+		prezzi = "Prețuri"
+		termini = 'Termeni'
+		privacy = 'Confidențialitate'
+		supporto = 'Ajutor'
+		cambia_email = 'Schimba adresa de email'
+		logout = 'Logout'
+		post_string = 'Posts'
+		follower_string = 'Followers'
+		following_string = 'Following'
+		nuovi_seguaci_string = 'Followers obținuți dupa registrare'
+		elapsed_time_string = 'Timp utilizat'
+		pause_string = 'PAUSA'
+		avvia_string = 'START'
+		total_time_string = 'Timp total'
+		giorni_string = 'zile'
+		tempo_restante_string = 'Timp rămas'
+		comprato_string = 'Cumparat'
+		rimanenti_string = 'Rămas'
+		compra_pacchetto_string = 'Pentru a utiliza sistemul trebuie să cumperi un nou pachet de zile!'
+		time_over_string = 'Ai gatat timpul la dispoziție'
+		avviso_partenza_string = 'După apăsarea butonului START, incepe timpul la dispoziție, nu se opreste până cănd nu scade.'
+		settings_title = 'Targets & Tags'
+		target_users_title = 'Utilizatorii target'
+		search_placeholder = 'Caută un utilizator target'
+		ricerca_string = 'Caută'
+		selected_users_string = 'Utilizatorii lezați'
+		selected_tags_string = "Tag selectați"
+		tags_string = 'Tags'
+		salva_sting = 'Salvează'
+		subscription_bonus_string = 'Bonus de bun venit'
+		giorni_free_subscription_string = '2 zile cadou de la înregistrare'
+		pay_tweet_string = 'Pay with a Tweet'
+		corpo_pay_tweet = 'Platește cu un Tweet și vei primi o zi de utilizare cadou'
+		un_giorno_free_string = 'O zi gratis'
+		gia_preso_string = 'Deja făcut!'
+		string_15_giorni_titolo = '15 zile la &euro;6.99'
+		entry_pack_string = 'Entry Pack'
+		string_15_giorni = '15 zile'
+		prezzo_15_giorni = '&euro;6.99'
+		paga_card_string = 'Platește cu cardul'
+		titolo_30_giorni = '30 zile la &euro;10.79'
+		standard_pack_string = 'Standard Pack'
+		string_30_giorni = '30 zile'
+		prezzo_30_giorni = '&euro;10.79'
+		titolo_90_giorni_string = '90 zile la &euro;24.49'
+		power_pack_string = 'Power Pack'
+		stringa_90_giorni = '90 zile'
+		prezzo_90_giorni_string = '&euro;24.49'
+		stringa_iva_inclusa = 'Prețuri TVA inclus.'
+		accettazione_termini_string = 'Acceptați condițiile de utilizare'
+		you_have_to_accept = 'Acceptați condițiile de utilizare și introduceți adresa de e-mail pentru a continua'
+		conferma_lettura_string = 'Am citit, și accept condițiile de utilizare *'
+		continua_string = 'Continuă'
+		aiuto_string = 'Ai nevoie de ajutor?'
+		titolo_string_supporto = 'Titlu *'
+		placeholder_titolo_supporto_string = 'Titlu'
+		messaggio_string_support = 'Mesaj *'
+		write_a_message_placeholder = 'Scrie un mesaj'
+		chiudi_string = 'Închide'
+		cambia_email_string = 'Schimbă adresa de email'
+		email_attuale_string = 'Adresa ta de email este'
+		nuova_email_string = 'Noua adresa de email *'
+		placeholder_nuova_email = 'introduceți o noua adresa de email'
+		conferma_nuova_email = 'Repetă noua adresa de email *'
+		conferma_email_string_placeholder = 'Confirmare noua adresa de email'
+		errore_corpo_modale_string = '<p>Ceva a mers prost!<br/>Vă rugăm să încercați din nou mai târziu.<br/>Pentru informați: info@instautomation.com</p>'		
+		errore_numero_tag_e_target = 'Pentru a utiliza serviciul introduceți un utilizator target sau un hashtag'
+		caricamento_string = 'Încărcare...'
+		torna_in_cima = 'Back to top'
+		no_target_found_string = 'Nici un utilizator target găsit'
+		utente_esiste_string = 'Target deja folosit!'
+		added_generico_string = 'Terminat!'
+		tag_esistente_string = 'Tag deja folosit'
+		choose_target_profile_string = 'Alege un profil target'
+		choose_tag_string = 'Alege un tag!'
+		your_account_string = "Accountul tau"
+		il_tuo_abbonamento_string = "Datele tale"
+		il_sistema_ha_generato = "Statistice"
+		utenti_stringa = 'utilizatorii'
+		seguiti_dal_sistema_string = 'Utilizatorii urmariți prin sistem'
+		liked_by_system_string = 'likeați prin sistem'
+		titolo_pagamenti_string = "Cumpăra mai multe zile"
+		aumenta_giorni_string = 'Adaugă alte zile!'
+		errore_myself_string = "Nu poți să te alegi pe tine ca și target!"
+		num_tag_modal_string = "Câte un cuvânt pe rând!"
+		insert_a_tag_place = 'introduceți un TAG'
+		lingua_string = 'Limbă'
+		iubenda_link = '//www.iubenda.com/privacy-policy/203721'
+		benvenuto_avatar_string = 'Bine ai venit'
 	else:
 		prezzi = "Prices"
 		termini = 'Our terms'
@@ -485,6 +621,8 @@ def home_page(request):
 		num_tag_modal_string = "One word at a time please!"
 		insert_a_tag_place = 'Insert a TAG'
 		lingua_string = 'Language'
+		iubenda_link = '//www.iubenda.com/privacy-policy/203721'
+		benvenuto_avatar_string = 'Welcome'
 
 	variabili = {
 		'termini' : termini,
@@ -578,6 +716,8 @@ def home_page(request):
 		'num_tag_modal_string' : num_tag_modal_string,
 		'insert_a_tag_place' : insert_a_tag_place,
 		'lingua_string' : lingua_string,
+		'iubenda_link' : iubenda_link,
+		'benvenuto_avatar_string' : benvenuto_avatar_string,
 
 		'username' : username,
 		'avatar' : avatar,
