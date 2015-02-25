@@ -61,7 +61,7 @@ def index(request):
 		welcome = "Bine ați venit pe Instautomation!"
 		sub_welcome = '<p>Un nou mod de a <span class="hue coloured">optimiza</span> utilizarea programului Instagram!</p>'
 		start_now = 'INCEPE ACUMA GRATIS!'
-		small_credits = 'Utilizand Instautomation accepți condițiile de utilizare și politica de privacy'
+		small_credits = '<i>Utilizand Instautomation accepți condițiile de utilizare și politica de privacy</i>'
 		titolo_target = '<span class="hue coloured">Targetul</span> conteaza!'
 		corpo_target = 'Instautomation lucreaza în mod <span class="hue coloured">inteligent</span>: utilizeaza targetul și <span class="hue coloured">hashtagul potrivit</span> pentru a aduce mai mult trafic de persoane interesate de <span class="hue coloured">profilul</span> tau și face sa-ți creasca numarul de Followers.'
 		titolo_plan = 'Alege <span class="hue coloured">oferta</span> potrivita!'
@@ -84,7 +84,7 @@ def index(request):
 		privacy = 'Confidentialité'
 		chiudi = 'Fermer'
 		torna_in_cima = 'Retour au sommet!'
-		iubenda_link = '//www.iubenda.com/privacy-policy/578901'				
+		iubenda_link = '//www.iubenda.com/privacy-policy/203721'				
 	else:
 		welcome = "Welcome to Instautomation!"
 		sub_welcome = 'A new way that provide <span class="hue coloured">optimization</span> for Instagram.'
@@ -394,8 +394,8 @@ def home_page(request):
 		modale_corpo_email_obbligatoria = "Abbiamo bisogno della tua email per poterti contattare in caso di bisogno"
 		sistema_attivo_string = "Il sistema è attivo!"
 		string_js_15_giorni = 'Entry Pack - 15 giorni'
-		string_js_30_giorni = 'Medium Pack - 30 giorni'
-		string_js_90_giorni = 'Long Pack - 90 giorni'
+		string_js_30_giorni = 'Standard Pack - 30 giorni'
+		string_js_90_giorni = 'Power Pack - 90 giorni'
 		invia_string = "Invia"
 		prezzi = "Prezzi"
 		termini = 'Termini di servizi'
@@ -492,8 +492,8 @@ def home_page(request):
 		modale_corpo_email_obbligatoria = "Avem nevoie de adresa ta de email pentru a-te contacta în caz de necesitate"		
 		sistema_attivo_string = "Sistemul este activ!"
 		string_js_15_giorni = 'Entry Pack - 15 zile'
-		string_js_30_giorni = 'Medium Pack - 30 zile'
-		string_js_90_giorni = 'Long Pack - 90 zile'
+		string_js_30_giorni = 'Standard Pack - 30 zile'
+		string_js_90_giorni = 'Power Pack - 90 zile'
 		invia_string = "Trimite"
 		prezzi = "Prețuri"
 		termini = 'Termeni'
@@ -588,8 +588,8 @@ def home_page(request):
 	elif lingua == 'fr':
 		sistema_attivo_string = " Le système est actif!"
 		string_js_15_giorni = 'Entry Pack - 15 jours'
-		string_js_30_giorni = 'Medium Pack - 30 jours'
-		string_js_90_giorni = 'Long Pack - 90 jours'
+		string_js_30_giorni = 'Standard Pack - 30 jours'
+		string_js_90_giorni = 'Power Pack - 90 jours'
 		invia_string = "Envoie"
 		prezzi = "Prix"
 		termini = "Conditions d'utilisation"
@@ -678,7 +678,7 @@ def home_page(request):
 		num_tag_modal_string = " Un mot à la fois!"
 		insert_a_tag_place = 'Insérez un TAG'
 		lingua_string = 'Langue'
-		iubenda_link = '//www.iubenda.com/privacy-policy/578901'
+		iubenda_link = '//www.iubenda.com/privacy-policy/203721'
 		benvenuto_avatar_string = 'Bienvenu'
 		email_string = "Email"
 		modale_titolo_email_obbligatoria = "Une dernière chose..."	
@@ -689,8 +689,8 @@ def home_page(request):
 		modale_corpo_email_obbligatoria = "We need your email address to contact you in case of problems"		
 		sistema_attivo_string = "System is running!"
 		string_js_15_giorni = 'Entry Pack - 15 Days'
-		string_js_30_giorni = 'Medium Pack - 30 Days'
-		string_js_90_giorni = 'Long Pack - 90 Days'
+		string_js_30_giorni = 'Standard Pack - 30 Days'
+		string_js_90_giorni = 'Power Pack - 90 Days'
 		invia_string = "Send"
 		prezzi = "Prices"
 		termini = 'Our terms'
