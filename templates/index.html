@@ -22,7 +22,7 @@
           		<li><a href="#pricing" class="smooth-price">{{prezzi}}</a></li>
 			    <li><a href="javascript:openTerms()">{{termini}}</a></li>
 			    <li><a href="{{iubenda_link}}" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">{{privacy}}</a></li>
-			    <li><a href="javascript:openSupport('{{email}}')">{{supporto}}</a></li>
+			    <li><a href="javascript:openSupport()">{{supporto}}</a></li>
 			    <li><a href="javascript:openChange()">{{cambia_email}}</a></li>
 			    <li><a href="javascript:loggingOut('1')">{{logout}}</a></li>
 			    <li class="dropdown">
@@ -44,7 +44,12 @@
    							<a role="menuitem" tabindex="-1" href="javascript:changeLang('ro')">
    								Română
    							</a>
-   						</li>   						
+   						</li>  
+   						<li role="presentation">
+   							<a role="menuitem" tabindex="-1" href="javascript:changeLang('fr')">
+   								Français
+   							</a>
+   						</li>     						 						
    					</ul>
 				</li>
 			</ul>
@@ -768,32 +773,69 @@
 			<div class="modal-body">
 				<form class="form-horizontal" id="ajax-contact-form">
 				  	<fieldset>
+				  		{% if email == None %}
+					    <div class="form-group">		      		
+					      	<label for="email_nuova_vuota" class="col-lg-3 control-label">
+					      			{{email_string}} *
+					      	</label>
+					     	<div class="col-lg-9">
+					       		<input type="email" class="form-control" name="email" id="email_nuova_vuota" placeholder="{{placeholder_nuova_email}}">
+					       	</div>
+					    </div>
+				  		{% endif %}
+
 				    	<div class="form-group">
-				      		<input id="inputEmail" type="hidden" name="" value="">
+				      		<input id="inputEmail" type="hidden" name="" value="">			      		
 				      		<label for="inputSubject" class="col-lg-3 control-label">
 				      			{{titolo_string_supporto}}
 				      		</label>
 				     		<div class="col-lg-9">
-				       			<input type="text" class="form-control" id="inputSubject" placeholder="{{placeholder_titolo_supporto_string}}"></div>
-				    		</div>
-				    		<div class="form-group">
-				      			<label for="inputMessage" class="col-lg-3 control-label">
-				      				{{messaggio_string_support}}
-				      			</label>
-				     			<div class="col-lg-9">
-				        			<textarea class="form-control" rows="3" id="inputMessage" placeholder="{{write_a_message_placeholder}}"></textarea>
-				       				<span class="help-block"></span>
-				      			</div>
-				   			</div>
+				       			<input type="text" class="form-control" id="inputSubject" placeholder="{{placeholder_titolo_supporto_string}}">
+				       		</div>
+				    	</div>
+				    	<div class="form-group">
+				      		<label for="inputMessage" class="col-lg-3 control-label">
+				      			{{messaggio_string_support}}
+				      		</label>
+				     		<div class="col-lg-9">
+				        		<textarea class="form-control" rows="3" id="inputMessage" placeholder="{{write_a_message_placeholder}}"></textarea>
+				       			<span class="help-block"></span>
+				      		</div>
 				   		</div>	
 				  	</fieldset>
-				</form>	
-				<div id="note"></div>		
-				<div class="modal-footer"></div>
-			</div>
+				</form>
+			</div>		
+			<div id="note"></div>		
+			<div class="modal-footer"></div>
 		</div>
 	</div>
-</div>	
+</div>
+
+<!-- Modale inserimento email -->
+<div id="prima_email_modal" class="modal fade">
+	<div class="modal-dialog">
+    	<div class="modal-content">
+      		<div class="modal-header">
+       			<h4 class="modal-title">
+       				{{modale_titolo_email_obbligatoria}}
+       			</h4>
+     		</div>
+     		<form id="modale_nuova_prima_email">
+     			{% csrf_token %}
+	      		<div class="modal-body">    			
+	      			<div class="form-group">
+	      				<p>{{modale_corpo_email_obbligatoria}}</p>
+					    <input type="email" name="email" class="form-control" id="id_email_form" placeholder="{{placeholder_nuova_email}}" required>
+					</div>
+	     		</div>
+	     		<div class="modal-footer">
+	       			<button type="submit" class="btn btn-primary">{{salva_sting}}</button>
+	      		</div>
+      		</form>
+    	</div>
+ 	</div>
+</div>
+
 
 <!-- Inizio footer -->
 <footer>
@@ -805,7 +847,7 @@
 					<li class="pull-right"><a href="#top" class="smooth-top">{{torna_in_cima}}</a></li>
 					<li><a href="javascript:openTerms()">{{termini}}</a></li>
 					<li><a href="{{iubenda_link}}" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">{{privacy}}</a></li>
-				</ul>invia_string
+				</ul>
 				<p>
 					Instautomation.com © 2015 - <a href="http://www.socialcities.co" target="_blank">SocialCities s.r.l.</a>
 				</p>
@@ -824,8 +866,7 @@ invia_string = "{{invia_string}}";
 string_js_15_giorni = "{{string_js_15_giorni}}";
 string_js_30_giorni = "{{string_js_30_giorni}}"; 
 string_js_90_giorni = "{{string_js_90_giorni}}";
-
-
+email = "{{email}}";
 </script>
 
 {% endblock %}

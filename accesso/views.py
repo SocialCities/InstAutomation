@@ -70,7 +70,21 @@ def index(request):
 		privacy = 'Confidenţialitate'
 		chiudi = 'Închide'
 		torna_in_cima = 'Back to top' 
-		iubenda_link = '//www.iubenda.com/privacy-policy/203721'		
+		iubenda_link = '//www.iubenda.com/privacy-policy/203721'
+	elif linguaggio == "fr":
+		welcome = "Soyez les bienvenus sur Instautomation!"
+		sub_welcome = "C’est une nouvelle façon <span class='hue coloured'>d'optimiser</span> les fonctions de l'Instagram"
+		start_now = 'COMMENCE MAINTENANT GRATUITEMENT!'
+		small_credits = '<i>Aide Instautomation, vous acceptez <a href="javascript:openTerms()">les conditions d’utilisation</a> et notre <a href="//www.iubenda.com/privacy-policy/203721" class="iubenda-nostyle no-brand iubenda-embed" title="politique de confidentialité">privacy policy</a></i>'		
+		titolo_target = "La <span class='hue coloured'>cible</span> est essentielle!"
+		corpo_target = "L'Instautomation travaille d'une manière <span class='hue coloured'>intelligente</span>: il utilise la <span class='hue coloured'>cible</span> et les <span class='hue coloured'>hashtags</span> convenables pour attirer plus de gens qui sont intéressés par votre profil et faire augmenter le nombre d’adeptes de <span class='hue coloured'>followers</span>."
+		titolo_plan = "Choisissez l'offre qui <span class='hue coloured'>vous</span> convient!"
+		corpo_plan = "Le service est <span class='hue coloured'>gratuit</span> pour les premiers deux jours. Si l'échantillon gratuit correspond à vos attentes, vous pouvez choisir l’une des <span class='hue coloured'>trois</span> offres, que nous mettons à votre disposition."
+		termini = "Conditions d'utilisation"
+		privacy = 'Confidentialité'
+		chiudi = 'Fermer'
+		torna_in_cima = 'Retour au sommet!'
+		iubenda_link = '//www.iubenda.com/privacy-policy/578901'				
 	else:
 		welcome = "Welcome to Instautomation!"
 		sub_welcome = 'A new way that provide <span class="hue coloured">optimization</span> for Instagram.'
@@ -144,6 +158,8 @@ def access(request):
 			lingua = 'it'
 		elif linguaggio == 'ro':
 			lingua = 'ro'
+		elif linguaggio == "fr":
+			lingua = "fr"
 		else:
 			lingua = 'en'
 
@@ -254,6 +270,8 @@ def home_page(request):
 					testo_regalo = "un giorno in più di utilizzo"
 				elif lingua == 'ro':
 					testo_regalo = "O zi în plus"
+				elif lingua == "fr":
+					testo_regalo = "un jour en plus d'utilisation"
 				else:
 					testo_regalo = "one more free day"
 			else:
@@ -263,6 +281,8 @@ def home_page(request):
 					testo_regalo = str(giorni) + ' giorni in più di utilizzo'
 				elif lingua == "ro":
 					testo_regalo = str(giorni) + ' zile în plus'
+				elif lingua == "fr":
+					testo_regalo = str(giorni) + ' plus jours'
 				else:
 					testo_regalo = str(giorni) + ' more free days'					
 
@@ -270,6 +290,8 @@ def home_page(request):
 				avviso = "Gentile utente, purtroppo il sistema si è bloccato per ragioni inaspettate. Ti abbiamo regalato "+testo_regalo+". Ci scusiamo per il disagio."
 			elif lingua == "ro":
 				avviso = "Dragă utiizator, din pacate sistemul sa blocat. Iți facem cadou încă"+testo_regalo+". Ne scuzam pentru disconfort."
+			elif lingua == "fr":
+				avviso = "Gentil utilisateur, le système s'est malheurosement bloqué puor raisons inattendues. On t'ai offert "+testo_regalo+". Veuillez nous excuser pour les troubles occasionnés."
 			else:
 				avviso = 'Dear user, unfortunately the system was blocked for unknown reasons. Your account has been enlarged with '+testo_regalo+'. Sorry for the inconvenience'
 			
@@ -293,7 +315,9 @@ def home_page(request):
 					if lingua == 'it':
 						testo_regalo = "un giorno in più di utilizzo"
 					elif lingua == 'ro':
-						testo_regalo = "O zi în plus"	
+						testo_regalo = "O zi în plus"
+					elif lingua == "fr":
+						testo_regalo = "un jour en plus d'utilisation"	
 					else:
 						testo_regalo = "one more free day"					
 				else:
@@ -302,7 +326,9 @@ def home_page(request):
 					if lingua == 'it':
 						testo_regalo = str(giorni) + ' giorni in più di utilizzo'
 					elif lingua == "ro":
-						testo_regalo = str(giorni) + ' zile în plus'						
+						testo_regalo = str(giorni) + ' zile în plus'
+					elif lingua == "fr":
+						testo_regalo = str(giorni) + ' plus jours'												
 					else:
 						testo_regalo = str(giorni) + ' more free days'	
 				
@@ -310,6 +336,8 @@ def home_page(request):
 					avviso = "Gentile utente, purtroppo il sistema si è bloccato per ragioni inaspettate. Ti abbiamo regalato "+testo_regalo+". Ci scusiamo per il disagio."
 				elif lingua == "ro":
 					avviso = "Dragă utiizator, din pacate sistemul sa blocat. Iți facem cadou încă"+testo_regalo+". Ne scuzam pentru disconfort."
+				elif lingua == "fr":
+					avviso = "Gentil utilisateur, le système s'est malheurosement bloqué puor raisons inattendues. On t'ai offert "+testo_regalo+". Veuillez nous excuser pour les troubles occasionnés."
 				else:
 					avviso = 'Dear user, unfortunately the system was blocked for unknown reasons. Your account has been enlarged with '+testo_regalo+'. Sorry for the inconvenience'
 
@@ -328,30 +356,42 @@ def home_page(request):
 		if lingua == 'it':
 			warning_string = 'Ciao!'
 			avviso = "Puoi iniziare ad usare Instautomation gratuitamente per due giorni!<br/>\
-			1) Aggiungi un utente target<br/>\
-			2) Scegli qualche bel hashtag (ti abbiamo inserito un paio di tag utili)<br/>\
+			1) Aggiungi un utente target con i contenuti simili ai tuoi<br/>\
+			2) Scegli qualche hashtag su cui fare like (te ne abbiamo già inseriti un paio)<br/>\
 			3) Premi START!"
+		elif lingua == "fr":
+			warning_string = 'Salut!'
+			avviso = "Tu peux commencer à utiliser Instautomation gratuitement pour deux jours!<br/>\
+			1) Ajoutez un utilisateur target avec les contenus semblables aux tiens<br/>\
+			2) Choisissez quelques hashtag sur lequel faire like (nous avons déjà insérés quelqu’un)<br/>\
+			3) Presser START!"
 		elif lingua == "ro":
 			warning_string = 'Salut!'
-			avviso = "Puoi iniziare ad usare Instautomation gratuitamente per due giorni!<br/>\
-			Per prima cosa aggiungi un utente target, quindi scegli qualche bel hashtag (ti abbiamo inserito un paio di tag utili), e infine...\
-			premi START!"			
+			avviso = "Puteți utiliza Instautomation gratis pentru doua zile!<br/>\
+			1) Adăuga un utilizator target cu interese similare<br/>\
+			2) Alege hashtaguri potrivit(v-am sugerat câteva)<br/>\
+			3) Apasă START!"			
 		else:
 			warning_string = 'Hi!'
-			avviso = 'You can start using Instautomation for free for 2 days!<br/>\
-			First add an user target, then choose some cool hashtag (we give you a couple for start), then...\
-			push START!'			
+			avviso = "You can start using Instautomation free for two days!<br/>\
+			1) Add an user target  who has your similar contents.<br/>\
+			2) Choose some hastag to autolike (we give you a couple!)<br/>\
+			3) Push START!"			
 	else:
 		if lingua == 'it':
 			warning_string = 'Attenzione!'
 		elif lingua == "ro":
-			warning_string = "Attenție!"	
+			warning_string = "Attenție!"
+		elif lingua == "fr":
+			warning_string = "Avertissement!"	
 		else:
 			warning_string = 'Warning!'			
 
 	status_obj_attivi = TaskStatus.objects.filter(utente = instance, completato = False).exists()	
 
 	if lingua == 'it':
+		modale_titolo_email_obbligatoria = "Ancora un attimo..."
+		modale_corpo_email_obbligatoria = "Abbiamo bisogno della tua email per poterti contattare in caso di bisogno"
 		sistema_attivo_string = "Il sistema è attivo!"
 		string_js_15_giorni = 'Entry Pack - 15 giorni'
 		string_js_30_giorni = 'Medium Pack - 30 giorni'
@@ -446,7 +486,10 @@ def home_page(request):
 		lingua_string = 'Lingua'
 		iubenda_link = '//www.iubenda.com/privacy-policy/578901'
 		benvenuto_avatar_string = 'Benvenuto'
+		email_string = "Email"
 	elif lingua == 'ro':
+		modale_titolo_email_obbligatoria = "Încă un pic..."
+		modale_corpo_email_obbligatoria = "Avem nevoie de adresa ta de email pentru a-te contacta în caz de necesitate"		
 		sistema_attivo_string = "Sistemul este activ!"
 		string_js_15_giorni = 'Entry Pack - 15 zile'
 		string_js_30_giorni = 'Medium Pack - 30 zile'
@@ -541,7 +584,109 @@ def home_page(request):
 		lingua_string = 'Limbă'
 		iubenda_link = '//www.iubenda.com/privacy-policy/203721'
 		benvenuto_avatar_string = 'Bine ai venit'
+		email_string = "Email"
+	elif lingua == 'fr':
+		sistema_attivo_string = " Le système est actif!"
+		string_js_15_giorni = 'Entry Pack - 15 jours'
+		string_js_30_giorni = 'Medium Pack - 30 jours'
+		string_js_90_giorni = 'Long Pack - 90 jours'
+		invia_string = "Envoie"
+		prezzi = "Prix"
+		termini = "Conditions d'utilisation"
+		privacy = 'Confidentialité'
+		supporto = 'Soutien'
+		cambia_email = 'Change ton adresse email'
+		logout = 'Logout'
+		post_string = 'Post'
+		follower_string = 'Follower'
+		following_string = 'Following'
+		nuovi_seguaci_string = "nouveaux followers de l'enregistrement"
+		elapsed_time_string = 'Temps passé'
+		pause_string = 'PAUSE'
+		avvia_string = 'START'
+		total_time_string = 'Temps total acheté'
+		giorni_string = 'jours'
+		tempo_restante_string = 'Temps reste'
+		comprato_string = 'Acheté'
+		rimanenti_string = 'Reste'
+		compra_pacchetto_string = 'Pour utiliser le système tu dois acheter un nouveau paquet de jours!'
+		time_over_string = 'Tu as épuisé le temps'
+		avviso_partenza_string = "Une fois pressée le bouton de commencement, le temps commencera à couler, et il ne sera pas possible de l'arrêter jusqu'à la sa conclusion."
+		settings_title = 'Targets & Tags'
+		target_users_title = 'Utilisateurs target'
+		search_placeholder = 'Cherche un utilisateur target'
+		ricerca_string = 'Cherche'
+		selected_users_string = 'Utilisateurs sélectionnés'
+		selected_tags_string = "Tags sélectionnés"
+		tags_string = 'Tag'
+		salva_sting = 'Sauver'
+		subscription_bonus_string = 'Bonus de bienvenu'
+		giorni_free_subscription_string = "2 jours en cadeau à l'inscription"
+		pay_tweet_string = 'Pay with a Tweet'
+		corpo_pay_tweet = 'Paie avec un tweet et tu reçois un jour de jouissance en cadeau'
+		un_giorno_free_string = '1 jour gratis'
+		gia_preso_string = 'Déjà effectué!'
+		string_15_giorni_titolo = '15 jours a &euro;6.99'
+		entry_pack_string = 'Entry Pack'
+		string_15_giorni = '15 jours'
+		prezzo_15_giorni = '&euro;6.99'
+		paga_card_string = 'Paye par carte de crédit'
+		titolo_30_giorni = '30 jours a &euro;10.79'
+		standard_pack_string = 'Standard Pack'
+		string_30_giorni = '30 jours'
+		prezzo_30_giorni = '&euro;10.79'
+		titolo_90_giorni_string = '90 jours a &euro;24.49'
+		power_pack_string = 'Power Pack'
+		stringa_90_giorni = '90 jours'
+		prezzo_90_giorni_string = '&euro;24.49'
+		stringa_iva_inclusa = 'Prix TVA incluse.'
+		accettazione_termini_string = 'Acceptation des conditions d’utilisation'
+		you_have_to_accept = 'Tu dois accepter les termes de service et saisir une adresse email pour continuer.'		
+		conferma_lettura_string = "J'ai lu les termes et je consens aux conditions *"
+		continua_string = 'Continue'
+		aiuto_string = "Tu as besoin d'aide?"
+		titolo_string_supporto = 'Titre *'
+		placeholder_titolo_supporto_string = 'Titre'
+		messaggio_string_support = 'Message *'
+		write_a_message_placeholder = 'Ècrivez un messagge'
+		chiudi_string = 'Fermer' 
+		cambia_email_string = 'Change ton adresse email'
+		email_attuale_string = 'Ton adresse email est'
+		nuova_email_string = 'Nouvelle adresse email*'
+		placeholder_nuova_email = 'Saisissez la nouvelle adresse email'
+		conferma_nuova_email = 'Répètes la nouvelle adresse email *'
+		conferma_email_string_placeholder = 'Confirmes votre adresse email'
+		errore_corpo_modale_string = '<p>Quelque chose est allé de travers!<br/>S’il vous plait, veulles réessayer plus tard.<br/>Pour avoir des information écris-nous à info@instautomation.com</p>'		
+		errore_numero_tag_e_target = 'Pour commencer à utiliser le système tu dois insérer au moins un utilisateur target et au moins un hashtag'
+		caricamento_string = 'Chargement...'
+		torna_in_cima = 'Retour au sommet!'
+		no_target_found_string = 'Aucun utilisateur target trouvé'
+		utente_esiste_string = 'Target déjà inséré!'
+		added_generico_string = 'Fait!'
+		tag_esistente_string = 'Tag déjà inséré '
+		choose_target_profile_string = 'Choisissez un profil target'
+		choose_tag_string = 'Choisissez un tag!'
+		your_account_string = "Ton account"
+		il_tuo_abbonamento_string = "Tes données"
+		il_sistema_ha_generato = "Statistique"
+		utenti_stringa = ' utilisateurs '
+		seguiti_dal_sistema_string = 'suivi par le système'
+		liked_by_system_string = 'like par le système'
+		titolo_pagamenti_string = "Augmentez les jours"
+		aumenta_giorni_string = "Augmentez les jours!"
+		errore_myself_string = "Tu ne peux pas choisir tu même comme target !"
+		num_tag_modal_string = " Un mot à la fois!"
+		insert_a_tag_place = 'Insérez un TAG'
+		lingua_string = 'Langue'
+		iubenda_link = '//www.iubenda.com/privacy-policy/578901'
+		benvenuto_avatar_string = 'Bienvenu'
+		email_string = "Email"
+		modale_titolo_email_obbligatoria = "Une dernière chose..."	
+		modale_corpo_email_obbligatoria = "Nous avons besoin de ton adresse email pour pouvoir t'avertir en cas de problèmes"		
+			
 	else:
+		modale_titolo_email_obbligatoria = "One more thing..."
+		modale_corpo_email_obbligatoria = "We need your email address to contact you in case of problems"		
 		sistema_attivo_string = "System is running!"
 		string_js_15_giorni = 'Entry Pack - 15 Days'
 		string_js_30_giorni = 'Medium Pack - 30 Days'
@@ -636,8 +781,12 @@ def home_page(request):
 		lingua_string = 'Language'
 		iubenda_link = '//www.iubenda.com/privacy-policy/203721'
 		benvenuto_avatar_string = 'Welcome'
+		email_string = "Email"
 
 	variabili = {
+		'email_string' : email_string,
+		'modale_titolo_email_obbligatoria' : modale_titolo_email_obbligatoria,
+		'modale_corpo_email_obbligatoria' : modale_corpo_email_obbligatoria,
 		'sistema_attivo_string' : sistema_attivo_string,
 		'string_js_15_giorni' : string_js_15_giorni,
 		'string_js_30_giorni' : string_js_30_giorni,
@@ -894,4 +1043,23 @@ def change_lang(request):
 	lingua = request.POST['lingua']
 
 	Utente.objects.filter(utente = instance).update(lingua = lingua)
+	return HttpResponse()
+
+
+@login_required(login_url='/login')
+def salva_email(request):
+	instance = UserSocialAuth.objects.get(user=request.user, provider='instagram')
+
+	email = request.POST['email']
+
+	try:
+		apikey = 'a36024c7bb5504d63b61963dd9741fa2-us8'
+		mailid = 'c4ed436de6'
+
+		pm = PostMonkey(apikey)
+		pm.listSubscribe(id = mailid, email_address = email, double_optin = False)
+	except:
+		pass
+
+	Utente.objects.filter(utente = instance).update(email = email)
 	return HttpResponse()

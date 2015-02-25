@@ -62,8 +62,8 @@ def like_task(access_token, user_instance, api):
 
 				if conto_like < 100:
 					try:
-						#sleeping_time = random.randint(60, 300)
-						sleeping_time = random.randint(30, 240)
+						#sleeping_time = random.randint(30, 240)
+						sleeping_time = random.randint(30, 120)
 						time.sleep(sleeping_time)
 						api.like_media(id_elemento)
 

@@ -77,7 +77,7 @@ def kill_all_tasks(instance):
 
 def errore_mortale(e, instance):
 	username = instance.extra_data['username']
-	if (e.status_code == 400):
+	if (e.status_code == 400) or (e.status_code == "400"):
 		if (e.error_type == 'OAuthParameterException'):
 			print username + " - " + e.error_message #Token errore
 			utente_obj = Utente.objects.get(utente = instance)
@@ -94,53 +94,53 @@ def errore_mortale(e, instance):
 					
 		elif (e.error_type == 'APINotAllowedError'):
 			print username + " - " +  e.error_message
-			#time.sleep(180)
-			time.sleep(120)
+			#time.sleep(120)
+			time.sleep(60)
 
 		elif (e.error_type == 'APINotFoundError'):
 			print username + " - " +  e.error_message
-			#time.sleep(180)
-			time.sleep(120)	
+			#time.sleep(120)
+			time.sleep(60)	
 			
-	elif (e.status_code == 429):
+	elif (e.status_code == 429) or (e.status_code == "429"):
 		print username + " - " +  e.error_message #Rate limited
-		#time.sleep(360)
-		time.sleep(240)
-
-	elif (e.status_code == 404):
-		print username + " - " +  e.error_message #Rate limited
-		#time.sleep(360)
-		time.sleep(240)	
-		
-	elif (e.status_code == 500):
-		print username + " - " +  e.error_message #errore JSON
-		#time.sleep(180)
-		time.sleep(120)
-							
-	elif (e.status_code == 502):
-		print username + " - " +  e.error_message #errore JSON
-		#time.sleep(180)
+		#time.sleep(240)
 		time.sleep(120)
 
-	elif (e.status_code == 503):
-		print username + " - " +  e.error_message #Rate limited	
-		#time.sleep(180)
-		time.sleep(120)			
-		
-	elif (e.status_code == 504):
-		print username + " - " +  e.error_message #errore JSON
-		#time.sleep(180)
+	elif (e.status_code == 404) or (e.status_code == "404"):
+		print username + " - " +  e.error_message #Rate limited
+		#time.sleep(240)
 		time.sleep(120)	
+		
+	elif (e.status_code == 500) or (e.status_code == "500"):
+		print username + " - " +  e.error_message #errore JSON
+		#time.sleep(120)
+		time.sleep(60)
+							
+	elif (e.status_code == 502) or (e.status_code == "502"):
+		print username + " - " +  e.error_message #errore JSON
+		#time.sleep(120)
+		time.sleep(60)
+
+	elif (e.status_code == 503) or (e.status_code == "503"):
+		print username + " - " +  e.error_message #Rate limited	
+		#time.sleep(120)
+		time.sleep(60)			
+		
+	elif (e.status_code == 504) or (e.status_code == "504"):
+		print username + " - " +  e.error_message #errore JSON
+		#time.sleep(120)
+		time.sleep(60)
 	else:
 		codice = e.status_code
 		if(codice == "Rate limited"):
-			#time.sleep(360)
-			time.sleep(240)
+			#time.sleep(240)
+			time.sleep(120)
 			print username + " - Rate limited" 
 				
 		else:
-			#time.sleep(360)
-			time.sleep(240)
+			#time.sleep(240)
+			time.sleep(120)
 			print username + " - " + 'errore mortale'
 			print codice
 			logger.error("errore mortale", exc_info=True)

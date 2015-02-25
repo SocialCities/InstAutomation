@@ -50,8 +50,8 @@ def avvia_task_pulizia_follower(token, instance, task_diretto, id_task_padre):
 		user_id = utente.id_utente 
 		check_limite(api)
 
-		#sleeping_time = random.randint(60, 300)
-		sleeping_time = random.randint(30, 240)
+		#sleeping_time = random.randint(30, 240)
+		sleeping_time = random.randint(30, 120)
 		time.sleep(sleeping_time)	
 
 		try:
@@ -123,8 +123,8 @@ def start_follow(instance, api):
 							
 							if (esistenza_nuovo_user is False) and (esistenza_in_white is False) and (is_private is False):
 						
-								#sleeping_time = random.randint(60, 300)
-								sleeping_time = random.randint(30, 240)
+								#sleeping_time = random.randint(30, 240)
+								sleeping_time = random.randint(30, 120)
 								time.sleep(sleeping_time)	
 								
 								api.follow_user(user_id = utente.id)
