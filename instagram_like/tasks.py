@@ -11,7 +11,7 @@ import random
 import time
 import logging
 logger = logging.getLogger('django')
-
+import httplib2
 from instautomation.utility import check_limite, errore_mortale
 
 MIOIP = settings.IP_LOCALE
@@ -74,6 +74,9 @@ def like_task(access_token, user_instance, api):
 						errore_mortale(errore, user_instance)
 
 					except InstagramClientError as errore2:
-						errore_mortale(errore2, user_instance)	
+						errore_mortale(errore2, user_instance)
+
+					except httplib2.ServerNotFoundError:
+   						time.sleep(120)		
 	
 	return "Stop like"						

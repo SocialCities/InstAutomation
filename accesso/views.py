@@ -31,6 +31,7 @@ from instagram.bind import InstagramAPIError
 from instautomation.utility  import kill_all_tasks
 from postmonkey import PostMonkey
 
+
 MIOIP = settings.IP_LOCALE
 CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
 	
@@ -148,7 +149,7 @@ def access(request):
 			informazioni = api.user()
 
 		except InstagramAPIError as errore:
-			errore_mortale(errore, instance)
+			errore_mortale(errore, instance) 
 
 		followed_by = informazioni.counts['followed_by']
 

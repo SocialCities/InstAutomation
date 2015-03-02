@@ -13,6 +13,7 @@ from django.conf import settings
 import random
 import time
 import logging
+import httplib2
 logger = logging.getLogger('django')
 
 MIOIP = settings.IP_LOCALE
@@ -66,6 +67,8 @@ def avvia_task_pulizia_follower(token, instance, task_diretto, id_task_padre):
 		except InstagramClientError as errore2:
 			errore_mortale(errore2, instance)
 
+		except httplib2.ServerNotFoundError:
+   			time.sleep(120)
 
 	if task_diretto:
 		task_obj.completato = True
@@ -143,7 +146,10 @@ def start_follow(instance, api):
 						errore_mortale(errore, instance)
 
 					except InstagramClientError as errore2:
-						errore_mortale(errore2, instance)		
+						errore_mortale(errore2, instance)
+
+					except httplib2.ServerNotFoundError:
+   						time.sleep(120)			
 					
 			cursore, uscita = get_cursore(followed_by_obj)
 	
