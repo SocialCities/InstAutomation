@@ -357,7 +357,7 @@ def home_page(request):
 		if lingua == 'it':
 			warning_string = 'Ciao!'
 			avviso = "Puoi iniziare ad usare Instautomation gratuitamente per due giorni!<br/>\
-			1) Aggiungi un utente target con i contenuti simili ai tuoi<br/>\
+			1) Aggiungi uno o più utenti target con i contenuti simili ai tuoi<br/>\
 			2) Scegli qualche hashtag su cui fare like (te ne abbiamo già inseriti un paio)<br/>\
 			3) Premi START!"
 		elif lingua == "fr":
@@ -391,6 +391,8 @@ def home_page(request):
 	status_obj_attivi = TaskStatus.objects.filter(utente = instance, completato = False).exists()	
 
 	if lingua == 'it':
+		corpo_choose_target_profile_string = "Cerca e seleziona profili influenti come marchi leader, VIP o persone che rispecchiano i tuoi interessi."
+		corpo_choose_tag_string = "Aggiungi i tag più popolari o che utilizzi spesso nelle tue foto"
 		modale_titolo_email_obbligatoria = "Ancora un attimo..."
 		modale_corpo_email_obbligatoria = "Abbiamo bisogno della tua email per poterti contattare in caso di bisogno"
 		sistema_attivo_string = "Il sistema è attivo!"
@@ -471,8 +473,8 @@ def home_page(request):
 		utente_esiste_string = 'Target già inserito!'
 		added_generico_string = 'Fatto!'
 		tag_esistente_string = 'Tag già inserito'
-		choose_target_profile_string = 'Scegli un profilo target'
-		choose_tag_string = 'Scegli un tag!'
+		choose_target_profile_string = 'Aggiungi uno o più utenti target'
+		choose_tag_string = 'Scegli qualche hashtag'
 		your_account_string = "Il tuo account"
 		il_tuo_abbonamento_string = "I tuoi dati"
 		il_sistema_ha_generato = "Statistiche"
@@ -489,6 +491,8 @@ def home_page(request):
 		benvenuto_avatar_string = 'Benvenuto'
 		email_string = "Email"
 	elif lingua == 'ro':
+		corpo_choose_target_profile_string = "Caută și selecționeaza profile interesante tip un brand lider, VIP sau persoane interesate de aceleași lucruri ca și tine." 
+		corpo_choose_tag_string = "Adaugă tag-utile mai populare sau care le folosești des in pozele tale." 
 		modale_titolo_email_obbligatoria = "Încă un pic..."
 		modale_corpo_email_obbligatoria = "Avem nevoie de adresa ta de email pentru a-te contacta în caz de necesitate"		
 		sistema_attivo_string = "Sistemul este activ!"
@@ -569,8 +573,8 @@ def home_page(request):
 		utente_esiste_string = 'Target deja folosit!'
 		added_generico_string = 'Terminat!'
 		tag_esistente_string = 'Tag deja folosit'
-		choose_target_profile_string = 'Alege un profil target'
-		choose_tag_string = 'Alege un tag!'
+		choose_target_profile_string = 'Adaugă unul sau mai mulți utilizatori' 
+		choose_tag_string = 'Alege un hashtag' 
 		your_account_string = "Accountul tau"
 		il_tuo_abbonamento_string = "Datele tale"
 		il_sistema_ha_generato = "Statistice"
@@ -587,6 +591,8 @@ def home_page(request):
 		benvenuto_avatar_string = 'Bine ai venit'
 		email_string = "Email"
 	elif lingua == 'fr':
+		corpo_choose_target_profile_string = "Recherche et sélectionne profils influents comme des marques leader, VIP ou gens qu'ils reflètent tes intérêts." 
+		corpo_choose_tag_string = "Ajoute les tag les plus populaires ou que tu utilises souvent dans tes photos"
 		sistema_attivo_string = " Le système est actif!"
 		string_js_15_giorni = 'Entry Pack - 15 jours'
 		string_js_30_giorni = 'Standard Pack - 30 jours'
@@ -665,8 +671,8 @@ def home_page(request):
 		utente_esiste_string = 'Target déjà inséré!'
 		added_generico_string = 'Fait!'
 		tag_esistente_string = 'Tag déjà inséré '
-		choose_target_profile_string = 'Choisissez un profil target'
-		choose_tag_string = 'Choisissez un tag!'
+		choose_target_profile_string = 'Ajoute un ou plus utilisateurs target' 
+		choose_tag_string = 'Choisis quelques hashtag' 
 		your_account_string = "Ton account"
 		il_tuo_abbonamento_string = "Tes données"
 		il_sistema_ha_generato = "Statistique"
@@ -683,9 +689,11 @@ def home_page(request):
 		benvenuto_avatar_string = 'Bienvenu'
 		email_string = "Email"
 		modale_titolo_email_obbligatoria = "Une dernière chose..."	
-		modale_corpo_email_obbligatoria = "Nous avons besoin de ton adresse email pour pouvoir t'avertir en cas de problèmes"		
-			
+		modale_corpo_email_obbligatoria = "Nous avons besoin de ton adresse email pour pouvoir t'avertir en cas de problèmes"				
 	else:
+		corpo_choose_target_profile_string = "Search and select influent profiles like important brand, VIP or people that have the same interests as you." 
+		corpo_choose_tag_string = "Add the most popular tags or the ones that you use in your photos more frequently" 
+
 		modale_titolo_email_obbligatoria = "One more thing..."
 		modale_corpo_email_obbligatoria = "We need your email address to contact you in case of problems"		
 		sistema_attivo_string = "System is running!"
@@ -766,8 +774,8 @@ def home_page(request):
 		utente_esiste_string = 'This user already exists!'
 		added_generico_string = 'Added!'
 		tag_esistente_string = 'This tag exists'
-		choose_target_profile_string = 'Choose a target profile!'
-		choose_tag_string = 'Choose a tag!'
+		choose_target_profile_string = 'Add one or more users target'
+		choose_tag_string = 'Choose some hashtags'
 		your_account_string = "Your account"
 		il_tuo_abbonamento_string = "Your subscription"
 		il_sistema_ha_generato = "Statistics"
@@ -785,6 +793,8 @@ def home_page(request):
 		email_string = "Email"
 
 	variabili = {
+		'corpo_choose_target_profile_string' : corpo_choose_target_profile_string,
+		'corpo_choose_tag_string' : corpo_choose_tag_string,
 		'email_string' : email_string,
 		'modale_titolo_email_obbligatoria' : modale_titolo_email_obbligatoria,
 		'modale_corpo_email_obbligatoria' : modale_corpo_email_obbligatoria,

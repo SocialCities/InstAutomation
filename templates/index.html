@@ -133,10 +133,10 @@
       				<div class="row">
       					<!-- Inizio sezione user target -->      					
       					<div class="col-md-6">
-      						<div class="alert alert-default" role="alert">
-      							<span class="titolo_sezione">
+      						<div class="alert alert-warning" role="alert">
+								<span class="titolo_sezione" data-content="{{corpo_choose_target_profile_string}}" rel="popover" data-placement="bottom" data-trigger="hover">
       								{{choose_target_profile_string}}
-      							</span>	
+      							</span>
       						</div>
       						
       						<div id="sezione_user_target" class="panel panel-default">
@@ -210,8 +210,15 @@
 
       					<!-- Inizio sezione tag -->
   						<div class="col-md-6">
-  							<div class="alert alert-default" role="alert">
-      							<span class="titolo_sezione">{{choose_tag_string}}</span>
+  							<div class="alert alert-warning" role="alert">
+  								<!--
+      							<span class="titolo_sezione">
+      								{{choose_tag_string}}
+      							</span>
+      							-->
+      							<span class="titolo_sezione" data-content="{{corpo_choose_tag_string}}" rel="popover" data-placement="bottom" data-trigger="hover">
+      								{{choose_tag_string}}
+      							</span>
       						</div>
   							<div id="sezione_user_tag" class="panel panel-default">
       							<div class="panel-heading">
