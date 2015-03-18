@@ -120,7 +120,7 @@ def charge(request):
 
 	stripe.Charge.create(
 	  amount = amount,
-	  currency = "USD",
+	  currency = "EUR",
 	  card = stripeToken, 
 	  description = "Charge for Instautomation.com",
 	)
