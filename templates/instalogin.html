@@ -31,6 +31,9 @@
         </div>
         <div class="navbar-collapse collapse" id="navbar-main">
           <ul class="nav navbar-nav navbar-right">
+          	<li><a href="{% url 'socialauth_begin' 'instagram' %}"><span class="text-primary">
+          		<strong>{{start_now}}</strong></span></a>
+          	</li>
             <li><a href="javascript:openTerms()">{{termini}}</a></li>
             <li><a href="{{iubenda_link}}" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">{{privacy}}</a></li>
           </ul>
@@ -50,8 +53,8 @@
 					</div>
 				</div>
 				<div class="col-md-8">
-					<div id="jumbo" class="jumbotron">
-						<h1>{{welcome}}</h1>
+					<div class="jumbotron">
+						<h2>{{welcome}}</h2>
 						<p>{{sub_welcome|safe}}</p>
 						<div class="row">
 							<div class="col-md-12">
@@ -70,8 +73,8 @@
 				</div>
 			</div>
 
-			<div class="row pad20">
-				<div class="col-md-6">
+			<div class="row">
+				<div class="col-md-6" style="margin-top:50pt;">
 					<blockquote>
 						<h2>{{titolo_target|safe}}</h2>					
 						{{corpo_target|safe}}
@@ -79,7 +82,7 @@
 				</div>
 				<div class="col-md-6">
 					<div style="text-align:center">
-						<img src="{% static "./_insta_images/1.png" %}" style="width:60%;margin-top:-50px;" alt="">
+						<img src="{% static "./_insta_images/1.png" %}" style="width:60%;" alt="">
 					</div>
 				</div>	
 			</div>
@@ -87,10 +90,10 @@
 			<div class="row pad20">
 				<div class="col-md-6">
 					  <div style="text-align:center">
-					  	<img src="{% static "./_insta_images/2.png" %}" style="width:60%;margin-top:-50px;" alt="">
+					  	<img src="{% static "./_insta_images/2.png" %}" style="width:60%;" alt="">
 					  </div>
 				</div>
-				<div class="col-md-6">
+				<div class="col-md-6" style="margin-top:50pt;">
 					<blockquote class="pull-right">
 						<h2>{{titolo_plan|safe}}</h2>
 					  	{{corpo_plan|safe}}
@@ -168,6 +171,13 @@
 				  				{{torna_in_cima}}
 				  			</a>
 				  		</li>
+				  		<li>
+				  			<a href="{% url 'socialauth_begin' 'instagram' %}">
+				  				<span class="text-primary">
+				  					<strong>{{start_now}}</strong>
+				  				</span>
+          					</a>
+				  		</li>				  		
 				  		<li>
 				  			<a href="javascript:openTerms()">
 				  				{{termini}}

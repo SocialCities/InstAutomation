@@ -19,12 +19,50 @@
        	</div>
         <div class="navbar-collapse collapse" id="navbar-main">
           	<ul class="nav navbar-nav navbar-right">
-          		<li><a href="#pricing" class="smooth-price">{{prezzi}}</a></li>
-			    <li><a href="javascript:openTerms()">{{termini}}</a></li>
-			    <li><a href="{{iubenda_link}}" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">{{privacy}}</a></li>
-			    <li><a href="javascript:openSupport()">{{supporto}}</a></li>
-			    <li><a href="javascript:openChange()">{{cambia_email}}</a></li>
-			    <li><a href="javascript:loggingOut('1')">{{logout}}</a></li>
+			    <li class="dropdown">
+			    	<a href="" class="dropdown-toggle" id="info_menu" data-toggle="dropdown" aria-expanded="true">
+			    		{{info_label}} <span class="caret"></span>
+			   		</a>
+			   		<ul class="dropdown-menu" role="menu" aria-labelledby="info_menu">
+			   			<li role="presentation">
+			   				<a role="menuitem" tabindex="-1" href="#pricing" class="smooth-price">
+			   					{{prezzi}}
+			   				</a>
+			   			</li>
+   						<li role="presentation">
+   							<a role="menuitem" tabindex="-1" href="javascript:openTerms()">
+   								{{termini}}
+   							</a>
+   						</li>
+   						<li role="presentation">
+   							<a role="menuitem" tabindex="-1" href="{{iubenda_link}}" class="iubenda-nostyle no-brand iubenda-embed" title="Privacy Policy">
+   								{{privacy}}
+   							</a>
+   						</li>
+   						<li role="presentation" class="divider"></li>
+   						<li role="presentation">
+   							<a role="menuitem" tabindex="-1" href="javascript:openSupport()">
+   								{{supporto}}
+   							</a>
+   						</li>    						 						
+   					</ul>
+				</li>
+
+			    <li class="dropdown">
+			    	<a href="" class="dropdown-toggle" id="mio_profilo" data-toggle="dropdown" aria-expanded="true">
+			    		{{my_profile_label}} <span class="caret"></span>
+			   		</a>
+			   		<ul class="dropdown-menu" role="menu" aria-labelledby="mio_profilo">
+			   			<li role="presentation">
+			   				<a role="menuitem" tabindex="-1" href="javascript:openChange()">{{cambia_email}}</a>
+			   			</li>
+			   			<li role="presentation" class="divider"></li>
+   						<li role="presentation">
+   							<a role="menuitem" tabindex="-1" href="javascript:loggingOut('1')">{{logout}}</a>
+   						</li>    						 						
+   					</ul>
+				</li>
+
 			    <li class="dropdown">
 			    	<a href="" class="dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
 			    		{{lingua_string}} <span class="caret"></span>
@@ -67,8 +105,10 @@
 		<div class="col-md-6">
 			<img id="avatar" src={{avatar}} alt=""/>
 			<div id="nick">{{username}}</div>
-		</div>				
-		
+		</div>		
+
+		<div style="margin:10pt;"></div>
+
 		<div class="col-md-2">
 			<div class="panel panel-default">
 				<div class="panel-heading">
@@ -131,11 +171,14 @@
     		<div id="collapse" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading">
       			<div class="panel-body">
       				<div class="row">
-      					<!-- Inizio sezione user target -->      					
+      					<!-- Inizio sezione user target -->  
+      					<div style="margin:10pt;"></div>    					
       					<div class="col-md-6">
-      						<div class="alert alert-warning" role="alert">
+      						<div class="alert alert-default" role="alert">
 								<span class="titolo_sezione" data-content="{{corpo_choose_target_profile_string}}" rel="popover" data-placement="bottom" data-trigger="hover">
-      								{{choose_target_profile_string}}
+      								<span style="color:#f0ad4e; font-weight: bold;">
+      									{{choose_target_profile_string}}
+      								</span>
       							</span>
       						</div>
       						
@@ -207,17 +250,14 @@
       						</div>
       					</div>
       					<!-- Fine sezione user target -->
-
+      					<div style="margin:10pt;"></div>
       					<!-- Inizio sezione tag -->
   						<div class="col-md-6">
-  							<div class="alert alert-warning" role="alert">
-  								<!--
-      							<span class="titolo_sezione">
-      								{{choose_tag_string}}
-      							</span>
-      							-->
+  							<div class="alert alert-default" role="alert">
       							<span class="titolo_sezione" data-content="{{corpo_choose_tag_string}}" rel="popover" data-placement="bottom" data-trigger="hover">
-      								{{choose_tag_string}}
+      								<span style="color:#f0ad4e; font-weight: bold;">
+      									{{choose_tag_string}}
+      								</span>
       							</span>
       						</div>
   							<div id="sezione_user_tag" class="panel panel-default">
@@ -348,6 +388,9 @@
   									</div>
   								</div>
   								<div class="row pad10">
+
+  									<div style="margin:10pt;"></div>
+
   									<div class="col-md-6">
   										<div class="panel panel-default">
   											<div class="panel-body">
@@ -357,6 +400,9 @@
   											</div>
   										</div>
   									</div>
+
+  									<div style="margin:10pt;"></div>
+
   									<div class="col-md-6">
   										<div class="panel panel-default">
   											<div class="panel-body">
@@ -393,6 +439,7 @@
   									</div>
   								</div>
   								<div class="row pad10">
+  									<div style="margin:10pt;"></div>
   									<div class="col-md-6">
   										<div class="panel panel-default">
   											<div class="panel-body">
@@ -402,6 +449,7 @@
   											</div>
   										</div>
   									</div>
+  									<div style="margin:10pt;"></div>
   									<div class="col-md-6">
   										<div class="panel panel-default">
   											<div class="panel-body">
@@ -450,40 +498,15 @@
 							</div>
 						</div>
 						<br/>
+						<!--
 						<div class="panel panel-default">
 							<div class="panel-body">
 								<a href="http://socialcities.co" target="_blank">
 									<img src="{% static "socialcities.png" %}" style="width:100%;"/>
 								</a>
 							</div>
-							<!--
-							<div class="panel-heading">
-								<h3 class="panel-title">
-									{{pay_tweet_string}}
-								</h3>
-							</div>
-							<div class="panel-body">
-								<span class="fa fa-twitter fa-3x"></span>								
-								<p style="font-size:small;">
-									{{corpo_pay_tweet}}
-								</p>
-								<span style="color:blue;">
-									<strong>
-										{{un_giorno_free_string}}
-									</strong>									
-								</span>						
-								<div class="pad10">
-									{% if tweet_boolean %}
-										<div class="alert alert-warning" role="alert">
-											{{gia_preso_string}}
-										</div>
-									{% else %}
-										<iframe src="https://www.paywithatweet.com/dlbutton01.php?id=eb7efe3d-ec52-4a6f-88da-90da4392269a" class="spaced-right" name="paytweet_button" scrolling="no" frameborder="no" height="24px" width="145px"></iframe>
-									{% endif %}
-								</div>
-							</div>
-							-->
 						</div>
+						-->
 					</div> 
 					<!-- Fine sezione free e tweet -->
 

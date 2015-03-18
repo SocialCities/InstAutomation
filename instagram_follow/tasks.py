@@ -21,11 +21,15 @@ CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
 	
 @shared_task   
 def avvia_task_pulizia_follower(token, instance, task_diretto, id_task_padre):
+	
 	api = InstagramAPI(
 		access_token = token,
 		client_ips = MIOIP,
 		client_secret = CLIENT_SECRET 
 	)
+
+	#Funzione utile a pulire gli utenti rimasti appesi
+	pulizia_utenti_mancanti(api, instance)
 
 	utenti_da_unfolloware = BlacklistUtenti.objects.filter(utente = instance, unfollowato = False)
 
@@ -34,7 +38,6 @@ def avvia_task_pulizia_follower(token, instance, task_diretto, id_task_padre):
 		if task_diretto:
 			id_task = avvia_task_pulizia_follower.request.id	
 			task_obj = TaskStatus.objects.get(utente = instance, task_id = id_task)
-
 		else:
 			task_obj = TaskStatus.objects.get(utente = instance, task_id = id_task_padre)
 
@@ -51,8 +54,7 @@ def avvia_task_pulizia_follower(token, instance, task_diretto, id_task_padre):
 		user_id = utente.id_utente 
 		check_limite(api)
 
-		#sleeping_time = random.randint(30, 240)
-		sleeping_time = random.randint(30, 120)
+		sleeping_time = random.randint(40, 130)
 		time.sleep(sleeping_time)	
 
 		try:
@@ -70,7 +72,10 @@ def avvia_task_pulizia_follower(token, instance, task_diretto, id_task_padre):
 		except httplib2.ServerNotFoundError:
    			time.sleep(120)
 
+
 	if task_diretto:
+		id_task = avvia_task_pulizia_follower.request.id
+		task_obj = TaskStatus.objects.get(utente = instance, task_id = id_task)
 		task_obj.completato = True
 		task_obj.save()
 
@@ -126,8 +131,7 @@ def start_follow(instance, api):
 							
 							if (esistenza_nuovo_user is False) and (esistenza_in_white is False) and (is_private is False):
 						
-								#sleeping_time = random.randint(30, 240)
-								sleeping_time = random.randint(30, 120)
+								sleeping_time = random.randint(40, 130)
 								time.sleep(sleeping_time)	
 								
 								api.follow_user(user_id = utente.id)
@@ -169,3 +173,25 @@ def check_contatore(contatore, token, instance, id_task_padre):
 		
 	return contatore
 
+
+def pulizia_utenti_mancanti(api, instance):
+
+	all_utenti = BlacklistUtenti.objects.filter(utente = instance, unfollowato = False)
+
+	cursore = None
+	uscita = False
+	persone_che_seguo = []
+	while uscita is False:
+		followed_by_obj = api.user_follows(cursor = cursore)
+		utenti = followed_by_obj[0]
+		
+		for utente in utenti:
+			persone_che_seguo.append(utente.username)
+		
+		cursore, uscita = get_cursore(followed_by_obj)
+
+	for utente in all_utenti.iterator():
+	 	username = utente.username
+		
+		if username not in persone_che_seguo:
+			utente.delete()

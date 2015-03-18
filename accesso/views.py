@@ -391,6 +391,8 @@ def home_page(request):
 	status_obj_attivi = TaskStatus.objects.filter(utente = instance, completato = False).exists()	
 
 	if lingua == 'it':
+		info_label = "Info"
+		my_profile_label = "My profile"
 		corpo_choose_target_profile_string = "Cerca e seleziona profili influenti come marchi leader, VIP o persone che rispecchiano i tuoi interessi."
 		corpo_choose_tag_string = "Aggiungi i tag più popolari o che utilizzi spesso nelle tue foto"
 		modale_titolo_email_obbligatoria = "Ancora un attimo..."
@@ -491,6 +493,8 @@ def home_page(request):
 		benvenuto_avatar_string = 'Benvenuto'
 		email_string = "Email"
 	elif lingua == 'ro':
+		my_profile_label = "My profile"
+		info_label = "Info"
 		corpo_choose_target_profile_string = "Caută și selecționeaza profile interesante tip un brand lider, VIP sau persoane interesate de aceleași lucruri ca și tine." 
 		corpo_choose_tag_string = "Adaugă tag-utile mai populare sau care le folosești des in pozele tale." 
 		modale_titolo_email_obbligatoria = "Încă un pic..."
@@ -591,6 +595,8 @@ def home_page(request):
 		benvenuto_avatar_string = 'Bine ai venit'
 		email_string = "Email"
 	elif lingua == 'fr':
+		my_profile_label = "My profile"
+		info_label = "Info"
 		corpo_choose_target_profile_string = "Recherche et sélectionne profils influents comme des marques leader, VIP ou gens qu'ils reflètent tes intérêts." 
 		corpo_choose_tag_string = "Ajoute les tag les plus populaires ou que tu utilises souvent dans tes photos"
 		sistema_attivo_string = " Le système est actif!"
@@ -691,9 +697,10 @@ def home_page(request):
 		modale_titolo_email_obbligatoria = "Une dernière chose..."	
 		modale_corpo_email_obbligatoria = "Nous avons besoin de ton adresse email pour pouvoir t'avertir en cas de problèmes"				
 	else:
+		my_profile_label = "My profile"
+		info_label = "Info"
 		corpo_choose_target_profile_string = "Search and select influent profiles like important brand, VIP or people that have the same interests as you." 
 		corpo_choose_tag_string = "Add the most popular tags or the ones that you use in your photos more frequently" 
-
 		modale_titolo_email_obbligatoria = "One more thing..."
 		modale_corpo_email_obbligatoria = "We need your email address to contact you in case of problems"		
 		sistema_attivo_string = "System is running!"
@@ -793,6 +800,8 @@ def home_page(request):
 		email_string = "Email"
 
 	variabili = {
+		'my_profile_label' : my_profile_label,
+		'info_label' : info_label,
 		'corpo_choose_target_profile_string' : corpo_choose_target_profile_string,
 		'corpo_choose_tag_string' : corpo_choose_tag_string,
 		'email_string' : email_string,

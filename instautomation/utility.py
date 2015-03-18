@@ -94,52 +94,42 @@ def errore_mortale(e, instance):
 					
 		elif (e.error_type == 'APINotAllowedError'):
 			print username + " - " +  e.error_message
-			#time.sleep(120)
-			time.sleep(60)
+			time.sleep(120)
 
 		elif (e.error_type == 'APINotFoundError'):
 			print username + " - " +  e.error_message
-			#time.sleep(120)
-			time.sleep(60)	
+			time.sleep(120)	
 			
 	elif (e.status_code == 429) or (e.status_code == "429"):
 		print username + " - " +  e.error_message #Rate limited
-		#time.sleep(240)
 		time.sleep(120)
 
 	elif (e.status_code == 404) or (e.status_code == "404"):
 		print username + " - " +  e.error_message #Rate limited
-		#time.sleep(240)
 		time.sleep(120)	
 		
 	elif (e.status_code == 500) or (e.status_code == "500"):
 		print username + " - " +  e.error_message #errore JSON
-		#time.sleep(120)
-		time.sleep(60)
+		time.sleep(120)
 							
 	elif (e.status_code == 502) or (e.status_code == "502"):
 		print username + " - " +  e.error_message #errore JSON
-		#time.sleep(120)
-		time.sleep(60)
+		time.sleep(120)
 
 	elif (e.status_code == 503) or (e.status_code == "503"):
 		print username + " - " +  e.error_message #Rate limited	
-		#time.sleep(120)
-		time.sleep(60)			
+		time.sleep(120)			
 		
 	elif (e.status_code == 504) or (e.status_code == "504"):
 		print username + " - " +  e.error_message #errore JSON
-		#time.sleep(120)
-		time.sleep(60)
+		time.sleep(120)
 	else:
 		codice = e.status_code
 		if(codice == "Rate limited"):
-			#time.sleep(240)
 			time.sleep(120)
 			print username + " - Rate limited" 
 				
 		else:
-			#time.sleep(240)
 			time.sleep(120)
 			print username + " - " + 'errore mortale'
 			print codice
@@ -150,7 +140,7 @@ def avviso_email(email_utente):
 	
     text_content = "Dear user, your access token has been reset by Instagram. Log in Instagram and insert the chapta, then log in Instautomation and you'll be able to continue to use out system."
     html_content = "Dear user, your access token has been reset by Instagram.<br/>\
-          Log in Instagram and insert the chapta, then log in Instautomation and you'll be able to continue to use out system."
+          Log in Instagram and insert the chapta, then log in Instautomation and you'll be able to continue to use our system."
 	
     msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
     msg.attach_alternative(html_content, "text/html")

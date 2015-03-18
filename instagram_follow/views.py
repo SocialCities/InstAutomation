@@ -122,3 +122,4 @@ def cerca_competitor(request):
     	json.dumps(output),
         content_type="application/json"
     )
+
