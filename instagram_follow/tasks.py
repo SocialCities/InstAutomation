@@ -39,7 +39,7 @@ def avvia_task_pulizia_follower(token, instance, task_diretto, id_task_padre):
 	#Funzione utile a pulire gli utenti rimasti appesi
 	pulizia_utenti_mancanti(api, instance)
 
-	utenti_da_unfolloware = BlacklistUtenti.objects.filter(utente = instance, unfollowato = False)
+	utenti_da_unfolloware = BlacklistUtenti.objects.filter(utente = instance, unfollowato = False).order_by('time_stamp')
 
 	for utente in utenti_da_unfolloware.iterator():
 
