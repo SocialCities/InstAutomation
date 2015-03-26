@@ -18,6 +18,14 @@ logger = logging.getLogger('django')
 
 MIOIP = settings.IP_LOCALE
 CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
+
+from accesso.models import ValDelay
+
+def get_min_max():
+	valori = ValDelay.objects.get(pk=1)
+	minimo = valori.delay_min
+	massimo = valori.delay_max
+	return minimo, massimo
 	
 @shared_task   
 def avvia_task_pulizia_follower(token, instance, task_diretto, id_task_padre):
@@ -54,7 +62,8 @@ def avvia_task_pulizia_follower(token, instance, task_diretto, id_task_padre):
 		user_id = utente.id_utente 
 		check_limite(api)
 
-		sleeping_time = random.randint(40, 130)
+		minimo, massimo = get_min_max()
+		sleeping_time = random.randint(minimo, massimo)
 		time.sleep(sleeping_time)	
 
 		try:
@@ -70,8 +79,9 @@ def avvia_task_pulizia_follower(token, instance, task_diretto, id_task_padre):
 			errore_mortale(errore2, instance)
 
 		except httplib2.ServerNotFoundError:
-   			time.sleep(120)
-
+			minimo, massimo = get_min_max()
+			sleeping_time = random.randint(minimo, massimo)
+			time.sleep(sleeping_time)	
 
 	if task_diretto:
 		id_task = avvia_task_pulizia_follower.request.id
@@ -82,7 +92,8 @@ def avvia_task_pulizia_follower(token, instance, task_diretto, id_task_padre):
 	return "Fine unfollow"
 			
 @shared_task
-def start_follow(instance, api):	
+def start_follow(instance, api):
+
 	access_token = instance.tokens['access_token']
 
 	id_task = start_follow.request.id
@@ -130,8 +141,9 @@ def start_follow(instance, api):
 							check_limite(api)
 							
 							if (esistenza_nuovo_user is False) and (esistenza_in_white is False) and (is_private is False):
-						
-								sleeping_time = random.randint(40, 130)
+								
+								minimo, massimo = get_min_max()
+								sleeping_time = random.randint(minimo, massimo)
 								time.sleep(sleeping_time)	
 								
 								api.follow_user(user_id = utente.id)
@@ -153,7 +165,9 @@ def start_follow(instance, api):
 						errore_mortale(errore2, instance)
 
 					except httplib2.ServerNotFoundError:
-   						time.sleep(120)			
+						minimo, massimo = get_min_max()
+   						sleeping_time = random.randint(minimo, massimo)
+   						time.sleep(sleeping_time)	
 					
 			cursore, uscita = get_cursore(followed_by_obj)
 	
@@ -165,7 +179,7 @@ def start_follow(instance, api):
 		
 								
 def check_contatore(contatore, token, instance, id_task_padre):
-	limite = 50
+	limite = 2
 	
 	if contatore > limite:
 		avvia_task_pulizia_follower(token, instance, False, id_task_padre)

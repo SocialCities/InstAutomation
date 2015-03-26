@@ -29,3 +29,11 @@ class TaskStatus(models.Model):
 	class Meta:
 		verbose_name = "Task status"
 		verbose_name_plural = "Task status"
+
+class ValDelay(models.Model):
+	delay_min = models.IntegerField()
+	delay_max = models.IntegerField()
+
+	class Meta:
+		verbose_name = "Valore delay"
+		verbose_name_plural = "Valore delay"	

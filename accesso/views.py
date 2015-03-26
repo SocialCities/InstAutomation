@@ -41,7 +41,6 @@ def index(request):
 
 	numero_iscritti = Utente.objects.filter().count()
 	
-	#linguaggio = request.META['LANGUAGE']
 	linguaggio = translation.get_language_from_request(request)
 
 	if linguaggio == 'it':	

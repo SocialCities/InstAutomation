@@ -9,6 +9,20 @@ import time
 import logging
 logger = logging.getLogger('django')
 
+from accesso.models import ValDelay
+import random
+
+def get_min_max():
+	valori = ValDelay.objects.get(pk=1)
+	minimo = valori.delay_min
+	massimo = valori.delay_max
+	return minimo, massimo
+
+def fermati():
+	minimo, massimo = get_min_max()
+	sleeping_time = random.randint(minimo, massimo)
+	time.sleep(sleeping_time)
+
 def get_cursore(object_to_check):
 	cursore = prendi_valore_indice('cursor', object_to_check)
 	
@@ -94,43 +108,43 @@ def errore_mortale(e, instance):
 					
 		elif (e.error_type == 'APINotAllowedError'):
 			print username + " - " +  e.error_message
-			time.sleep(120)
+			fermati()
 
 		elif (e.error_type == 'APINotFoundError'):
 			print username + " - " +  e.error_message
-			time.sleep(120)	
+			fermati()
 			
 	elif (e.status_code == 429) or (e.status_code == "429"):
 		print username + " - " +  e.error_message #Rate limited
-		time.sleep(120)
+		fermati()
 
 	elif (e.status_code == 404) or (e.status_code == "404"):
 		print username + " - " +  e.error_message #Rate limited
-		time.sleep(120)	
+		fermati()
 		
 	elif (e.status_code == 500) or (e.status_code == "500"):
 		print username + " - " +  e.error_message #errore JSON
-		time.sleep(120)
+		fermati()
 							
 	elif (e.status_code == 502) or (e.status_code == "502"):
 		print username + " - " +  e.error_message #errore JSON
-		time.sleep(120)
+		fermati()
 
 	elif (e.status_code == 503) or (e.status_code == "503"):
 		print username + " - " +  e.error_message #Rate limited	
-		time.sleep(120)			
+		fermati()			
 		
 	elif (e.status_code == 504) or (e.status_code == "504"):
 		print username + " - " +  e.error_message #errore JSON
-		time.sleep(120)
+		fermati()
 	else:
 		codice = e.status_code
 		if(codice == "Rate limited"):
-			time.sleep(120)
+			fermati()
 			print username + " - Rate limited" 
 				
 		else:
-			time.sleep(120)
+			fermati()
 			print username + " - " + 'errore mortale'
 			print codice
 			logger.error("errore mortale", exc_info=True)

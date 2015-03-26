@@ -16,6 +16,14 @@ from instautomation.utility import check_limite, errore_mortale
 
 MIOIP = settings.IP_LOCALE
 CLIENT_SECRET = settings.INSTAGRAM_CLIENT_SECRET
+
+from accesso.models import ValDelay
+
+def get_min_max():
+	valori = ValDelay.objects.get(pk=1)
+	minimo = valori.delay_min
+	massimo = valori.delay_max
+	return minimo, massimo
    
 @shared_task
 def like_task(access_token, user_instance, api):
@@ -62,7 +70,8 @@ def like_task(access_token, user_instance, api):
 
 				if conto_like < 100:
 					try:
-						sleeping_time = random.randint(40, 130)
+						minimo, massimo = get_min_max()
+						sleeping_time = random.randint(minimo, massimo)
 						time.sleep(sleeping_time)
 						api.like_media(id_elemento)
 
@@ -76,6 +85,8 @@ def like_task(access_token, user_instance, api):
 						errore_mortale(errore2, user_instance)
 
 					except httplib2.ServerNotFoundError:
-   						time.sleep(120)		
+						minimo, massimo = get_min_max()
+						sleeping_time = random.randint(minimo, massimo)
+   						time.sleep(sleeping_time)		
 	
 	return "Stop like"						

@@ -4,13 +4,13 @@ from django.contrib import admin
 from instagram_like.models import ListaTag
 from instagram_follow.models import BlacklistUtenti, UtentiRivali, WhitelistUtenti
 from pagamenti.models import Pacchetti
-from accesso.models import Utente, TaskStatus
+from accesso.models import Utente, TaskStatus, ValDelay
 from social_auth.models import UserSocialAuth
 
 from accesso.views import beta_home
 from accesso.admin import pulsantone_view
 from pagamenti.views import pay_tweet
-	
+
 class TagAdmin(admin.ModelAdmin):
 	fields=['keyword', 'utente']
 	list_display = ('keyword', 'utente')	
@@ -39,6 +39,10 @@ class PacchettiAdmin(admin.ModelAdmin):
     fields = ['utente', 'data_acquisto', 'giorni', 'attivato', 'data_sottoscrizione', 'data_scadenza']
     list_display = ('utente', 'data_acquisto', 'giorni', 'attivato', 'data_sottoscrizione', 'data_scadenza')
 
+class ValDelayAdmin(admin.ModelAdmin):
+    fields = ['delay_min', 'delay_max']
+    list_display = ('delay_min', 'delay_max')
+
 admin.site.register(UserSocialAuth)
 admin.site.register(ListaTag, TagAdmin)
 admin.site.register(BlacklistUtenti, BlacklistUtentiAdmin)
@@ -47,6 +51,7 @@ admin.site.register(WhitelistUtenti, WhitelistUtentiAdmin)
 admin.site.register(TaskStatus, TaskStatusAdmin)
 admin.site.register(Utente, UtenteAdmin)
 admin.site.register(Pacchetti, PacchettiAdmin)
+admin.site.register(ValDelay, ValDelayAdmin)
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
