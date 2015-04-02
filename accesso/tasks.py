@@ -17,6 +17,7 @@ from instagram_like.tasks import like_task
 from instagram_follow.tasks import start_follow
 from instagram_follow.views import update_whitelist
 from instagram_follow.models import BlacklistUtenti
+from instagram_like.models import BlackTag
 
 from .models import TaskStatus, Utente
 
@@ -100,3 +101,14 @@ def invio_email_primo_avvio(email, username):
     msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
     msg.attach_alternative(html_content, "text/html")
     msg.send()		
+
+
+@shared_task 
+def elimina_vecchie_foto():
+    now = datetime.now()
+    
+    tre_giorni_fa = now - timedelta(2)
+	
+    utenti_da_eliminare = BlackTag.objects.filter(time_stamp__lt = tre_giorni_fa)
+    utenti_da_eliminare.delete()
+    print "Pulizia finita"

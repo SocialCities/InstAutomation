@@ -1,7 +1,6 @@
 from django.db import models
 from social_auth.models import UserSocialAuth
 
-
 class BlacklistUtenti(models.Model):
 	username = models.CharField(max_length=200)	
 	id_utente = models.CharField(max_length=200)	
@@ -38,7 +37,6 @@ class WhitelistUtenti(models.Model):
 		
 		verbose_name = "Utente in whitelist"
 		verbose_name_plural = "Utenti in whitelist"			
-		
 
 class UtentiRivali(models.Model):
 	username = models.CharField(max_length=200)	

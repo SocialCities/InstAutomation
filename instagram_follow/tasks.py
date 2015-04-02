@@ -179,7 +179,7 @@ def start_follow(instance, api):
 		
 								
 def check_contatore(contatore, token, instance, id_task_padre):
-	limite = 2
+	limite = 300
 	
 	if contatore > limite:
 		avvia_task_pulizia_follower(token, instance, False, id_task_padre)

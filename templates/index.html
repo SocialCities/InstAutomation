@@ -344,6 +344,18 @@
 		</button>
 	</form>	
 
+	{% elif stato_pacchetto = 1 or stato_pacchetto = 0 %}
+
+	<div class="well">
+		<center>
+			<a href = "#pricing"> 
+				<b>{{time_over_string}}</b>
+				<br/>
+				{{compra_pacchetto_string}}
+			</a>
+		</center>
+	</div>
+
 	{% else %}
 	
 	<form id = "start">

@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 from django.conf import settings
 from celery import shared_task
-from .models import ListaTag
+from .models import ListaTag, BlackTag
 from accesso.models import TaskStatus, Utente
 from pagamenti.views import abbonamento_valido
 from instagram.bind import InstagramAPIError, InstagramClientError 
@@ -68,12 +68,16 @@ def like_task(access_token, user_instance, api):
 					id_elemento = foto.id
 					conto_like = foto.like_count
 
-					if conto_like < 100:
+					controllo_esistenza_in_black_list = BlackTag.objects.filter(id_media = id_elemento).exists()
+
+					if (conto_like < 100) and (not controllo_esistenza_in_black_list):
 						try:
 							minimo, massimo = get_min_max()
 							sleeping_time = random.randint(minimo, massimo)
 							time.sleep(sleeping_time)
 							api.like_media(id_elemento)
+
+							BlackTag.objects.create(utente = user_instance, id_media = id_elemento)
 
 							Utente.objects.filter(utente = user_instance).update(like_totali = F('like_totali') + 1)
 							Utente.objects.filter(utente = user_instance).update(like_sessione = F('like_sessione') + 1)								
@@ -89,10 +93,9 @@ def like_task(access_token, user_instance, api):
 							sleeping_time = random.randint(minimo, massimo)
 	   						time.sleep(sleeping_time)
 	   		except:
-	   			print "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 				minimo, massimo = get_min_max()
 				sleeping_time = random.randint(minimo, massimo)
 				time.sleep(sleeping_time)
-				pass		
+				pass						
 	
 	return "Stop like"						

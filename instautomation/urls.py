@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
-from instagram_like.models import ListaTag
+from instagram_like.models import ListaTag, BlackTag
 from instagram_follow.models import BlacklistUtenti, UtentiRivali, WhitelistUtenti
 from pagamenti.models import Pacchetti
 from accesso.models import Utente, TaskStatus, ValDelay
@@ -13,7 +13,11 @@ from pagamenti.views import pay_tweet
 
 class TagAdmin(admin.ModelAdmin):
 	fields=['keyword', 'utente']
-	list_display = ('keyword', 'utente')	
+	list_display = ('keyword', 'utente')
+
+class BlackTagAdmin(admin.ModelAdmin):
+    fields=['id_media', 'utente', 'time_stamp']
+    list_display = ('id_media', 'utente' , 'time_stamp')	
 	
 class BlacklistUtentiAdmin(admin.ModelAdmin):
 	field = ['username', 'id_utente', 'utente', 'unfollowato', 'time_stamp']
@@ -52,6 +56,7 @@ admin.site.register(TaskStatus, TaskStatusAdmin)
 admin.site.register(Utente, UtenteAdmin)
 admin.site.register(Pacchetti, PacchettiAdmin)
 admin.site.register(ValDelay, ValDelayAdmin)
+admin.site.register(BlackTag, BlackTagAdmin)
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
